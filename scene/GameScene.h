@@ -8,7 +8,8 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
-#include <DebugCamera.h>
+//#include <DebugCamera.h>
+#include "Player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -50,26 +51,23 @@ private: // メンバ変数
 	/// ゲームシーン用
 	/// </summary>
 
+	/*-----------
+	　 キャラクタ
+	-----------*/
+	Player* player = nullptr;
+
+
 	/*------------
-	    画像関連
+	   テクスチャ
 	------------*/
-	// テクスチャーハンドル
 	uint32_t textureHandle = 0;
-	// 3Dモデル
 	Model* model = nullptr;
-	// 2Dスプライト
-	Sprite* sprite = nullptr;
 
-	/*------------
-	     音楽
-	------------*/
-	uint32_t soundDataHandle = 0;
-	uint32_t voiceHandle = 0;
-
-	WorldTransform worldTransform;
+	
+	/*--------------
+	* ワールド・ビュー
+	--------------*/
+	
 	ViewProjection viewProjection;
-	float inputFloat3[3] = {0, 0, 0};
 
-	// デバッグカメラ
-	DebugCamera* debugCamera = nullptr;
 };
