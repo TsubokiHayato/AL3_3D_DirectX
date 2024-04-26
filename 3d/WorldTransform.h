@@ -50,6 +50,12 @@ public:
 	/// 定数バッファの取得
 	/// </summary>
 	/// <returns>定数バッファ</returns>
+	/// 
+	/// 
+	/// 
+	void UpdateMatrix();
+
+
 	const Microsoft::WRL::ComPtr<ID3D12Resource>& GetConstBuffer() const { return constBuffer_; }
 
 private:

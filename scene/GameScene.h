@@ -6,10 +6,13 @@
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
-#include "WorldTransform.h"
 
-//#include <DebugCamera.h>
-#include "Player.h"
+
+
+#include <DebugCamera.h>
+//#include "Player.h"
+
+#include<vector>
 
 /// <summary>
 /// ゲームシーン
@@ -51,10 +54,16 @@ private: // メンバ変数
 	/// ゲームシーン用
 	/// </summary>
 
+
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+
+	bool isDebugCameraActive_ = false;
+	DebugCamera* debugCamera_ = nullptr;
+
 	/*-----------
 	　 キャラクタ
 	-----------*/
-	Player* player = nullptr;
+	//Player* player = nullptr;
 
 
 	/*------------
@@ -63,11 +72,13 @@ private: // メンバ変数
 	uint32_t textureHandle = 0;
 	Model* model = nullptr;
 
+	Model* modelBlock_ = nullptr;
+
 	
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
 	
-	ViewProjection viewProjection;
+	ViewProjection viewProjection_;
 
 };

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "WorldTransform.h"
+
 #include "Model.h"
 
-//#include "TextureManager.h"
 
+#include "WorldTransform.h"
 
 //自キャラ
 class Player {
