@@ -2,7 +2,8 @@
 #include "TextureManager.h"
 #include <cassert>
 
-#include "WorldTransform.h"
+
+
 
 #include "WorldTransform_MT.h"
 
@@ -18,6 +19,8 @@ GameScene::~GameScene() {
 	delete modelBlock_;
 
 	delete debugCamera_;
+
+	delete modelSkydome_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -45,16 +48,27 @@ void GameScene::Initialize() {
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
+
+	viewProjection_.farZ = 1145;
+
 	viewProjection_.Initialize();
+
 
 	/*---------
 	* Chara
 	--------*/
 
 	// 自キャラの生成
-	// player = new Player;
+	player = new Player;
 	// 自キャラの初期化
-	// player->Initialize(model, textureHandle, viewProjection_);
+	player->Initialize(model, textureHandle, &viewProjection_);
+
+	//SkyDome作成
+	skydome = new Skydome;
+
+	
+	modelSkydome_ = Model::CreateFromOBJ("sakaban", true);
+	skydome->Initialize(modelSkydome_, &viewProjection_);
 
 	//
 	const uint32_t kNumBlockHorizonal = 20;
@@ -85,6 +99,7 @@ void GameScene::Initialize() {
 
 		}
 	}
+
 }
 
 void GameScene::Update() {
@@ -114,7 +129,9 @@ void GameScene::Update() {
 	     3D
 	----------*/
 	// 自キャラの更新
-	// player->Update();
+	player->Update();
+
+	skydome->Update();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -161,7 +178,8 @@ void GameScene::Draw() {
 	     3D
 	-----------*/
 	// 自キャラ
-	// player->Draw();
+	player->Draw();
+	skydome->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {

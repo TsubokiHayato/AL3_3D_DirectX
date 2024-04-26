@@ -8,9 +8,10 @@
 #include "ViewProjection.h"
 
 
+#include "Skydome.h"
 
 #include <DebugCamera.h>
-//#include "Player.h"
+#include "Player.h"
 
 #include<vector>
 
@@ -63,16 +64,21 @@ private: // メンバ変数
 	/*-----------
 	　 キャラクタ
 	-----------*/
-	//Player* player = nullptr;
+	Player* player = nullptr;
 
+	Skydome* skydome = nullptr;
 
 	/*------------
 	   テクスチャ
 	------------*/
 	uint32_t textureHandle = 0;
+
+
 	Model* model = nullptr;
 
 	Model* modelBlock_ = nullptr;
+
+	Model* modelSkydome_ = nullptr;
 
 	
 	/*--------------

@@ -18,7 +18,7 @@ public:
 	void Draw();
 
 private:
-
+	 
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_;
 
