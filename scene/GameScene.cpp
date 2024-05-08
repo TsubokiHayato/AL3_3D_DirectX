@@ -5,7 +5,6 @@
 
 
 
-#include "WorldTransform_MT.h"
 
 GameScene::GameScene() {}
 
@@ -138,12 +137,13 @@ void GameScene::Update() {
 			if (!worldTransformBlock)
 				continue;
 
-			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+			worldTransformBlock->matWorld_ =worldTransformBlock->UpdateMatMatrix(worldTransformBlock);
 
 			worldTransformBlock->TransferMatrix();
 		}
 	}
 }
+
 
 void GameScene::Draw() {
 
