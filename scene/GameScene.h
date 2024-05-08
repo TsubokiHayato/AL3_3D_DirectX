@@ -14,6 +14,7 @@
 #include "Player.h"
 
 #include<vector>
+#include<MapChipField.h>
 
 /// <summary>
 /// ゲームシーン
@@ -45,8 +46,13 @@ public: // メンバ関数
 	/// 描画
 	/// </summary>
 	void Draw();
+	/// <summary>
+	/// 表示ブロックの生成
+	/// </summary>
+	void GenerateBlocks();
 
 private: // メンバ変数
+
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
@@ -56,10 +62,14 @@ private: // メンバ変数
 	/// </summary>
 
 
-	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+	
 
+	/*-----------
+	DebugCamera
+	-----------*/
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
+
 
 	/*-----------
 	　 キャラクタ
@@ -68,11 +78,12 @@ private: // メンバ変数
 
 	Skydome* skydome = nullptr;
 
+	MapChipField* mapChipField_;
+
 	/*------------
-	   テクスチャ
+	テクスチャ&モデル
 	------------*/
 	uint32_t textureHandle = 0;
-
 
 	Model* model = nullptr;
 
@@ -84,7 +95,8 @@ private: // メンバ変数
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
-	
+
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 	ViewProjection viewProjection_;
 
 };

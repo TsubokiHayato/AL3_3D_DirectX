@@ -15,7 +15,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 }
 //更新
 void Player::Update() { 
-	worldTransform_.UpdateMatrix(&worldTransform_);
+	worldTransform_.UpdateVoidMatrix(&worldTransform_);
 	
 }
 //描画
