@@ -70,22 +70,26 @@ private: // メンバ変数
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 
+	//std::unique_ptr<Model> model_;
 
+	//model_ = std::make_unique<Model>();
+	//osusume
 	/*-----------
 	　 キャラクタ
 	-----------*/
 	Player* player = nullptr;
+	Vector3 playerPos = {};
 
 	Skydome* skydome = nullptr;
 
-	MapChipField* mapChipField_;
+	MapChipField* mapChipField_=nullptr;
 
 	/*------------
 	テクスチャ&モデル
 	------------*/
-	uint32_t textureHandle = 0;
+	
 
-	Model* model = nullptr;
+	Model* modelPlayer = nullptr;
 
 	Model* modelBlock_ = nullptr;
 

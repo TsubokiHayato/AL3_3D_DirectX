@@ -5,17 +5,19 @@
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
-
+	delete debugCamera_;
+	delete player;
+	delete skydome;
+	delete mapChipField_;
 	// 3Dモデル削除
-	delete model;
 
-	// delete player;
+	delete modelPlayer;
 
 	delete modelBlock_;
 
-	delete debugCamera_;
-
 	delete modelSkydome_;
+
+	
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -23,9 +25,8 @@ GameScene::~GameScene() {
 		}
 	}
 	worldTransformBlocks_.clear();
-
-	delete mapChipField_;
 }
+
 void GameScene::GenerateBlocks() {
 	// 要素数
 	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
@@ -39,7 +40,7 @@ void GameScene::GenerateBlocks() {
 		worldTransformBlocks_[i].resize(numBlockHorizontal);
 	}
 
-	for (uint32_t i = 0; i < numBlockHorizontal; ++i) {
+	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
 		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
 
 			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
@@ -52,19 +53,23 @@ void GameScene::GenerateBlocks() {
 		}
 	}
 }
+
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	
+
+	
+
 	/*-------------------
 	       　テクスチャー
 	    -------------------*/
-	// ポーションの画像
-	textureHandle = TextureManager::Load("Recovery_agents.png");
+	
 
-	model = Model::Create();
+	
 
 	modelBlock_ = Model::Create();
 	/*--------------
@@ -76,23 +81,6 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	/*---------
-	* Chara
-	--------*/
-
-	// 自キャラの生成
-	player = new Player;
-	// 自キャラの初期化
-	player->Initialize(model, textureHandle, &viewProjection_);
-
-	/*---------
-	* Map
-	--------*/
-	// Mapの生成
-	mapChipField_ = new MapChipField;
-	//Mapのよみこみ
-	mapChipField_->LoadMapChipCsv("Resources/block.csv");
-
-	/*---------
 	  SkyDome
 	---------*/
 
@@ -102,9 +90,36 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("sakaban", true);
 
 	skydome->Initialize(modelSkydome_, &viewProjection_);
+	/*---------
+	* Map
+	--------*/
+	// Mapの生成
+	mapChipField_ = new MapChipField;
+	// Mapのよみこみ
+	mapChipField_->LoadMapChipCsv("Resources/block.csv");
 
+	/*---------
+	* Chara
+	--------*/
+
+	// 自キャラの生成
+	player = new Player;
+
+	modelPlayer = Model::CreateFromOBJ("player", true);
+
+	// 座標をマップチップ番号で指定
+	playerPos = mapChipField_->GetMapChipPositionByIndex(9, 9);
+
+	// 自キャラの初期化
+	player->Initialize(modelPlayer, &viewProjection_, playerPos);
+
+	/*-----------
+	 DEBUG_CAMERA
+	-----------*/
 	debugCamera_ = new DebugCamera(1280, 720);
-
+	/*---------
+	* BLOCK
+	--------*/
 	GenerateBlocks();
 }
 
@@ -148,11 +163,15 @@ void GameScene::Update() {
 			if (!worldTransformBlock)
 				continue;
 
-			worldTransformBlock->matWorld_ = worldTransformBlock->UpdateMatrix(worldTransformBlock);
+			worldTransformBlock->UpdateMatrix();
 
 			worldTransformBlock->TransferMatrix();
 		}
 	}
+
+
+
+
 }
 
 void GameScene::Draw() {
@@ -189,6 +208,7 @@ void GameScene::Draw() {
 	-----------*/
 	// 自キャラ
 	player->Draw();
+
 	skydome->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {

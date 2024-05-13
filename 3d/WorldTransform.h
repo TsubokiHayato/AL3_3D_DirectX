@@ -55,9 +55,9 @@ public:
 	/// 
 	/// 
 	/// 
-	void UpdateVoidMatrix(WorldTransform* world);
+	void UpdateMatrix();
 
-	Matrix4x4 UpdateMatrix(WorldTransform* world);
+	
 
 
 	const Microsoft::WRL::ComPtr<ID3D12Resource>& GetConstBuffer() const { return constBuffer_; }
