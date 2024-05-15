@@ -39,12 +39,12 @@ void Player::Update() {
 	if (onGround_) {
 
 		if (Input::GetInstance()->PushKey(DIK_A) || Input::GetInstance()->PushKey(DIK_D)) {
-			worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
+			worldTransform_.rotation_.y = std::numbers::pi_v<float> * 3.0f / 2.0f;
 			// 左右加速
 			Vector3 acceleration = {};
 
 			if (Input::GetInstance()->PushKey(DIK_D)) {
-				worldTransform_.rotation_.y = std::numbers::pi_v<float> * 3.0f / 2.0f;
+				worldTransform_.rotation_.y = std::numbers::pi_v<float>  / 2.0f;
 				acceleration.x += kAcceleration;
 
 				if (velocity_.x < 0.0f) {
@@ -135,7 +135,7 @@ void Player::Update() {
 
 		// 左右の自キャラ角度テーブル
 		float destinationRotationYTable[] = {
-		    std::numbers::pi_v<float> / 2.0f, std::numbers::pi_v<float> * 3.0f / 2.0f
+		    std::numbers::pi_v<float> * 3.0f / 2.0f, std::numbers::pi_v<float> / 2.0f
 
 		};
 		// 状態に応じた目標角度を取得する
