@@ -103,7 +103,7 @@ void Player::Update() {
 	// 下降中？
 	if (velocity_.y < 0) {
 		// Y座標が地面以下になったら着地
-		if (worldTransform_.translation_.y <= 1.0f) {
+		if (worldTransform_.translation_.y <= 2.0f) {
 			landing = true;
 		}
 	}
@@ -119,7 +119,7 @@ void Player::Update() {
 		// 着地
 		if (landing) {
 			// めり込み
-			worldTransform_.translation_.y = 1.0f;
+			worldTransform_.translation_.y = 2.0f;
 			// 摩擦で横方向速度が減衰する
 			velocity_.x *= (1.0f - kAttenuationLanding);
 			// 下方向速度リセット

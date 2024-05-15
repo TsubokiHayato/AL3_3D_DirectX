@@ -29,6 +29,7 @@ GameScene::~GameScene() {
 }
 
 void GameScene::GenerateBlocks() {
+
 	// 要素数
 	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
 	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
@@ -109,7 +110,7 @@ void GameScene::Initialize() {
 	modelPlayer = Model::CreateFromOBJ("player", true);
 
 	// 座標をマップチップ番号で指定
-	playerPos = mapChipField_->GetMapChipPositionByIndex(9, 9);
+	playerPos = mapChipField_->GetMapChipPositionByIndex(1, 18);
 
 	// 自キャラの初期化
 	player->Initialize(modelPlayer, &viewProjection_, playerPos);

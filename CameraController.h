@@ -36,6 +36,7 @@ private:
 	
 	//速度制限掛率
 	static inline const float kVelocityBias = 0.8f;
-	//
+
+	//margin
 	static inline const Rect margin = {};
 };

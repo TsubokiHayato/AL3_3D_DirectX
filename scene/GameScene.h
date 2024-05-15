@@ -80,6 +80,7 @@ private: // メンバ変数
 	　 キャラクタ
 	-----------*/
 	Player* player = nullptr;
+
 	Vector3 playerPos = {};
 
 	Skydome* skydome = nullptr;
@@ -90,7 +91,6 @@ private: // メンバ変数
 	テクスチャ&モデル
 	------------*/
 	
-
 	Model* modelPlayer = nullptr;
 
 	Model* modelBlock_ = nullptr;

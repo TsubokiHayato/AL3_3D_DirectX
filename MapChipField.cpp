@@ -83,8 +83,8 @@ MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex
 Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) { 
 
 	return Vector3(
-		kBlockWidth * xIndex,
-		kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 
+		kBlockWidth * xIndex*2,
+		kBlockHeight * (kNumBlockVirtical - 1 - yIndex)*2, 
 		0
 	); 
 }
