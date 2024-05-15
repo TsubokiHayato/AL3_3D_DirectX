@@ -26,8 +26,11 @@ public:
 	
 
 	~Player();
+	const Vector3& GetPosition() const { return worldTransform_.translation_; }
 
+	WorldTransform& GetWorldTransform() { return worldTransform_; };
 	
+	const Vector3& GetVelocity() const { return velocity_; }
 
 private:
 	// ワールドトランスフォーム

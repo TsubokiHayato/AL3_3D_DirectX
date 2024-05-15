@@ -16,6 +16,8 @@
 #include<vector>
 #include<MapChipField.h>
 
+
+#include<CameraController.h>
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -95,6 +97,10 @@ private: // メンバ変数
 
 	Model* modelSkydome_ = nullptr;
 
+	/*------------
+	   　カメラ
+	 ------------*/
+	CameraController* cameraController_ = nullptr;
 	
 	/*--------------
 	* ワールド・ビュー
@@ -102,5 +108,8 @@ private: // メンバ変数
 
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 	ViewProjection viewProjection_;
+
+
+
 
 };

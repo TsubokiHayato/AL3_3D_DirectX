@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include <cassert>
 
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
@@ -17,7 +18,7 @@ GameScene::~GameScene() {
 
 	delete modelSkydome_;
 
-	
+	delete cameraController_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -117,10 +118,20 @@ void GameScene::Initialize() {
 	 DEBUG_CAMERA
 	-----------*/
 	debugCamera_ = new DebugCamera(1280, 720);
+
 	/*---------
 	* BLOCK
 	--------*/
 	GenerateBlocks();
+
+	/*---------
+	* Camera
+	--------*/
+
+	cameraController_ = new CameraController;
+	cameraController_->Initialize(&viewProjection_);
+	cameraController_->SetTarget(player);
+	cameraController_->Reset();
 }
 
 void GameScene::Update() {
@@ -169,7 +180,11 @@ void GameScene::Update() {
 		}
 	}
 
+	/*---------
+	* Camera
+	--------*/
 
+	cameraController_->Update();
 
 
 }
