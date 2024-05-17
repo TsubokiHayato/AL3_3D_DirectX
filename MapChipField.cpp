@@ -7,12 +7,14 @@
 
 #include <cassert>
 
+#include <ImGuiManager.h>
+
 namespace {
 
 std::map<std::string, MapChipType> MapChipTable = {
-	//0のときは空白にする
+  //  0のときは空白にする
     {"0", MapChipType::kBlank},
-	//1のときはブロック
+ //  1のときはブロック
     {"1", MapChipType::kBlock},
 };
 
@@ -61,11 +63,13 @@ void MapChipField::LoadMapChipCsv(const std::string& filePath) {
 			std::string word;
 			getline(line_stream, word, ',');
 
+
 			if (MapChipTable.contains(word)) {
 				mapChipData_.data[i][j] = MapChipTable[word];
 			}
 		}
 	}
+
 }
 MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex) {
 
@@ -82,12 +86,16 @@ MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex
 
 Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) { 
 
-	return Vector3(
-		kBlockWidth * xIndex*2,
-		kBlockHeight * (kNumBlockVirtical - 1 - yIndex)*2, 
-		0
-	); 
-}
-//Blockの数を取得する関数
+	return Vector3(kBlockWidth * xIndex , kBlockHeight * (kNumBlockVirtical - 1 - yIndex) , 0); }
+// Blockの数を取得する関数
 uint32_t MapChipField::GetNumBlockHorizontal() { return kNumBlockHorizontal; }
 uint32_t MapChipField::GetNumBlockVirtical() { return kNumBlockVirtical; }
+
+IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position) {
+
+	IndexSet indexSet = {};
+	indexSet.xIndex = (uint32_t)((position.x + kBlockWidth / 2) / kBlockWidth);
+	indexSet.yIndex = kNumBlockVirtical - 1 - (uint32_t)((position.y + kBlockHeight / 2) / kBlockHeight);
+
+	return indexSet;
+}

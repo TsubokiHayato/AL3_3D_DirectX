@@ -66,13 +66,8 @@ void GameScene::Initialize() {
 
 	
 
-	/*-------------------
-	       　テクスチャー
-	    -------------------*/
 	
-
 	
-
 	modelBlock_ = Model::Create();
 	/*--------------
 	* ワールド・ビュー
@@ -97,6 +92,7 @@ void GameScene::Initialize() {
 	--------*/
 	// Mapの生成
 	mapChipField_ = new MapChipField;
+	
 	// Mapのよみこみ
 	mapChipField_->LoadMapChipCsv("Resources/block.csv");
 
@@ -114,6 +110,8 @@ void GameScene::Initialize() {
 
 	// 自キャラの初期化
 	player->Initialize(modelPlayer, &viewProjection_, playerPos);
+
+	player->SetMapChipField(mapChipField_);
 
 	/*-----------
 	 DEBUG_CAMERA
