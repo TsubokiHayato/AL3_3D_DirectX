@@ -70,7 +70,7 @@ private:
 	// 最大落下速度(下)
 	static inline const float kLimitFallSpeed = 0.5f;
 	// ジャンプ初速(上)
-	static inline const float kJumpAcceleration = 0.8f;
+	static inline const float kJumpAcceleration = 1.0f;
 
 	// マップチップによるフィールド
 	MapChipField* mapChipField_ = nullptr;
@@ -105,9 +105,17 @@ public:
 
 	void TopCollision(CollisionMapInfo& info);
 	
+	void BottomCollision(CollisionMapInfo& info);
+
+	void LeftCollision(CollisionMapInfo& info);
+
+	void RightCollision(CollisionMapInfo& info);
+	
 
 	//判定結果を反映して移動させる
-	//void CellingReflectionMove(const CollisionMapInfo& info);
+	void CellingReflectionMove(const CollisionMapInfo& info);
 
 	void HitCeiling(const CollisionMapInfo& info);
+
+	void HitLanding(const CollisionMapInfo& info);
 };
