@@ -8,16 +8,10 @@
 #include "ViewProjection.h"
 
 
-#include "Skydome.h"
 
 #include <DebugCamera.h>
 #include "Player.h"
 
-#include<vector>
-#include<MapChipField.h>
-
-
-#include<CameraController.h>
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -81,11 +75,8 @@ private: // メンバ変数
 	-----------*/
 	Player* player = nullptr;
 
-	Vector3 playerPos = {};
+	
 
-	Skydome* skydome = nullptr;
-
-	MapChipField* mapChipField_=nullptr;
 
 	/*------------
 	テクスチャ&モデル
@@ -93,20 +84,13 @@ private: // メンバ変数
 	
 	Model* modelPlayer = nullptr;
 
-	Model* modelBlock_ = nullptr;
-
-	Model* modelSkydome_ = nullptr;
-
-	/*------------
-	   　カメラ
-	 ------------*/
-	CameraController* cameraController_ = nullptr;
+	
 	
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
 
-	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+	
 	ViewProjection viewProjection_;
 
 

@@ -17,7 +17,7 @@ enum class LRDirection {
 class Player {
 public:
 	// 初期化
-	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& pos);
+	void Initialize(Model* model, ViewProjection* viewProjection);
 	// 更新
 	void Update();
 	// 描画
