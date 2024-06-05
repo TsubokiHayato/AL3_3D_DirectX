@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include <cassert>
 #include"AxisIndicator.h"
+#include<ImGuiManager.h>
 
 
 GameScene::GameScene() {}
@@ -32,10 +33,6 @@ void GameScene::Initialize() {
 	    -------------------*/
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
-
-	
-
-	
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
@@ -104,7 +101,7 @@ void GameScene::Update() {
 	player->Update();
 
 	
-
+	
 
 }
 
