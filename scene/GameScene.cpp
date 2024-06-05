@@ -62,21 +62,23 @@ void GameScene::Update() {
 	/*--------------
 	  デバックカメラ
 	--------------*/
-
-	#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_C)) {
-		debugCamera_->isDebugCamera = true;
-	}
-#endif // _DEBUG
-	if (debugCamera_->isDebugCamera) {
-	//デバックカメラの更新
-	debugCamera_->Update();
-	viewProjection.UpdateMatrix();
-
-	} else {
-		viewProjection.UpdateMatrix();
-	}
-	
+//
+//	#ifdef _DEBUG
+//	if (input_->TriggerKey(DIK_C)) {
+//		debugCamera_->isDebugCamera = true;
+//	}
+//#endif // _DEBUG
+//
+//	if (debugCamera_->isDebugCamera) {
+//	//デバックカメラの更新
+//		debugCamera_->GetView();
+//	debugCamera_->GetProjection();
+//		viewProjection.TransferMatrix();
+//
+//	} else {
+//		viewProjection.UpdateMatrix();
+//	}
+//	
 
 
 }
