@@ -40,16 +40,26 @@ void Player::Update() {
 	// キャラクターの移動速さ
 	const float kCharaSpeed = 0.2f;
 
-	if (input_->PushKey(DIK_A)) {
+	//移動処理
+	if (input_->PushKey(DIK_LEFT)) {
 		move.x -= kCharaSpeed;
-	} else if (input_->PushKey(DIK_D)) {
+	} else if (input_->PushKey(DIK_RIGHT)) {
 		 move.x += kCharaSpeed; 
 	}
 
-	if (input_->PushKey(DIK_S)) {
+	if (input_->PushKey(DIK_DOWN)) {
 		move.y -= kCharaSpeed;
-	} else if (input_->PushKey(DIK_W)) {
+	} else if (input_->PushKey(DIK_UP)) {
 		 move.y += kCharaSpeed; 
+	}
+
+	//回転速さ
+	const float kRotSpeed = 0.02f;
+	//回転処理
+	if (input_->PushKey(DIK_A)) {
+		worldTransform_.rotation_.y -= kRotSpeed;
+	} else if (input_->PushKey(DIK_D)) {
+		worldTransform_.rotation_.y += kRotSpeed;
 	}
 
 	ImGui::SliderFloat3("Player Position", &worldTransform_.translation_.x, -600.0f, 600.0f);
