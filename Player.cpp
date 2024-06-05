@@ -1,5 +1,4 @@
-#define NOMINMAX
-#include<Windows.h>
+
 #include <Player.h>
 
 #include <algorithm>
@@ -44,13 +43,13 @@ void Player::Update() {
 	if (input_->PushKey(DIK_A)) {
 		move.x -= kCharaSpeed;
 	} else if (input_->PushKey(DIK_D)) {
-		{ move.x += kCharaSpeed; }
+		 move.x += kCharaSpeed; 
 	}
 
 	if (input_->PushKey(DIK_S)) {
 		move.y -= kCharaSpeed;
 	} else if (input_->PushKey(DIK_W)) {
-		{ move.y += kCharaSpeed; }
+		 move.y += kCharaSpeed; 
 	}
 
 	ImGui::SliderFloat3("Player Position", &worldTransform_.translation_.x, -600.0f, 600.0f);
