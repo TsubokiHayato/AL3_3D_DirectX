@@ -11,6 +11,8 @@ GameScene::~GameScene() {
 
 	delete player;
 
+	delete debugCamera_;
+
 }
 
 void GameScene::Initialize() {
@@ -39,6 +41,14 @@ void GameScene::Initialize() {
 	player = new Player;
 	// 自キャラの初期化
 	player->Initialize(model, textureHandle, &viewProjection);
+
+	/*--------------
+	  デバックカメラ
+	--------------*/
+	// デバックカメラの生成
+	debugCamera_ = new DebugCamera(1280, 720);
+
+	
 }
 
 void GameScene::Update() {
@@ -48,6 +58,26 @@ void GameScene::Update() {
 	----------*/
 	// 自キャラの更新
 	player->Update();
+
+	/*--------------
+	  デバックカメラ
+	--------------*/
+
+	#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_C)) {
+		debugCamera_->isDebugCamera = true;
+	}
+#endif // _DEBUG
+	if (debugCamera_->isDebugCamera) {
+	//デバックカメラの更新
+	debugCamera_->Update();
+	viewProjection.matView = MakeViewportMatrix();
+
+	} else {
+		viewProjection.UpdateMatrix();
+	}
+	
+
 
 }
 

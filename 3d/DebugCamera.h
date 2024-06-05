@@ -34,6 +34,8 @@ public:
 	void SetNearZ(float value) { viewProjection_.nearZ = value; }
 	void SetFarZ(float value) { viewProjection_.farZ = value; }
 
+	bool isDebugCamera = false;
+
 private:
 	// 入力クラスのポインタ
 	Input* input_;

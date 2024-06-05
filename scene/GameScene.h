@@ -8,7 +8,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
-//#include <DebugCamera.h>
+#include <DebugCamera.h>
 #include "Player.h"
 
 /// <summary>
@@ -69,5 +69,12 @@ private: // メンバ変数
 	--------------*/
 	
 	ViewProjection viewProjection;
+
+	/*--------------
+	  デバックカメラ
+	--------------*/
+
+	DebugCamera* debugCamera_ = nullptr;
+	bool isDebugCameraActive_ = false;
 
 };
