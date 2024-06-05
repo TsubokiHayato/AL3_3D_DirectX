@@ -6,19 +6,21 @@
 
 #include <ImGuiManager.h>
 
-
 Player::~Player() {
 	model_ = nullptr;
 	viewProjection_ = nullptr;
+	for (PlayerBullet* bullet : bullets_) {
+		delete bullet;
+	}
 }
 
 void Player::Attack() {
 	if (input_->IsTriggerMouse(0)) {
+
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, worldTransform_.translation_);
 
-		bullet_ = newBullet;
-
+		bullets_.push_back(newBullet);
 	}
 }
 
@@ -59,22 +61,22 @@ void Player::Update() {
 	// キャラクターの移動速さ
 	const float kCharaSpeed = 0.2f;
 
-	//移動処理
+	// 移動処理
 	if (input_->PushKey(DIK_LEFT)) {
 		move.x -= kCharaSpeed;
 	} else if (input_->PushKey(DIK_RIGHT)) {
-		 move.x += kCharaSpeed; 
+		move.x += kCharaSpeed;
 	}
 
 	if (input_->PushKey(DIK_DOWN)) {
 		move.y -= kCharaSpeed;
 	} else if (input_->PushKey(DIK_UP)) {
-		 move.y += kCharaSpeed; 
+		move.y += kCharaSpeed;
 	}
 
 	Attack();
-	if (bullet_) {
-		bullet_->Update();
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Update();
 	}
 	ImGui::Begin("Memo");
 	ImGui::SliderFloat3("Player Position", &worldTransform_.translation_.x, -600.0f, 600.0f);
@@ -86,7 +88,7 @@ void Player::Update() {
 	// 移動限界座標
 	const float kMoveLimitX = 35.0f;
 	const float kMoveLimitY = 19.0f;
-	
+
 	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
 	worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
@@ -96,16 +98,14 @@ void Player::Update() {
 
 	// 行列計算
 	worldTransform_.UpdateMatrix();
-
-	
 }
 // 描画
 void Player::Draw() {
 	// 3D作成
 	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
 
-	if (bullet_) {
-	
-	bullet_->Draw(*viewProjection_);
+	for (PlayerBullet* bullet : bullets_) {
+
+		bullet->Draw(*viewProjection_);
 	}
 }

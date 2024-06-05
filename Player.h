@@ -8,6 +8,7 @@
 
 #include "Input.h"
 #include"PlayerBullet.h"
+#include<list>
 
 enum class LRDirection {
 	kRight,
@@ -38,6 +39,8 @@ public:
 
 private:
 
+	std::list<PlayerBullet*> bullets_;
+
 	Input* input_ = nullptr;
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
@@ -51,8 +54,7 @@ private:
 	// ビューポート
 	ViewProjection* viewProjection_ = nullptr;
 
-	//弾
-	PlayerBullet* bullet_ = nullptr;
+	
 
 
 };
