@@ -5,7 +5,7 @@
 #include <d3d12.h>
 #include <type_traits>
 #include <wrl.h>
-#include "WorldTransform_EX.h"
+
 // 定数バッファ用データ構造体
 struct ConstBufferDataWorldTransform {
 	Matrix4x4 matWorld; // ローカル → ワールド変換行列

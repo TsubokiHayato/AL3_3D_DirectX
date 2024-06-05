@@ -71,7 +71,7 @@ void GameScene::Update() {
 	if (debugCamera_->isDebugCamera) {
 	//デバックカメラの更新
 	debugCamera_->Update();
-	viewProjection.matView = MakeViewportMatrix();
+	viewProjection.UpdateMatrix();
 
 	} else {
 		viewProjection.UpdateMatrix();
