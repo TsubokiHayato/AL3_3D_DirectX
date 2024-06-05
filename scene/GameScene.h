@@ -6,10 +6,9 @@
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
-#include "WorldTransform.h"
 
-#include <DebugCamera.h>
 #include "Player.h"
+#include <DebugCamera.h>
 
 /// <summary>
 /// ゲームシーン
@@ -41,6 +40,10 @@ public: // メンバ関数
 	/// 描画
 	/// </summary>
 	void Draw();
+	/// <summary>
+	/// 表示ブロックの生成
+	/// </summary>
+	void GenerateBlocks();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -52,29 +55,29 @@ private: // メンバ変数
 	/// </summary>
 
 	/*-----------
+	DebugCamera
+	-----------*/
+	bool isDebugCameraActive_ = false;
+	DebugCamera* debugCamera_ = nullptr;
+
+	// std::unique_ptr<Model> model_;
+
+	// model_ = std::make_unique<Model>();
+	// osusume
+	/*-----------
 	　 キャラクタ
 	-----------*/
 	Player* player = nullptr;
 
-
 	/*------------
-	   テクスチャ
+	テクスチャ&モデル
 	------------*/
-	uint32_t textureHandle = 0;
-	Model* model = nullptr;
 
-	
+	Model* modelPlayer = nullptr;
+
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
-	
+
 	ViewProjection viewProjection_;
-
-	/*--------------
-	  デバックカメラ
-	--------------*/
-
-	DebugCamera* debugCamera_ = nullptr;
-	bool isDebugCameraActive_ = false;
-
 };

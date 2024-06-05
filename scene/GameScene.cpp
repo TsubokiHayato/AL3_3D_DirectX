@@ -5,14 +5,12 @@
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
-
-	// 3Dモデル削除
-	delete model;
-
+	delete debugCamera_;
 	delete player;
 
-	delete debugCamera_;
+	// 3Dモデル削除
 
+	delete modelPlayer;
 }
 
 void GameScene::Initialize() {
@@ -24,13 +22,13 @@ void GameScene::Initialize() {
 	/*-------------------
 	       　テクスチャー
 	    -------------------*/
-	//ポーションの画像
-	textureHandle = TextureManager::Load("Recovery_agents.png");
 
-	model = Model::Create();
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
+
+	viewProjection_.farZ = 1145;
+
 	viewProjection_.Initialize();
 
 	/*---------
@@ -39,39 +37,27 @@ void GameScene::Initialize() {
 
 	// 自キャラの生成
 	player = new Player;
+
+	modelPlayer = Model::Create();
+
 	// 自キャラの初期化
-	player->Initialize(model, textureHandle, &viewProjection_);
+	player->Initialize(modelPlayer, &viewProjection_);
 
-	/*--------------
-	  デバックカメラ
-	--------------*/
-	// デバックカメラの生成
-	//debugCamera_ = new DebugCamera(1280, 720);
-
-	
+	/*-----------
+	 DEBUG_CAMERA
+	-----------*/
+	debugCamera_ = new DebugCamera(1280, 720);
 }
 
 void GameScene::Update() {
 
-	/*----------
-	     3D
-	----------*/
-	// 自キャラの更新
-	player->Update();
-
-	/*--------------
-	  デバックカメラ
-	--------------*/
-
-	debugCamera_->Update();
-
+	/*-----------
+	DebugCamera
+	-----------*/
 #ifdef _DEBUG
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		isDebugCameraActive_ = true;
-	}
-	if (input_->TriggerKey(DIK_R)) {
-		isDebugCameraActive_ = false;
 	}
 #endif
 
@@ -87,9 +73,12 @@ void GameScene::Update() {
 		//
 		viewProjection_.UpdateMatrix();
 	}
-	
 
-
+	/*----------
+	     3D
+	----------*/
+	// 自キャラの更新
+	player->Update();
 }
 
 void GameScene::Draw() {
@@ -105,7 +94,6 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 	///
-	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -125,7 +113,7 @@ void GameScene::Draw() {
 	/*-----------
 	     3D
 	-----------*/
-	//自キャラ
+	// 自キャラ
 	player->Draw();
 
 	// 3Dオブジェクト描画後処理
@@ -139,8 +127,6 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-
-	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

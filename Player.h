@@ -1,39 +1,39 @@
 #pragma once
 
-#include "WorldTransform.h"
 #include "Model.h"
-#include<Input.h>
 
-//#include "TextureManager.h"
+#include "WorldTransform.h"
 
+#include <numbers>
 
-//自キャラ
+#include "Input.h"
+
+enum class LRDirection { kRight, kLeft };
+
+// 自キャラ
 class Player {
 public:
-
 	// 初期化
-	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
-	//更新
+	void Initialize(Model* model, ViewProjection* viewProjection);
+	// 更新
 	void Update();
-	//描画
+	// 描画
 	void Draw();
+
+	~Player();
+
+	const Vector3& GetPosition() const { return worldTransform_.translation_; }
+
+	WorldTransform& GetWorldTransform() { return worldTransform_; };
 
 private:
 	Input* input_ = nullptr;
-
-	//ワールドトランスフォーム
+	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
 
-	//3Dモデル
+	// 3Dモデル
 	Model* model_ = nullptr;
 
-	//テクスチャーハンドル
-	uint32_t textureHandle_ = 0u;
-
-	//ビューポート
-	ViewProjection* viewProjection_=nullptr;
-
+	// ビューポート
+	ViewProjection* viewProjection_ = nullptr;
 };
-
-
-
