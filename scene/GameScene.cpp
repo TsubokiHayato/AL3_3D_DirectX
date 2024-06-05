@@ -31,7 +31,7 @@ void GameScene::Initialize() {
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
-	viewProjection.Initialize();
+	viewProjection_.Initialize();
 
 	/*---------
 	* Chara
@@ -40,13 +40,13 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player = new Player;
 	// 自キャラの初期化
-	player->Initialize(model, textureHandle, &viewProjection);
+	player->Initialize(model, textureHandle, &viewProjection_);
 
 	/*--------------
 	  デバックカメラ
 	--------------*/
 	// デバックカメラの生成
-	debugCamera_ = new DebugCamera(1280, 720);
+	//debugCamera_ = new DebugCamera(1280, 720);
 
 	
 }
@@ -62,23 +62,32 @@ void GameScene::Update() {
 	/*--------------
 	  デバックカメラ
 	--------------*/
+
+//	debugCamera_->Update();
 //
-//	#ifdef _DEBUG
-//	if (input_->TriggerKey(DIK_C)) {
-//		debugCamera_->isDebugCamera = true;
+//#ifdef _DEBUG
+//
+//	if (input_->TriggerKey(DIK_SPACE)) {
+//		isDebugCameraActive_ = true;
 //	}
-//#endif // _DEBUG
+//	if (input_->TriggerKey(DIK_R)) {
+//		isDebugCameraActive_ = false;
+//	}
+//#endif
 //
-//	if (debugCamera_->isDebugCamera) {
-//	//デバックカメラの更新
-//		debugCamera_->GetView();
-//	debugCamera_->GetProjection();
-//		viewProjection.TransferMatrix();
+//	if (isDebugCameraActive_) {
 //
+//		debugCamera_->Update();
+//		viewProjection_.matView = debugCamera_->GetView();
+//		viewProjection_.matProjection = debugCamera_->GetProjection();
+//
+//		//
+//		viewProjection_.TransferMatrix();
 //	} else {
-//		viewProjection.UpdateMatrix();
+//		//
+//		viewProjection_.UpdateMatrix();
 //	}
-//	
+	
 
 
 }

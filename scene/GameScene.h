@@ -68,13 +68,13 @@ private: // メンバ変数
 	* ワールド・ビュー
 	--------------*/
 	
-	ViewProjection viewProjection;
+	ViewProjection viewProjection_;
 
 	/*--------------
 	  デバックカメラ
 	--------------*/
 
-	DebugCamera* debugCamera_ = nullptr;
-	bool isDebugCameraActive_ = false;
+	//DebugCamera* debugCamera_ = nullptr;
+	//bool isDebugCameraActive_ = false;
 
 };
