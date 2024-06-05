@@ -12,6 +12,16 @@ Player::~Player() {
 	viewProjection_ = nullptr;
 }
 
+void Player::Attack() {
+	if (input_->IsTriggerMouse(0)) {
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, worldTransform_.translation_);
+
+		bullet_ = newBullet;
+
+	}
+}
+
 // 初期化
 void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) {
 	assert(model);
@@ -34,6 +44,15 @@ void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 // 更新
 void Player::Update() {
 
+	// 回転速さ
+	const float kRotSpeed = 0.02f;
+	// 回転処理
+	if (input_->PushKey(DIK_A)) {
+		worldTransform_.rotation_.y -= kRotSpeed;
+	} else if (input_->PushKey(DIK_D)) {
+		worldTransform_.rotation_.y += kRotSpeed;
+	}
+
 	// playerの移動ベクトル
 	Vector3 move = {0.0f, 0.0f, 0.0f};
 
@@ -53,13 +72,9 @@ void Player::Update() {
 		 move.y += kCharaSpeed; 
 	}
 
-	//回転速さ
-	const float kRotSpeed = 0.02f;
-	//回転処理
-	if (input_->PushKey(DIK_A)) {
-		worldTransform_.rotation_.y -= kRotSpeed;
-	} else if (input_->PushKey(DIK_D)) {
-		worldTransform_.rotation_.y += kRotSpeed;
+	Attack();
+	if (bullet_) {
+		bullet_->Update();
 	}
 
 	ImGui::SliderFloat3("Player Position", &worldTransform_.translation_.x, -600.0f, 600.0f);
@@ -84,4 +99,9 @@ void Player::Update() {
 void Player::Draw() {
 	// 3D作成
 	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
+
+	if (bullet_) {
+	
+	bullet_->Draw(*viewProjection_);
+	}
 }

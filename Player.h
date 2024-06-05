@@ -7,6 +7,7 @@
 #include <numbers>
 
 #include "Input.h"
+#include"PlayerBullet.h"
 
 enum class LRDirection {
 	kRight,
@@ -26,6 +27,8 @@ public:
 	
 
 	~Player();
+
+	void Attack();
 
 	const Vector3& GetPosition() const { return worldTransform_.translation_; }
 
@@ -47,6 +50,9 @@ private:
 
 	// ビューポート
 	ViewProjection* viewProjection_ = nullptr;
+
+	//弾
+	PlayerBullet* bullet_ = nullptr;
 
 
 };
