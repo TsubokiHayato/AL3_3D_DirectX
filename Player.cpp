@@ -6,8 +6,6 @@
 
 #include <ImGuiManager.h>
 
-float lerp(float start, float end, float t);
-
 
 Player::~Player() {
 	model_ = nullptr;
@@ -15,7 +13,7 @@ Player::~Player() {
 }
 
 // 初期化
-void Player::Initialize(Model* model, ViewProjection* viewProjection) {
+void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) {
 	assert(model);
 
 	// 3Dモデルの作成
@@ -24,12 +22,14 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection) {
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 
-	
+	textureHandle_ = textureHandle;
 
 	// プレイヤーの初期角度
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 
 	viewProjection_ = viewProjection;
+
+	input_ = Input::GetInstance();
 }
 // 更新
 void Player::Update() {
@@ -73,5 +73,5 @@ void Player::Update() {
 // 描画
 void Player::Draw() {
 	// 3D作成
-	model_->Draw(worldTransform_, *viewProjection_);
+	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
 }

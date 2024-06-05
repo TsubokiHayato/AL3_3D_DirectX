@@ -94,6 +94,6 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 
 
-
+	uint32_t textureHandle = 0;
 
 };

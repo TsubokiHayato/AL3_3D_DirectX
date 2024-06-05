@@ -17,7 +17,7 @@ enum class LRDirection {
 class Player {
 public:
 	// 初期化
-	void Initialize(Model* model, ViewProjection* viewProjection);
+	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
 	// 更新
 	void Update();
 	// 描画
@@ -41,6 +41,9 @@ private:
 
 	// 3Dモデル
 	Model* model_ = nullptr;
+
+	// テクスチャーハンドル
+	uint32_t textureHandle_ = 0u;
 
 	// ビューポート
 	ViewProjection* viewProjection_ = nullptr;

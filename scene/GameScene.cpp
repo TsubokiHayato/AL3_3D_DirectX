@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
+#include"AxisIndicator.h"
 
 
 GameScene::GameScene() {}
@@ -27,9 +28,10 @@ void GameScene::Initialize() {
 	
 
 	/*-------------------
-	       　テクスチャー
+	       　Axis
 	    -------------------*/
-	
+	AxisIndicator::GetInstance()->SetVisible(true);
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 
 	
 
@@ -50,13 +52,15 @@ void GameScene::Initialize() {
 
 	// 自キャラの生成
 	player = new Player;
+	// ポーションの画像
+	textureHandle = TextureManager::Load("Recovery_agents.png");
 
 	modelPlayer = Model::Create();
 
 	
 
 	// 自キャラの初期化
-	player->Initialize(modelPlayer, &viewProjection_);
+	player->Initialize(modelPlayer,textureHandle ,&viewProjection_);
 
 	/*-----------
 	 DEBUG_CAMERA
