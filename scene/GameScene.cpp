@@ -168,6 +168,7 @@ void GameScene::Update() {
 
 	skydome->Update();
 
+<<<<<<< Updated upstream
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
@@ -177,6 +178,21 @@ void GameScene::Update() {
 
 			worldTransformBlock->TransferMatrix();
 		}
+=======
+	#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_C)) {
+		debugCamera_->isDebugCamera = true;
+	}
+#endif // _DEBUG
+	if (debugCamera_->isDebugCamera) {
+	//デバックカメラの更新
+	debugCamera_->Update();
+	viewProjection.matView = MakeViewportMatrix();
+	viewProjection.matProjection = 
+		viewProjection.TransferMatrix();
+	} else {
+		viewProjection.UpdateMatrix();
+>>>>>>> Stashed changes
 	}
 
 	/*---------
