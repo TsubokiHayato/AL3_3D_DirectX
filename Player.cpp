@@ -54,7 +54,7 @@ void Player::Update() {
 
 	worldTransform_.translation_ += move;
 
-	worldTransform_.UpdateMatrix4x4();
+	worldTransform_.UpdateMatrix();
 }
 // 描画
 void Player::Draw() {
