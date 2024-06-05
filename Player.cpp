@@ -1,4 +1,5 @@
 #define NOMINMAX
+#include<Windows.h>
 #include <Player.h>
 
 #include <algorithm>
@@ -57,13 +58,14 @@ void Player::Update() {
 	// 移動限界座標
 	const float kMoveLimitX = 35.0f;
 	const float kMoveLimitY = 19.0f;
-
+	
 	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
 	worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
 	worldTransform_.translation_ += move;
+
 	// 行列計算
 	worldTransform_.UpdateMatrix();
 
