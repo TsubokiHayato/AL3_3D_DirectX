@@ -63,30 +63,30 @@ void GameScene::Update() {
 	  デバックカメラ
 	--------------*/
 
-//	debugCamera_->Update();
-//
-//#ifdef _DEBUG
-//
-//	if (input_->TriggerKey(DIK_SPACE)) {
-//		isDebugCameraActive_ = true;
-//	}
-//	if (input_->TriggerKey(DIK_R)) {
-//		isDebugCameraActive_ = false;
-//	}
-//#endif
-//
-//	if (isDebugCameraActive_) {
-//
-//		debugCamera_->Update();
-//		viewProjection_.matView = debugCamera_->GetView();
-//		viewProjection_.matProjection = debugCamera_->GetProjection();
-//
-//		//
-//		viewProjection_.TransferMatrix();
-//	} else {
-//		//
-//		viewProjection_.UpdateMatrix();
-//	}
+	debugCamera_->Update();
+
+#ifdef _DEBUG
+
+	if (input_->TriggerKey(DIK_SPACE)) {
+		isDebugCameraActive_ = true;
+	}
+	if (input_->TriggerKey(DIK_R)) {
+		isDebugCameraActive_ = false;
+	}
+#endif
+
+	if (isDebugCameraActive_) {
+
+		debugCamera_->Update();
+		viewProjection_.matView = debugCamera_->GetView();
+		viewProjection_.matProjection = debugCamera_->GetProjection();
+
+		//
+		viewProjection_.TransferMatrix();
+	} else {
+		//
+		viewProjection_.UpdateMatrix();
+	}
 	
 
 
