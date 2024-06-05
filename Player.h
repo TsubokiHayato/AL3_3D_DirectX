@@ -2,6 +2,7 @@
 
 #include "WorldTransform.h"
 #include "Model.h"
+#include<Input.h>
 
 //#include "TextureManager.h"
 
@@ -18,6 +19,7 @@ public:
 	void Draw();
 
 private:
+	Input* input_ = nullptr;
 
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_;
