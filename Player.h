@@ -6,9 +6,11 @@
 
 #include <numbers>
 
-#include "Input.h"
+
 #include"PlayerBullet.h"
 #include<list>
+
+
 
 enum class LRDirection {
 	kRight,

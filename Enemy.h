@@ -7,7 +7,7 @@
 #include <numbers>
 
 #include "Input.h"
-#include "PlayerBullet.h"
+#include "EnemyBullet.h"
 #include <list>
 
 //行動フェーズ
@@ -26,6 +26,14 @@ class Enemy {
 	    // 描画
 	    void Draw();
 		
+		void Fire();
+
+		void ApproachPhaseInstance();
+	    void ApproachPhaseUpdate();
+
+
+		static const int kFireInterval = 60;
+
 		private:
 
 			// ワールドトランスフォーム
@@ -42,4 +50,10 @@ class Enemy {
 
 			//フェーズ
 	        Phase phase_ = Phase::Approach;
+
+			std::list<EnemyBullet*> bullets_;
+
+			//発射タイマー
+			int32_t ShotTimer = 0;
+	      
 };

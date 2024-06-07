@@ -7,11 +7,9 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 
-
-
 #include <DebugCamera.h>
 #include "Player.h"
-#include<Enemy.h>
+#include"Enemy.h"
 
 /// <summary>
 /// ゲームシーン
