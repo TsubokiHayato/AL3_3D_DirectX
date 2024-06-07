@@ -9,7 +9,9 @@
 #include "Input.h"
 #include "EnemyBullet.h"
 #include <list>
+#include<Player.h>
 
+class Player;
 //行動フェーズ
 enum class Phase {
 	Approach,//接近
@@ -33,11 +35,16 @@ class Enemy {
 		void ApproachPhaseInstance();
 	    void ApproachPhaseUpdate();
 
+		void SetPlayer(Player* player) { player_ = player; }
+
+		
+Vector3 GetWorldPos();
 
 		static const int kFireInterval = 60;
 
 		private:
 
+			Player* player_ = nullptr;
 			// ワールドトランスフォーム
 	        WorldTransform worldTransform_;
 

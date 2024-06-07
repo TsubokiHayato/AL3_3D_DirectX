@@ -58,11 +58,13 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player->Initialize(modelPlayer,textureHandle ,&viewProjection_);
 
+
+
 	enemy = new Enemy;
 	modelEnemy = Model::Create();
 	// Enemyの初期化
 	enemy->Initialize(modelEnemy, &viewProjection_);
-
+	enemy->SetPlayer(player);
 	/*-----------
 	 DEBUG_CAMERA
 	-----------*/

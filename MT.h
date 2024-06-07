@@ -11,3 +11,29 @@
 
 	return result;
 }
+
+ 
+// 内積
+inline float Dot(const Vector3& v1, const Vector3& v2) {
+	float dot = {};
+	dot = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+	return dot;
+}
+
+// 長さ
+inline float Length(const Vector3& v) {
+	float len = {};
+	len = sqrtf(Dot(v, v));
+	return len;
+}
+ 
+// 正規化
+inline Vector3 Normalize(const Vector3& v) {
+	float len = Length(v);
+	Vector3 v2 = {};
+	v2.x = v.x / len;
+	v2.y = v.y / len;
+	v2.z = v.z / len;
+
+	return v2;
+}

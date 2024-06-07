@@ -10,13 +10,26 @@
 
 void Enemy::Fire() {
 
-	const float kBulletSpeed = -0.4f;
-	Vector3 velocity(0, 0, kBulletSpeed);
+	const float kBulletSpeed = 0.4f;
 
-	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+	Vector3 playerVec=player_->GetWorldPos();
+	Vector3 enemyVec = GetWorldPos();
 
+	Vector3 diff{};
+
+	diff.x = playerVec.x - enemyVec.x;
+	diff.y = playerVec.y - enemyVec.y;
+	diff.z = playerVec.z - enemyVec.z;
+
+	diff=Normalize(diff);
+
+	diff.x *= kBulletSpeed;
+	diff.y *= kBulletSpeed;
+	diff.z *= kBulletSpeed;
+
+	
 	EnemyBullet* newBullet = new EnemyBullet();
-	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+	newBullet->Initialize(model_, worldTransform_.translation_, diff);
 
 	bullets_.push_back(newBullet);
 }
@@ -36,6 +49,19 @@ void Enemy::ApproachPhaseUpdate() {
 		ShotTimer = kFireInterval;
 	}
 }
+
+
+Vector3 Enemy::GetWorldPos() {
+
+	Vector3 worldPos = {};
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
 
 Enemy::~Enemy() {
 

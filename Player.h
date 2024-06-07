@@ -37,7 +37,7 @@ public:
 
 	WorldTransform& GetWorldTransform() { return worldTransform_; };
 	
-	
+	Vector3 GetWorldPos();
 
 private:
 

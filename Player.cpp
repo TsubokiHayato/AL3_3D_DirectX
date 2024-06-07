@@ -31,6 +31,19 @@ void Player::Attack() {
 	}
 }
 
+Vector3 Player::GetWorldPos() { 
+	
+	Vector3 worldPos = {};
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.x = worldTransform_.matWorld_.m[3][1];
+	worldPos.x = worldTransform_.matWorld_.m[3][2];
+	
+	
+	
+	return worldPos;
+}
+
 // 初期化
 void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) {
 	assert(model);
