@@ -10,6 +10,12 @@
 #include "PlayerBullet.h"
 #include <list>
 
+//行動フェーズ
+enum class Phase {
+	Approach,//接近
+	Leave//離脱
+};
+
 class Enemy {
 
 	public: 
@@ -34,4 +40,6 @@ class Enemy {
 			// ビューポート
 	        ViewProjection* viewProjection_ = nullptr;
 
+			//フェーズ
+	        Phase phase_ = Phase::Approach;
 };

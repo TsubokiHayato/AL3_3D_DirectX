@@ -15,6 +15,7 @@ GameScene::~GameScene() {
 	// 3Dモデル削除
 
 	delete modelPlayer;
+	delete modelEnemy;
 
 	
 }

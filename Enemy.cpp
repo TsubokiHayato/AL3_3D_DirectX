@@ -1,7 +1,7 @@
 #include "Enemy.h"
-#include<TextureManager.h>
+#include <TextureManager.h>
+#include <Vector3.h>
 #include <cassert>
-#include<Vector3.h>
 
 void Enemy::Initialize(Model* model, ViewProjection* viewProjection) {
 	assert(model);
@@ -12,32 +12,40 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection) {
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	worldTransform_.translation_.y = 3.0f;
-	worldTransform_.translation_.z = 10.0f;
+	worldTransform_.translation_.z = 100.0f;
 	textureHandle_ = TextureManager::Load("slime.jpg");
 
-	
-
 	viewProjection_ = viewProjection;
-
-	
-
-
 }
 
 void Enemy::Update() {
 
-// Enemyの移動ベクトル
-    Vector3 move = {0.0f, 0.0f, 0.0f};
+	// Enemyの移動ベクトル
+	Vector3 moveApproach = {0.0f, 0.0f, 0.0f};
+	Vector3 moveLeave = {0.0f, 0.0f, 0.0f};
 
-// キャラクターの移動速さ
-const float kCharaSpeed = 0.2f;
-	move.z += kCharaSpeed;
+	// キャラクターの移動速さ
+	 const float kCharaSpeed = 0.2f;
 
-worldTransform_.translation_.z -= move.z;
+	switch (phase_) {
+	case Phase::Approach:
+	    moveApproach.z -= kCharaSpeed;
+	    worldTransform_.translation_ += moveApproach;
+	    if (worldTransform_.translation_.z < 0.0f) {
+	        phase_ = Phase::Leave;
+	    }
+	    break;
+	case Phase::Leave:
 
-// 行列計算
-worldTransform_.UpdateMatrix();
+	    moveLeave.z += kCharaSpeed;
+	    worldTransform_.translation_ += moveLeave;
 
+	    break;
+
+	}
+
+	// 行列計算
+	worldTransform_.UpdateMatrix();
 }
 
 void Enemy::Draw() {
