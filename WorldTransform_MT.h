@@ -6,6 +6,7 @@
 #include <Vector3.h>
 #include <cmath>
 
+
 Matrix4x4 MakeRotateXMatrix(float radian) {
 	Matrix4x4 result = {};
 

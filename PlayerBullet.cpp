@@ -2,7 +2,7 @@
 #include <cassert>
 #include<TextureManager.h>
 
-void PlayerBullet::Initialize(Model* model, const Vector3& pos) {
+void PlayerBullet::Initialize(Model* model, const Vector3& pos,const Vector3& velocity) {
 
 	assert(model);
 
@@ -14,12 +14,27 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos) {
 	worldTransform_.Initialize();
 
 	worldTransform_.translation_ = pos;
+	
+	velocity_ = velocity;
 
 	
 
 }
 
-void PlayerBullet::Update() { worldTransform_.UpdateMatrix(); }
+void PlayerBullet::Update() { 
+
+	//時間経過でデス
+	if (--deathTimer_ <= 0) {
+		isDead_ = true;
+	}
+
+	
+	
+	worldTransform_.translation_ += velocity_;
+
+	worldTransform_.UpdateMatrix();
+
+}
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection) { 
 	//

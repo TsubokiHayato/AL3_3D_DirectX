@@ -5,6 +5,8 @@
 #include <cassert>
 
 #include <ImGuiManager.h>
+#include<MT.h>
+
 
 Player::~Player() {
 	model_ = nullptr;
@@ -17,8 +19,13 @@ Player::~Player() {
 void Player::Attack() {
 	if (input_->IsTriggerMouse(0)) {
 
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
+
+		velocity = TransformNormal(velocity,worldTransform_.matWorld_ );
+
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_);
+		newBullet->Initialize(model_, worldTransform_.translation_,velocity);
 
 		bullets_.push_back(newBullet);
 	}
@@ -45,6 +52,15 @@ void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 }
 // 更新
 void Player::Update() {
+
+
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+ 		return false;
+	});
 
 	// 回転速さ
 	const float kRotSpeed = 0.02f;
@@ -74,10 +90,13 @@ void Player::Update() {
 		move.y += kCharaSpeed;
 	}
 
+
+
 	Attack();
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Update();
 	}
+
 	ImGui::Begin("Memo");
 	ImGui::SliderFloat3("Player Position", &worldTransform_.translation_.x, -600.0f, 600.0f);
 	ImGui::Text("playerMove : LEFT RIGHT UP DOWN");
