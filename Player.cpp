@@ -43,8 +43,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 
 	textureHandle_ = textureHandle;
 
-	// プレイヤーの初期角度
-	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
+	//// プレイヤーの初期角度
+	//worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 
 	viewProjection_ = viewProjection;
 

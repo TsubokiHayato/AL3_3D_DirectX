@@ -11,6 +11,7 @@
 
 #include <DebugCamera.h>
 #include "Player.h"
+#include<Enemy.h>
 
 /// <summary>
 /// ゲームシーン
@@ -74,6 +75,7 @@ private: // メンバ変数
 	　 キャラクタ
 	-----------*/
 	Player* player = nullptr;
+	Enemy* enemy = nullptr;
 
 	
 
@@ -83,6 +85,7 @@ private: // メンバ変数
 	------------*/
 	
 	Model* modelPlayer = nullptr;
+	Model* modelEnemy = nullptr;
 
 	
 	

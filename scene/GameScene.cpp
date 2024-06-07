@@ -10,6 +10,7 @@ GameScene::GameScene() {}
 GameScene::~GameScene() {
 	delete debugCamera_;
 	delete player;
+	delete enemy;
 	
 	// 3Dモデル削除
 
@@ -53,11 +54,13 @@ void GameScene::Initialize() {
 	textureHandle = TextureManager::Load("Recovery_agents.png");
 
 	modelPlayer = Model::Create();
-
-	
-
 	// 自キャラの初期化
 	player->Initialize(modelPlayer,textureHandle ,&viewProjection_);
+
+	enemy = new Enemy;
+	modelEnemy = Model::Create();
+	// Enemyの初期化
+	enemy->Initialize(modelEnemy, &viewProjection_);
 
 	/*-----------
 	 DEBUG_CAMERA
@@ -99,8 +102,8 @@ void GameScene::Update() {
 	----------*/
 	// 自キャラの更新
 	player->Update();
-
-	
+	//enemyの更新
+	enemy->Update();
 	
 
 }
@@ -139,6 +142,8 @@ void GameScene::Draw() {
 	-----------*/
 	// 自キャラ
 	player->Draw();
+	//Enemy
+	enemy->Draw();
 
 	
 	
