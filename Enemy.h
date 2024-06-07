@@ -19,6 +19,8 @@ enum class Phase {
 class Enemy {
 
 	public: 
+
+		~Enemy();
 		// 初期化
 	    void Initialize(Model* model, ViewProjection* viewProjection);
 	    // 更新

@@ -37,6 +37,14 @@ void Enemy::ApproachPhaseUpdate() {
 	}
 }
 
+Enemy::~Enemy() {
+
+	model_ = nullptr;
+	viewProjection_ = nullptr;
+	for (EnemyBullet* bullet : bullets_) {
+		delete bullet;
+	}
+}
 
 void Enemy::Initialize(Model* model, ViewProjection* viewProjection) {
 	assert(model);
