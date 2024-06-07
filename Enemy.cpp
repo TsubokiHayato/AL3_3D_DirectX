@@ -3,16 +3,13 @@
 #include <Vector3.h>
 #include <cassert>
 
-
-#include<MT.h>
-
-
+#include <MT.h>
 
 void Enemy::Fire() {
 
 	const float kBulletSpeed = 0.4f;
 
-	Vector3 playerVec=player_->GetWorldPos();
+	Vector3 playerVec = player_->GetWorldPos();
 	Vector3 enemyVec = GetWorldPos();
 
 	Vector3 diff{};
@@ -21,13 +18,12 @@ void Enemy::Fire() {
 	diff.y = playerVec.y - enemyVec.y;
 	diff.z = playerVec.z - enemyVec.z;
 
-	diff=Normalize(diff);
+	diff = Normalize(diff);
 
 	diff.x *= kBulletSpeed;
 	diff.y *= kBulletSpeed;
 	diff.z *= kBulletSpeed;
 
-	
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialize(model_, worldTransform_.translation_, diff);
 
@@ -36,20 +32,18 @@ void Enemy::Fire() {
 
 void Enemy::ApproachPhaseInstance() {
 
-	//発射タイマーを初期化
+	// 発射タイマーを初期化
 	ShotTimer = kFireInterval;
-
 }
 
 void Enemy::ApproachPhaseUpdate() {
 
 	ShotTimer--;
-	if (ShotTimer<=0) {
+	if (ShotTimer <= 0) {
 		Fire();
 		ShotTimer = kFireInterval;
 	}
 }
-
 
 Vector3 Enemy::GetWorldPos() {
 
@@ -61,7 +55,6 @@ Vector3 Enemy::GetWorldPos() {
 
 	return worldPos;
 }
-
 
 Enemy::~Enemy() {
 
@@ -88,7 +81,6 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection) {
 	viewProjection_ = viewProjection;
 
 	ApproachPhaseInstance();
-	
 }
 
 void Enemy::Update() {
@@ -101,38 +93,33 @@ void Enemy::Update() {
 		return false;
 	});
 
-
 	// Enemyの移動ベクトル
 	Vector3 moveApproach = {0.0f, 0.0f, 0.0f};
 	Vector3 moveLeave = {0.0f, 0.0f, 0.0f};
 
 	// キャラクターの移動速さ
-	 const float kCharaSpeed = 0.2f;
+	const float kCharaSpeed = 0.2f;
 
-	
-	 ApproachPhaseUpdate();
-	 for (EnemyBullet* bullet : bullets_) {
-		 bullet->Update();
-	 }
+	ApproachPhaseUpdate();
+	for (EnemyBullet* bullet : bullets_) {
+		bullet->Update();
+	}
 
 	switch (phase_) {
 	case Phase::Approach:
-	    moveApproach.z -= kCharaSpeed;
-	    worldTransform_.translation_ += moveApproach;
+		moveApproach.z -= kCharaSpeed;
+		worldTransform_.translation_ += moveApproach;
 
-		
-
-	    if (worldTransform_.translation_.z < 0.0f) {
-	        phase_ = Phase::Leave;
-	    }
-	    break;
+		if (worldTransform_.translation_.z < 0.0f) {
+			phase_ = Phase::Leave;
+		}
+		break;
 	case Phase::Leave:
-		
-	    moveLeave.z += kCharaSpeed;
-	    worldTransform_.translation_ += moveLeave;
 
-	    break;
+		moveLeave.z += kCharaSpeed;
+		worldTransform_.translation_ += moveLeave;
 
+		break;
 	}
 
 	// 行列計算
@@ -149,4 +136,3 @@ void Enemy::Draw() {
 		bullet->Draw(*viewProjection_);
 	}
 }
-
