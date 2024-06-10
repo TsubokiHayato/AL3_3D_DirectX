@@ -17,7 +17,7 @@ Player::~Player() {
 }
 
 void Player::Attack() {
-	if (input_->IsTriggerMouse(0)) {
+	if (input_->PushKey(DIK_SPACE)) {
 
 		const float kBulletSpeed = 1.0f;
 		Vector3 velocity(0, 0, kBulletSpeed);
@@ -114,8 +114,8 @@ void Player::Update() {
 	ImGui::SliderFloat3("Player Position", &worldTransform_.translation_.x, -600.0f, 600.0f);
 	ImGui::Text("playerMove : LEFT RIGHT UP DOWN");
 	ImGui::Text("playerRotate : A D");
-	ImGui::Text("playerAttack : LeftMouse");
-	ImGui::Text("DebugCameraMode : Space");
+	ImGui::Text("playerAttack :Space");
+	ImGui::Text("DebugCameraMode : Q");
 	ImGui::End();
 	// 移動限界座標
 	const float kMoveLimitX = 35.0f;
