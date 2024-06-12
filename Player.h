@@ -28,6 +28,11 @@ public:
 	void Draw();
 
 	
+	// 衝突を検出したら呼び出されるコールバック関数
+	void OnCollision();
+
+	//弾リストの処理を参考に作成する
+	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 
 	~Player();
 

@@ -44,7 +44,9 @@ public: // メンバ関数
 	/// <summary>
 	/// 表示ブロックの生成
 	/// </summary>
-	void GenerateBlocks();
+	
+
+	void CheckAllCollisions();
 
 private: // メンバ変数
 

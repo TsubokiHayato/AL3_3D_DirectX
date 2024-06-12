@@ -56,6 +56,8 @@ Vector3 Enemy::GetWorldPos() {
 	return worldPos;
 }
 
+void Enemy::OnCollision() {}
+
 Enemy::~Enemy() {
 
 	model_ = nullptr;
@@ -73,8 +75,8 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection) {
 
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
-	worldTransform_.translation_.x = 3.0f;
-	worldTransform_.translation_.y = 3.0f;
+	worldTransform_.translation_.x = 5.0f;
+	worldTransform_.translation_.y = 0.0f;
 	worldTransform_.translation_.z = 100.0f;
 	textureHandle_ = TextureManager::Load("slime.jpg");
 

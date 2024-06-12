@@ -1,9 +1,76 @@
 #include "GameScene.h"
+#include "AxisIndicator.h"
 #include "TextureManager.h"
+#include <ImGuiManager.h>
 #include <cassert>
-#include"AxisIndicator.h"
-#include<ImGuiManager.h>
 
+void GameScene::CheckAllCollisions() {
+
+	Vector3 playerPos, playerBulletPos, enemyPos, enemyBulletPos;
+
+	const std::list<PlayerBullet*>& playerBullets = player->GetBullets();
+	const std::list<EnemyBullet*>& enemyBullets = enemy->GetBullets();
+
+#pragma region Player & EnemyBullets Colision
+
+	// 自キャラの座標
+	playerPos = player->GetWorldPos();
+
+	for (EnemyBullet* enemyBullet : enemyBullets) {
+
+		enemyBulletPos = enemyBullet->GetWorldPos();
+
+		float distance = powf((enemyBulletPos.x - playerPos.x), 2.0f) + powf((enemyBulletPos.y - playerPos.y), 2.0f) + powf((enemyBulletPos.z - playerPos.z), 2.0f);
+		float length = 1.0f;
+		if (distance <= length) {
+
+			player->OnCollision();
+			enemyBullet->OnCollision();
+		}
+	}
+
+#pragma endregion
+#pragma region PlayerBullets & Enemy Colision
+
+	// enemyの座標
+	enemyPos = enemy->GetWorldPos();
+
+	for (PlayerBullet* playerBullet : playerBullets) {
+
+		playerBulletPos = playerBullet->GetWorldPos();
+
+		float distance = powf((playerBulletPos.x - enemyPos.x), 2.0f) + powf((playerBulletPos.y - enemyPos.y), 2.0f) + powf((playerBulletPos.z - enemyPos.z), 2.0f);
+		float length = 1.0f;
+		if (distance <= length) {
+
+			enemy->OnCollision();
+			playerBullet->OnCollision();
+		}
+	}
+
+#pragma endregion
+#pragma region PlayerBullets & EnemyBullet Colision
+
+	for (PlayerBullet* playerBullet : playerBullets) {
+
+		playerBulletPos = playerBullet->GetWorldPos();
+
+		for (EnemyBullet* enemyBullet : enemyBullets) {
+
+			enemyBulletPos = enemyBullet->GetWorldPos();
+
+			float distance = powf((playerBulletPos.x - enemyBulletPos.x), 2.0f) + powf((playerBulletPos.y - enemyBulletPos.y), 2.0f) + powf((playerBulletPos.z - enemyBulletPos.z), 2.0f);
+			float length = 1.0f;
+			if (distance <= length) {
+
+				playerBullet->OnCollision();
+				enemyBullet->OnCollision();
+			}
+		}
+	}
+
+#pragma endregion
+}
 
 GameScene::GameScene() {}
 
@@ -11,13 +78,11 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete player;
 	delete enemy;
-	
+
 	// 3Dモデル削除
 
 	delete modelPlayer;
 	delete modelEnemy;
-
-	
 }
 
 void GameScene::Initialize() {
@@ -25,10 +90,6 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-
-	
-
-	
 
 	/*-------------------
 	       　Axis
@@ -43,8 +104,6 @@ void GameScene::Initialize() {
 
 	viewProjection_.Initialize();
 
-	
-	
 	/*---------
 	* Chara
 	--------*/
@@ -56,9 +115,7 @@ void GameScene::Initialize() {
 
 	modelPlayer = Model::Create();
 	// 自キャラの初期化
-	player->Initialize(modelPlayer,textureHandle ,&viewProjection_);
-
-
+	player->Initialize(modelPlayer, textureHandle, &viewProjection_);
 
 	enemy = new Enemy;
 	modelEnemy = Model::Create();
@@ -69,10 +126,6 @@ void GameScene::Initialize() {
 	 DEBUG_CAMERA
 	-----------*/
 	debugCamera_ = new DebugCamera(1280, 720);
-
-	
-
-	
 }
 
 void GameScene::Update() {
@@ -105,10 +158,10 @@ void GameScene::Update() {
 	----------*/
 	// 自キャラの更新
 	player->Update();
-	//enemyの更新
+	// enemyの更新
 	enemy->Update();
-	
 
+	CheckAllCollisions();
 }
 
 void GameScene::Draw() {
@@ -145,11 +198,8 @@ void GameScene::Draw() {
 	-----------*/
 	// 自キャラ
 	player->Draw();
-	//Enemy
+	// Enemy
 	enemy->Draw();
-
-	
-	
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

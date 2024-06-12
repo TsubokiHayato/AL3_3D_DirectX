@@ -40,7 +40,13 @@ public:
 
 	static const int kFireInterval = 60;
 
+	// 衝突を検出したら呼び出されるコールバック関数
+	void OnCollision();
 
+	// 弾リストの処理を参考に作成する
+	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
+
+	
 
 private:
 	Player* player_ = nullptr;

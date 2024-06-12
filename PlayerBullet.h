@@ -17,6 +17,11 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
+	// 衝突を検出したら呼び出されるコールバック関数
+	void OnCollision();
+
+	Vector3 GetWorldPos();
+
 private:
 	// 寿命<frm>
 	static const int32_t kLifeTime = 60 * 5;
