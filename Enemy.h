@@ -50,6 +50,7 @@ public:
 
 private:
 	Player* player_ = nullptr;
+
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
 

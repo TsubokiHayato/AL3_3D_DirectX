@@ -28,6 +28,7 @@ void Enemy::Fire() {
 	newBullet->Initialize(model_, worldTransform_.translation_, diff);
 
 	bullets_.push_back(newBullet);
+
 }
 
 void Enemy::ApproachPhaseInstance() {
