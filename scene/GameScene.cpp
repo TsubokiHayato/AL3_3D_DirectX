@@ -78,11 +78,12 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete player;
 	delete enemy;
-
+	delete skydome;
 	// 3Dモデル削除
 
 	delete modelPlayer;
 	delete modelEnemy;
+	delete modelSkydome;
 }
 
 void GameScene::Initialize() {
@@ -96,6 +97,7 @@ void GameScene::Initialize() {
 	    -------------------*/
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
@@ -103,6 +105,18 @@ void GameScene::Initialize() {
 	viewProjection_.farZ = 1145;
 
 	viewProjection_.Initialize();
+
+	/*---------
+	  SkyDome
+	---------*/
+
+	// SkyDome作成
+	skydome = new Skydome;
+
+	modelSkydome = Model::CreateFromOBJ("SkyDome", true);
+
+	skydome->Initialize(modelSkydome, &viewProjection_);
+
 
 	/*---------
 	* Chara
@@ -156,6 +170,9 @@ void GameScene::Update() {
 	/*----------
 	     3D
 	----------*/
+
+	skydome->Update();
+
 	// 自キャラの更新
 	player->Update();
 	// enemyの更新
@@ -200,6 +217,8 @@ void GameScene::Draw() {
 	player->Draw();
 	// Enemy
 	enemy->Draw();
+
+	skydome->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
