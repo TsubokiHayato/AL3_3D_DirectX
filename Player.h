@@ -39,6 +39,8 @@ public:
 	
 	Vector3 GetWorldPos();
 
+
+
 private:
 
 	std::list<PlayerBullet*> bullets_;

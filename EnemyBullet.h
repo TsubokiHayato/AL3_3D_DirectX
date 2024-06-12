@@ -19,6 +19,8 @@ class EnemyBullet {
 
 	bool IsDead() const { return isDead_; }
 
+
+
 private:
 	// 寿命<frm>
 	static const int32_t kLifeTime = 60 * 5;

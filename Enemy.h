@@ -6,63 +6,61 @@
 
 #include <numbers>
 
-#include "Input.h"
 #include "EnemyBullet.h"
+#include "Input.h"
+#include <Player.h>
 #include <list>
-#include<Player.h>
 
 class Player;
-//行動フェーズ
+// 行動フェーズ
 enum class Phase {
-	Approach,//接近
-	Leave//離脱
+	Approach, // 接近
+	Leave     // 離脱
 };
 
 class Enemy {
 
-	public: 
+public:
+	~Enemy();
+	// 初期化
+	void Initialize(Model* model, ViewProjection* viewProjection);
+	// 更新
+	void Update();
+	// 描画
+	void Draw();
 
-		~Enemy();
-		// 初期化
-	    void Initialize(Model* model, ViewProjection* viewProjection);
-	    // 更新
-	    void Update();
-	    // 描画
-	    void Draw();
-		
-		void Fire();
+	void Fire();
 
-		void ApproachPhaseInstance();
-	    void ApproachPhaseUpdate();
+	void ApproachPhaseInstance();
+	void ApproachPhaseUpdate();
 
-		void SetPlayer(Player* player) { player_ = player; }
+	void SetPlayer(Player* player) { player_ = player; }
 
-		
-Vector3 GetWorldPos();
+	Vector3 GetWorldPos();
 
-		static const int kFireInterval = 60;
+	static const int kFireInterval = 60;
 
-		private:
 
-			Player* player_ = nullptr;
-			// ワールドトランスフォーム
-	        WorldTransform worldTransform_;
 
-	        // 3Dモデル
-	        Model* model_ = nullptr;
+private:
+	Player* player_ = nullptr;
+	// ワールドトランスフォーム
+	WorldTransform worldTransform_;
 
-	        // テクスチャーハンドル
-	        uint32_t textureHandle_ = 0u;
+	// 3Dモデル
+	Model* model_ = nullptr;
 
-			// ビューポート
-	        ViewProjection* viewProjection_ = nullptr;
+	// テクスチャーハンドル
+	uint32_t textureHandle_ = 0u;
 
-			//フェーズ
-	        Phase phase_ = Phase::Approach;
+	// ビューポート
+	ViewProjection* viewProjection_ = nullptr;
 
-			std::list<EnemyBullet*> bullets_;
+	// フェーズ
+	Phase phase_ = Phase::Approach;
 
-			//発射タイマー
-			int32_t ShotTimer = 0;
-	      
+	std::list<EnemyBullet*> bullets_;
+
+	// 発射タイマー
+	int32_t ShotTimer = 0;
 };
