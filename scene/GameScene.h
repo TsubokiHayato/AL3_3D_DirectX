@@ -5,13 +5,17 @@
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
-#include "ViewProjection.h"
+
 
 #include <DebugCamera.h>
 #include "Player.h"
 #include"Enemy.h"
 #include"skydome.h"
 
+#include<WorldTransform.h>
+#include "ViewProjection.h"
+
+#include"RailCamera.h"
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -60,6 +64,9 @@ private: // メンバ変数
 	/// </summary>
 
 
+	RailCamera* railCamera = nullptr;
+	Vector3 cameraPos = {0.0f, 0.0f, 1.0f};
+	Vector3 cameraRotate = {0.0f,0.0f,0.0f};
 	
 
 	/*-----------
@@ -96,7 +103,7 @@ private: // メンバ変数
 
 	
 	ViewProjection viewProjection_;
-
+	WorldTransform worldTransform;
 
 	uint32_t textureHandle = 0;
 

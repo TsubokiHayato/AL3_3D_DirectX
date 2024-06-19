@@ -76,6 +76,7 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	delete debugCamera_;
+	delete railCamera;
 	delete player;
 	delete enemy;
 	delete skydome;
@@ -105,6 +106,11 @@ void GameScene::Initialize() {
 	viewProjection_.farZ = 1145;
 
 	viewProjection_.Initialize();
+	worldTransform.Initialize();
+
+
+	railCamera = new RailCamera;
+	railCamera->Initialize(cameraPos,cameraRotate);
 
 	/*---------
 	  SkyDome
@@ -136,6 +142,7 @@ void GameScene::Initialize() {
 	// Enemyの初期化
 	enemy->Initialize(modelEnemy, &viewProjection_);
 	enemy->SetPlayer(player);
+
 	/*-----------
 	 DEBUG_CAMERA
 	-----------*/
@@ -166,6 +173,9 @@ void GameScene::Update() {
 		//
 		viewProjection_.UpdateMatrix();
 	}
+
+
+	railCamera->Update();
 
 	/*----------
 	     3D
