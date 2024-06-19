@@ -6,8 +6,7 @@
 #include <Vector3.h>
 #include <cmath>
 
-
-Matrix4x4 MakeRotateXMatrix(float radian) {
+inline Matrix4x4 MakeRotateXMatrix(float radian) {
 	Matrix4x4 result = {};
 
 	result.m[0][0] = 1;
@@ -20,7 +19,7 @@ Matrix4x4 MakeRotateXMatrix(float radian) {
 	return result;
 }
 
-Matrix4x4 MakeRotateYMatrix(float radian) {
+inline Matrix4x4 MakeRotateYMatrix(float radian) {
 	Matrix4x4 result = {};
 
 	result.m[0][0] = std::cos(radian);
@@ -33,7 +32,7 @@ Matrix4x4 MakeRotateYMatrix(float radian) {
 	return result;
 }
 
-Matrix4x4 MakeRotateZMatrix(float radian) {
+inline Matrix4x4 MakeRotateZMatrix(float radian) {
 	Matrix4x4 result = {};
 
 	result.m[0][0] = std::cos(radian);
@@ -48,7 +47,7 @@ Matrix4x4 MakeRotateZMatrix(float radian) {
 	return result;
 }
 
-Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
+inline Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	Matrix4x4 m3;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
@@ -58,7 +57,7 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	return m3;
 }
 
-Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
+inline Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 	Matrix4x4 m = {};
 	m.m[0][0] = scale.x;
 	m.m[1][1] = scale.y;
@@ -67,8 +66,7 @@ Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 	return m;
 };
 
-
-Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
+inline Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
 	Vector3 result = {};
 	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
 	result.y = vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + 1.0f * matrix.m[3][1];
@@ -83,7 +81,7 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
 	return result;
 };
 
-Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
+inline Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 	Matrix4x4 m = {};
 	m.m[0][0] = 1;
 	m.m[1][1] = 1;
@@ -96,9 +94,8 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 	return m;
 };
 
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
+inline Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 
-	
 	Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotate.x);
 	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rotate.y);
 	Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotate.z);
@@ -129,9 +126,8 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	return result;
 }
 
-
 // 正射影行列
-Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip) {
+inline Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip) {
 	Matrix4x4 result = {};
 	result.m[0][0] = 2 / (right - left);
 
@@ -146,7 +142,7 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 	return result;
 }
 // viewport
-Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth) {
+inline Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth) {
 	Matrix4x4 result = {};
 	result.m[0][0] = width / 2;
 	result.m[1][1] = -(height / 2);
@@ -160,9 +156,8 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 	return result;
 }
 
-
 // 透視投影行列
-Matrix4x4 MakePerspectiveMatrix(float fovY, float aspectRatio, float nearClip, float farClip) {
+inline Matrix4x4 MakePerspectiveMatrix(float fovY, float aspectRatio, float nearClip, float farClip) {
 	Matrix4x4 result = {};
 	result.m[0][0] = 1 / aspectRatio * (1 / (std::tan(fovY / 2)));
 	result.m[1][1] = 1 / (std::tan(fovY / 2));
@@ -171,4 +166,82 @@ Matrix4x4 MakePerspectiveMatrix(float fovY, float aspectRatio, float nearClip, f
 	result.m[3][2] = -(nearClip * farClip) / (nearClip - farClip);
 
 	return result;
+}
+
+inline Matrix4x4 Inverse(const Matrix4x4& m) {
+	float A;
+	A = m.m[0][0] * m.m[1][1] * m.m[2][2] * m.m[3][3] + m.m[0][0] * m.m[1][2] * m.m[2][3] * m.m[3][1] + m.m[0][0] * m.m[1][3] * m.m[2][1] * m.m[3][2] - m.m[0][0] * m.m[1][3] * m.m[2][2] * m.m[3][1] -
+	    m.m[0][0] * m.m[1][2] * m.m[2][1] * m.m[3][3] - m.m[0][0] * m.m[1][1] * m.m[2][3] * m.m[3][2] - m.m[0][1] * m.m[1][0] * m.m[2][2] * m.m[3][3] - m.m[0][2] * m.m[1][0] * m.m[2][3] * m.m[3][1] -
+	    m.m[0][3] * m.m[1][0] * m.m[2][1] * m.m[3][2] + m.m[0][3] * m.m[1][0] * m.m[2][2] * m.m[3][1] + m.m[0][2] * m.m[1][0] * m.m[2][1] * m.m[3][3] + m.m[0][1] * m.m[1][0] * m.m[2][3] * m.m[3][2] +
+	    m.m[0][1] * m.m[1][2] * m.m[2][0] * m.m[3][3] + m.m[0][2] * m.m[1][3] * m.m[2][0] * m.m[3][1] + m.m[0][3] * m.m[1][1] * m.m[2][0] * m.m[3][2] - m.m[0][3] * m.m[1][2] * m.m[2][0] * m.m[3][1] -
+	    m.m[0][2] * m.m[1][1] * m.m[2][0] * m.m[3][3] - m.m[0][1] * m.m[1][3] * m.m[2][0] * m.m[3][2] - m.m[0][1] * m.m[1][2] * m.m[2][3] * m.m[3][0] - m.m[0][2] * m.m[1][3] * m.m[2][1] * m.m[3][0] -
+	    m.m[0][3] * m.m[1][1] * m.m[2][2] * m.m[3][0] + m.m[0][3] * m.m[1][2] * m.m[2][1] * m.m[3][0] + m.m[0][2] * m.m[1][1] * m.m[2][3] * m.m[3][0] + m.m[0][1] * m.m[1][3] * m.m[2][2] * m.m[3][0];
+
+	Matrix4x4 m2;
+
+	m2.m[0][0] = 1 / A *
+	             (m.m[1][1] * m.m[2][2] * m.m[3][3] + m.m[1][2] * m.m[2][3] * m.m[3][1] + m.m[1][3] * m.m[2][1] * m.m[3][2] - m.m[1][3] * m.m[2][2] * m.m[3][1] - m.m[1][2] * m.m[2][1] * m.m[3][3] -
+	              m.m[1][1] * m.m[2][3] * m.m[3][2]);
+
+	m2.m[0][1] = 1 / A *
+	             (-m.m[0][1] * m.m[2][2] * m.m[3][3] - m.m[0][2] * m.m[2][3] * m.m[3][1] - m.m[0][3] * m.m[2][1] * m.m[3][2] + m.m[0][3] * m.m[2][2] * m.m[3][1] + m.m[0][2] * m.m[2][1] * m.m[3][3] +
+	              m.m[0][1] * m.m[2][3] * m.m[3][2]);
+
+	m2.m[0][2] = 1 / A *
+	             (m.m[0][1] * m.m[1][2] * m.m[3][3] + m.m[0][2] * m.m[1][3] * m.m[3][1] + m.m[0][3] * m.m[1][1] * m.m[3][2] - m.m[0][3] * m.m[1][2] * m.m[3][1] - m.m[0][2] * m.m[1][1] * m.m[3][3] -
+	              m.m[0][1] * m.m[1][3] * m.m[3][2]);
+
+	m2.m[0][3] = 1 / A *
+	             (-m.m[0][1] * m.m[1][2] * m.m[2][3] - m.m[0][2] * m.m[1][3] * m.m[2][1] - m.m[0][3] * m.m[1][1] * m.m[2][2] + m.m[0][3] * m.m[1][2] * m.m[2][1] + m.m[0][2] * m.m[1][1] * m.m[2][3] +
+	              m.m[0][1] * m.m[1][3] * m.m[2][2]);
+
+	m2.m[1][0] = 1 / A *
+	             (-m.m[1][0] * m.m[2][2] * m.m[3][3] - m.m[1][2] * m.m[2][3] * m.m[3][0] - m.m[1][3] * m.m[2][0] * m.m[3][2] + m.m[1][3] * m.m[2][2] * m.m[3][0] + m.m[1][2] * m.m[2][0] * m.m[3][3] +
+	              m.m[1][0] * m.m[2][3] * m.m[3][2]);
+
+	m2.m[1][1] = 1 / A *
+	             (m.m[0][0] * m.m[2][2] * m.m[3][3] + m.m[0][2] * m.m[2][3] * m.m[3][0] + m.m[0][3] * m.m[2][0] * m.m[3][2] - m.m[0][3] * m.m[2][2] * m.m[3][0] - m.m[0][2] * m.m[2][0] * m.m[3][3] -
+	              m.m[0][0] * m.m[2][3] * m.m[3][2]);
+
+	m2.m[1][2] = 1 / A *
+	             (-m.m[0][0] * m.m[1][2] * m.m[3][3] - m.m[0][2] * m.m[1][3] * m.m[3][0] - m.m[0][3] * m.m[1][0] * m.m[3][2] + m.m[0][3] * m.m[1][2] * m.m[3][0] + m.m[0][2] * m.m[1][0] * m.m[3][3] +
+	              m.m[0][0] * m.m[1][3] * m.m[3][2]);
+
+	m2.m[1][3] = 1 / A *
+	             (m.m[0][0] * m.m[1][2] * m.m[2][3] + m.m[0][2] * m.m[1][3] * m.m[2][0] + m.m[0][3] * m.m[1][0] * m.m[2][2] - m.m[0][3] * m.m[1][2] * m.m[2][0] - m.m[0][2] * m.m[1][0] * m.m[2][3] -
+	              m.m[0][0] * m.m[1][3] * m.m[2][2]);
+
+	m2.m[2][0] = 1 / A *
+	             (m.m[1][0] * m.m[2][1] * m.m[3][3] + m.m[1][1] * m.m[2][3] * m.m[3][0] + m.m[1][3] * m.m[2][0] * m.m[3][1] - m.m[1][3] * m.m[2][1] * m.m[3][0] - m.m[1][1] * m.m[2][0] * m.m[3][3] -
+	              m.m[1][0] * m.m[2][3] * m.m[3][1]);
+
+	m2.m[2][1] = 1 / A *
+	             (-m.m[0][0] * m.m[2][1] * m.m[3][3] - m.m[0][1] * m.m[2][3] * m.m[3][0] - m.m[0][3] * m.m[2][0] * m.m[3][1] + m.m[0][3] * m.m[2][1] * m.m[3][0] + m.m[0][1] * m.m[2][0] * m.m[3][3] +
+	              m.m[0][0] * m.m[2][3] * m.m[3][1]);
+
+	m2.m[2][2] = 1 / A *
+	             (m.m[0][0] * m.m[1][1] * m.m[3][3] + m.m[0][1] * m.m[1][3] * m.m[3][0] + m.m[0][3] * m.m[1][0] * m.m[3][1] - m.m[0][3] * m.m[1][1] * m.m[3][0] - m.m[0][1] * m.m[1][0] * m.m[3][3] -
+	              m.m[0][0] * m.m[1][3] * m.m[3][1]);
+
+	m2.m[2][3] = 1 / A *
+	             -(m.m[0][0] * m.m[1][1] * m.m[2][3] - m.m[0][1] * m.m[1][3] * m.m[2][0] - m.m[0][3] * m.m[1][0] * m.m[2][1] + m.m[0][3] * m.m[1][1] * m.m[2][0] + m.m[0][1] * m.m[1][0] * m.m[2][3] +
+	               m.m[0][0] * m.m[1][3] * m.m[2][1]);
+
+	m2.m[3][0] = 1 / A *
+	             (-m.m[1][0] * m.m[2][1] * m.m[3][2] - m.m[1][1] * m.m[2][2] * m.m[3][0] - m.m[1][2] * m.m[2][0] * m.m[3][1] + m.m[1][2] * m.m[2][1] * m.m[3][0] + m.m[1][1] * m.m[2][0] * m.m[3][2] +
+	              m.m[1][0] * m.m[2][2] * m.m[3][1]);
+
+	m2.m[3][1] = 1 / A *
+	             (m.m[0][0] * m.m[2][1] * m.m[3][2] + m.m[0][1] * m.m[2][2] * m.m[3][0] + m.m[0][2] * m.m[2][0] * m.m[3][1] - m.m[0][2] * m.m[2][1] * m.m[3][0] - m.m[0][1] * m.m[2][0] * m.m[3][2] -
+	              m.m[0][0] * m.m[2][2] * m.m[3][1]);
+
+	m2.m[3][2] = 1 / A *
+	             (-m.m[0][0] * m.m[1][1] * m.m[3][2] - m.m[0][1] * m.m[1][2] * m.m[3][0] - m.m[0][2] * m.m[1][0] * m.m[3][1] + m.m[0][2] * m.m[1][1] * m.m[3][0] + m.m[0][1] * m.m[1][0] * m.m[3][2] +
+	              m.m[0][0] * m.m[1][2] * m.m[3][1]);
+
+	m2.m[3][3] = 1 / A *
+	             (m.m[0][0] * m.m[1][1] * m.m[2][2] + m.m[0][1] * m.m[1][2] * m.m[2][0] + m.m[0][2] * m.m[1][0] * m.m[2][1] - m.m[0][2] * m.m[1][1] * m.m[2][0] - m.m[0][1] * m.m[1][0] * m.m[2][2] -
+	              m.m[0][0] * m.m[1][2] * m.m[2][1]);
+
+	return m2;
 }

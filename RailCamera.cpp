@@ -1,5 +1,7 @@
 #include "RailCamera.h"
 #include<WorldTransform_MT.h>
+
+#include<ImGuiManager.h>
 void RailCamera::Initialize(Vector3 cameraPos, Vector3 cameraRotate) {
 
 	worldTransform_.translation_ = cameraPos;
@@ -17,7 +19,7 @@ void RailCamera::Update() {
 
 	worldTransform_.UpdateMatrix();
 
-	//viewProjection_.matView=
+	viewProjection_.matView = Inverse(worldTransform_.matWorld_);
 
 
 }
