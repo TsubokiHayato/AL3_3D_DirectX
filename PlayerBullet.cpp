@@ -53,6 +53,8 @@ Vector3 PlayerBullet::GetWorldPos() {
 	return worldPos;
 }
 
+void PlayerBullet::SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
+
 
 
 void PlayerBullet::OnCollision() { isDead_ = true; }

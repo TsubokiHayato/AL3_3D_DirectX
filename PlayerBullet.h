@@ -22,6 +22,8 @@ public:
 
 	Vector3 GetWorldPos();
 
+	void SetParent(const WorldTransform* parent);
+
 private:
 	// 寿命<frm>
 	static const int32_t kLifeTime = 60 * 5;

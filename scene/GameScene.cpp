@@ -108,9 +108,8 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 	worldTransform.Initialize();
 
-
 	railCamera = new RailCamera;
-	railCamera->Initialize(cameraPos,cameraRotate);
+	railCamera->Initialize(cameraPos, cameraRotate);
 
 	/*---------
 	  SkyDome
@@ -123,7 +122,6 @@ void GameScene::Initialize() {
 
 	skydome->Initialize(modelSkydome, &viewProjection_);
 
-
 	/*---------
 	* Chara
 	--------*/
@@ -134,8 +132,12 @@ void GameScene::Initialize() {
 	textureHandle = TextureManager::Load("Recovery_agents.png");
 
 	modelPlayer = Model::Create();
+
+	player->SetParent(&railCamera->GetWorldTransform());
+	Vector3 playerPos(0, 0, 10);
+	
 	// 自キャラの初期化
-	player->Initialize(modelPlayer, textureHandle, &viewProjection_);
+	player->Initialize(modelPlayer, textureHandle, &viewProjection_,playerPos);
 
 	enemy = new Enemy;
 	modelEnemy = Model::Create();
@@ -174,8 +176,11 @@ void GameScene::Update() {
 		viewProjection_.UpdateMatrix();
 	}
 
-
 	railCamera->Update();
+	viewProjection_.matView = railCamera->GetView();
+	viewProjection_.matProjection = railCamera->GetProjection();
+
+	viewProjection_.TransferMatrix();
 
 	/*----------
 	     3D
@@ -185,6 +190,7 @@ void GameScene::Update() {
 
 	// 自キャラの更新
 	player->Update();
+
 	// enemyの更新
 	enemy->Update();
 

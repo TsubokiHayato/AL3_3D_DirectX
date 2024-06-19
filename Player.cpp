@@ -26,7 +26,7 @@ void Player::Attack() {
 
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, worldTransform_.translation_,velocity);
-
+		newBullet->SetParent(worldTransform_.parent_);
 		bullets_.push_back(newBullet);
 	}
 }
@@ -44,8 +44,10 @@ Vector3 Player::GetWorldPos() {
 	return worldPos;
 }
 
+void Player::SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
+
 // 初期化
-void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) {
+void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection,Vector3 Position) {
 	assert(model);
 
 	// 3Dモデルの作成
@@ -53,6 +55,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
+
+	worldTransform_.translation_ = Position;
 
 	textureHandle_ = textureHandle;
 
