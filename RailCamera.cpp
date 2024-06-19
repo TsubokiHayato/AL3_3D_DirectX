@@ -17,7 +17,7 @@ void RailCamera::Update() {
 
 	worldTransform_.UpdateMatrix();
 
-	viewProjection_.matView=
+	//viewProjection_.matView=
 
 
 }
