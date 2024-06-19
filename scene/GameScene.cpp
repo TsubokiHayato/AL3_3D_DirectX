@@ -177,6 +177,7 @@ void GameScene::Update() {
 	}
 
 	railCamera->Update();
+
 	viewProjection_.matView = railCamera->GetView();
 	viewProjection_.matProjection = railCamera->GetProjection();
 

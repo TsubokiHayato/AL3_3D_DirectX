@@ -19,7 +19,8 @@ public:
 	Matrix4x4 GetProjection() { return viewProjection_.matProjection; }
 
 
-public:
+private:
+
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 };

@@ -24,6 +24,7 @@ public:
 	/// ビュープロジェクションを取得
 	/// </summary>
 	/// <returns>ビュープロジェクション</returns>
+	/// 
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
 
 	Matrix4x4 GetView() { return viewProjection_.matView; }
