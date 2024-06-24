@@ -125,7 +125,7 @@ void GameScene::Initialize() {
 	/*---------
 	* Chara
 	--------*/
-
+	
 	// 自キャラの生成
 	player = new Player;
 	// ポーションの画像
