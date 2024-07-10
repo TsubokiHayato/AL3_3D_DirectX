@@ -271,3 +271,86 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
+
+
+void GameScene::LoadEnemyPopData() {
+
+	std::ifstream file;
+	file.open("enemyPop.csv");
+	assert(file.is_open());
+
+	enemyPopCommands << file.rdbuf();
+
+	file.close();
+}
+void GameScene::UpdateEnemyPopCommands() {
+
+	// 待機処理
+	if (isWait) {
+		kWaitTimer_--;
+		if (kWaitTimer_ <= 0) {
+			// 待機完了
+			isWait = false;
+		}
+		return;
+	}
+
+	std::string line;
+
+	while (getline(enemyPopCommands, line)) {
+		std::istringstream line_stream(line);
+
+		std::string word;
+
+		getline(line_stream, word, ',');
+
+		if (word.find("//") == 0) {
+			continue;
+		}
+
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			// y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			// z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			// 敵を発生させる
+			enemyPop(Vector3(x, y, z));
+			// WAITコマンド
+		} else if (word.find("WAIT") == 0) {
+			getline(line_stream, word, ',');
+
+			// 待ち時間
+			int32_t waitTime = atoi(word.c_str());
+
+			// 待機開始
+			isWait = true;
+			kWaitTimer_ = waitTime;
+
+			// コマンドループを抜ける
+			break;
+		}
+	}
+}
+
+void GameScene::enemyPop(Vector3 translation) {
+	// 敵キャラの生成
+	enemy = new Enemy();
+	// 敵キャラの初期化
+	enemy->Initialize(modelEnemy, &viewProjection_);
+	// 敵キャラにゲームシーンを渡す
+	enemy->SetGameScene(this);
+
+	// 敵キャラに自キャラのアドレスを渡す
+	enemy->SetPlayer(player);
+
+	enemies_.push_back(enemy);
+}
