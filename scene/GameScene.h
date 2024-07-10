@@ -58,6 +58,12 @@ public: // メンバ関数
 	// 弾リストの処理を参考に作成する
 	const std::list<EnemyBullet*>& GetBullets() const { return enemyBullets_; }
 
+	void LoadEnemyPopData();
+
+	void UpdateEnemyPopCommands();
+
+	void enemyPop(Vector3 translation);
+
 
 private: // メンバ変数
 
