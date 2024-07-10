@@ -9,7 +9,7 @@ void GameScene::CheckAllCollisions() {
 	Vector3 playerPos, playerBulletPos, enemyPos, enemyBulletPos;
 
 	const std::list<PlayerBullet*>& playerBullets = player->GetBullets();
-	const std::list<EnemyBullet*>& enemyBullets = enemy->GetBullets();
+	const std::list<EnemyBullet*>& enemyBullets = enemyBullets_ = GetBullets();
 
 #pragma region Player & EnemyBullets Colision
 
@@ -75,6 +75,9 @@ void GameScene::CheckAllCollisions() {
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
+	for (EnemyBullet* bullet : enemyBullets_) {
+		delete bullet;
+	}
 	delete debugCamera_;
 	delete railCamera;
 	delete player;
@@ -143,6 +146,7 @@ void GameScene::Initialize() {
 	modelEnemy = Model::Create();
 	// Enemyの初期化
 	enemy->Initialize(modelEnemy, &viewProjection_);
+	enemy->SetGameScene(this);
 	enemy->SetPlayer(player);
 
 	/*-----------
@@ -152,6 +156,14 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+
+	enemyBullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
 
 	/*-----------
 	DebugCamera
@@ -194,7 +206,9 @@ void GameScene::Update() {
 
 	// enemyの更新
 	enemy->Update();
-
+	for (EnemyBullet* bullet : enemyBullets_) {
+		bullet->Update();
+	}
 	CheckAllCollisions();
 }
 
@@ -234,6 +248,9 @@ void GameScene::Draw() {
 	player->Draw();
 	// Enemy
 	enemy->Draw();
+	for (EnemyBullet* bullet : enemyBullets_) {
+		bullet->Draw(viewProjection_);
+	}
 
 	skydome->Draw();
 

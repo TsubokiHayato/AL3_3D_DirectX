@@ -2,7 +2,7 @@
 #include <TextureManager.h>
 #include <Vector3.h>
 #include <cassert>
-
+#include"GameScene.h"
 #include <MT.h>
 
 void Enemy::Fire() {
@@ -27,7 +27,7 @@ void Enemy::Fire() {
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialize(model_, worldTransform_.translation_, diff);
 
-	bullets_.push_back(newBullet);
+	gameScene_->AddEnemyBullet(newBullet);
 
 }
 
@@ -63,9 +63,7 @@ Enemy::~Enemy() {
 
 	model_ = nullptr;
 	viewProjection_ = nullptr;
-	for (EnemyBullet* bullet : bullets_) {
-		delete bullet;
-	}
+	
 }
 
 void Enemy::Initialize(Model* model, ViewProjection* viewProjection) {
@@ -88,13 +86,7 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection) {
 
 void Enemy::Update() {
 
-	bullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
+	
 
 	// Enemyの移動ベクトル
 	Vector3 moveApproach = {0.0f, 0.0f, 0.0f};
@@ -104,9 +96,7 @@ void Enemy::Update() {
 	const float kCharaSpeed = 0.2f;
 
 	ApproachPhaseUpdate();
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Update();
-	}
+	
 
 	switch (phase_) {
 	case Phase::Approach:
@@ -134,8 +124,5 @@ void Enemy::Draw() {
 	// 3D作成
 	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
 
-	for (EnemyBullet* bullet : bullets_) {
-
-		bullet->Draw(*viewProjection_);
-	}
+	
 }

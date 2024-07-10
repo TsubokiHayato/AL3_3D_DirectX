@@ -55,6 +55,10 @@ public: // メンバ関数
 
 	void AddEnemyBullet(EnemyBullet* enemyBullet) { enemyBullets_.push_back(enemyBullet); }
 
+	// 弾リストの処理を参考に作成する
+	const std::list<EnemyBullet*>& GetBullets() const { return enemyBullets_; }
+
+
 private: // メンバ変数
 
 	DirectXCommon* dxCommon_ = nullptr;
@@ -89,6 +93,7 @@ private: // メンバ変数
 
 	Skydome* skydome = nullptr;
 
+	std::list<EnemyBullet*> enemyBullets_;
 
 	/*------------
 	テクスチャ&モデル

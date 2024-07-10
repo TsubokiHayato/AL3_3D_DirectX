@@ -11,6 +11,7 @@
 #include <Player.h>
 #include <list>
 
+class GameScene;
 class Player;
 // 行動フェーズ
 enum class Phase {
@@ -43,10 +44,8 @@ public:
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
 
-	// 弾リストの処理を参考に作成する
-	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
-
 	
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
 private:
 	Player* player_ = nullptr;
@@ -66,8 +65,10 @@ private:
 	// フェーズ
 	Phase phase_ = Phase::Approach;
 
-	std::list<EnemyBullet*> bullets_;
+	
 
 	// 発射タイマー
 	int32_t ShotTimer = 0;
+
+	GameScene* gameScene_ = nullptr;
 };
