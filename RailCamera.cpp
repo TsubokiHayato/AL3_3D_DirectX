@@ -17,7 +17,7 @@ void RailCamera::Initialize(Vector3 cameraPos, Vector3 cameraRotate) {
 void RailCamera::Update() {
 	
 
-	worldTransform_.translation_.z += 0.1f;
+	worldTransform_.translation_.z += 0.01f;
 	//worldTransform_.rotation_.z += 0.01f;
 
 	viewProjection_.matView = Inverse(worldTransform_.matWorld_);

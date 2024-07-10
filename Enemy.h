@@ -24,7 +24,7 @@ class Enemy {
 public:
 	~Enemy();
 	// 初期化
-	void Initialize(Model* model, ViewProjection* viewProjection);
+	void Initialize(Model* model, ViewProjection* viewProjection,const Vector3& position);
 	// 更新
 	void Update();
 	// 描画

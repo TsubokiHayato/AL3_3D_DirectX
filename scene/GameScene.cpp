@@ -33,8 +33,10 @@ void GameScene::CheckAllCollisions() {
 #pragma region PlayerBullets & Enemy Colision
 
 	// enemyの座標
-	enemyPos = enemy->GetWorldPos();
+	for (Enemy* enemy_ : enemies_) {
 
+		enemyPos = enemy_->GetWorldPos();
+	}
 	for (PlayerBullet* playerBullet : playerBullets) {
 
 		playerBulletPos = playerBullet->GetWorldPos();
@@ -142,12 +144,8 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player->Initialize(modelPlayer, textureHandle, &viewProjection_,playerPos);
 
-	enemy = new Enemy;
 	modelEnemy = Model::Create();
-	// Enemyの初期化
-	enemy->Initialize(modelEnemy, &viewProjection_);
-	enemy->SetGameScene(this);
-	enemy->SetPlayer(player);
+	LoadEnemyPopData();
 
 	/*-----------
 	 DEBUG_CAMERA
@@ -164,6 +162,15 @@ void GameScene::Update() {
 		}
 		return false;
 	});
+
+	//// デスフラグの立った敵を削除
+	//enemies_.remove_if([](Enemy* enemy_) {
+	//	if (enemy_->IsDead) {
+	//		delete enemy_;
+	//		return true;
+	//	}
+	//	return false;
+	//});
 
 	/*-----------
 	DebugCamera
@@ -204,12 +211,21 @@ void GameScene::Update() {
 	// 自キャラの更新
 	player->Update();
 
-	// enemyの更新
-	enemy->Update();
+	UpdateEnemyPopCommands();
+
+	for (Enemy* enemy_ : enemies_) {
+
+		enemy_->Update();
+	}
+	
+
 	for (EnemyBullet* bullet : enemyBullets_) {
 		bullet->Update();
 	}
 	CheckAllCollisions();
+
+
+	//ImGui::DragFloat3("enemy.pos",&)
 }
 
 void GameScene::Draw() {
@@ -247,7 +263,10 @@ void GameScene::Draw() {
 	// 自キャラ
 	player->Draw();
 	// Enemy
-	enemy->Draw();
+	for (Enemy* enemy_ : enemies_) {
+		enemy_->Draw();
+	}
+
 	for (EnemyBullet* bullet : enemyBullets_) {
 		bullet->Draw(viewProjection_);
 	}
@@ -284,7 +303,6 @@ void GameScene::LoadEnemyPopData() {
 	file.close();
 }
 void GameScene::UpdateEnemyPopCommands() {
-
 	// 待機処理
 	if (isWait) {
 		kWaitTimer_--;
@@ -294,20 +312,23 @@ void GameScene::UpdateEnemyPopCommands() {
 		}
 		return;
 	}
-
+	// 1行分の文字列を入れる変数
 	std::string line;
 
+	// コマンド実行ループ
 	while (getline(enemyPopCommands, line)) {
+		// 1行分の文字列をストリームに変換して解析しやすくなる
 		std::istringstream line_stream(line);
 
 		std::string word;
-
+		// ,区切りで行の先頭文字列を取得
 		getline(line_stream, word, ',');
 
+		// "//"から始まる行はコメント
 		if (word.find("//") == 0) {
+			// コメント行を飛ばす
 			continue;
 		}
-
 		// POPコマンド
 		if (word.find("POP") == 0) {
 			// x座標
@@ -341,11 +362,13 @@ void GameScene::UpdateEnemyPopCommands() {
 	}
 }
 
+
 void GameScene::enemyPop(Vector3 translation) {
+	ImGui::DragFloat3("translate", &translation.x, 0.01f);
 	// 敵キャラの生成
 	enemy = new Enemy();
 	// 敵キャラの初期化
-	enemy->Initialize(modelEnemy, &viewProjection_);
+	enemy->Initialize(modelEnemy, &viewProjection_,translation);
 	// 敵キャラにゲームシーンを渡す
 	enemy->SetGameScene(this);
 

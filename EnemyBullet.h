@@ -9,7 +9,7 @@
 #include "Input.h"
 class EnemyBullet {
 
-
+	
 	public:
 	void Initialize(Model* model, const Vector3& pos, const Vector3& velocity);
 

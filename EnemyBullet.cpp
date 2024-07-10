@@ -19,14 +19,16 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& ve
 }
 
 void EnemyBullet::Update() {
-	// 時間経過でデス
-	if (--deathTimer_ <= 0) {
-		isDead_ = true;
-	}
+	
 
 	worldTransform_.translation_ += velocity_;
 
 	worldTransform_.UpdateMatrix();
+
+	// 時間経過でデス
+	if (--deathTimer_ <= 0) {
+		isDead_ = true;
+	}
 }
 
 void EnemyBullet::Draw(const ViewProjection& viewProjection) {
@@ -41,9 +43,9 @@ Vector3 EnemyBullet::GetWorldPos() {
 	
 	Vector3 worldPos = {};
 
-	worldPos.x = worldTransform_.matWorld_.m[3][0];
-	worldPos.y = worldTransform_.matWorld_.m[3][1];
-	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
 
 	return worldPos;
 

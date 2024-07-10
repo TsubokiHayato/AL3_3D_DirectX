@@ -6,6 +6,9 @@
 #include "Model.h"
 #include "Sprite.h"
 
+#include<sstream>
+#include<fstream>
+
 
 #include <DebugCamera.h>
 #include "Player.h"
@@ -58,8 +61,10 @@ public: // メンバ関数
 	// 弾リストの処理を参考に作成する
 	const std::list<EnemyBullet*>& GetBullets() const { return enemyBullets_; }
 
+	//ini
 	void LoadEnemyPopData();
 
+	//up
 	void UpdateEnemyPopCommands();
 
 	void enemyPop(Vector3 translation);
@@ -119,5 +124,18 @@ private: // メンバ変数
 	WorldTransform worldTransform;
 
 	uint32_t textureHandle = 0;
+
+
+
+	std::list<Enemy*> enemies_;
+
+	std::stringstream enemyPopCommands;
+
+	// 待機中フラグ
+	bool isWait = false;
+
+	// 待機タイマー
+	int32_t kWaitTimer_ = 0;
+
 
 };

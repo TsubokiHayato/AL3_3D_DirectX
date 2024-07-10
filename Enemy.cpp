@@ -1,13 +1,79 @@
 #include "Enemy.h"
+#include "GameScene.h"
+#include <MT.h>
 #include <TextureManager.h>
 #include <Vector3.h>
 #include <cassert>
-#include"GameScene.h"
-#include <MT.h>
+
+Enemy::~Enemy() {
+
+	model_ = nullptr;
+	viewProjection_ = nullptr;
+}
+
+void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) {
+	assert(model);
+
+	// 3Dモデルの作成
+	model_ = model;
+	textureHandle_ = TextureManager::Load("slime.jpg");
+
+	// ワールドトランスフォームの初期化
+	worldTransform_.Initialize();
+	worldTransform_.translation_ = position;
+
+	viewProjection_ = viewProjection;
+
+	ApproachPhaseInstance();
+}
+
+void Enemy::Update() {
+// キャラクターの移動速さ
+	const float kCharaSpeed = -0.01f;
+	// Enemyの移動ベクトル
+	Vector3 moveApproach = {0.0f, 0.0f, kCharaSpeed};
+	Vector3 moveLeave = {0.0f, 0.0f, 0.0f};
+
+	
+
+	ApproachPhaseUpdate();
+
+	switch (phase_) {
+	case Phase::Approach:
+		
+		worldTransform_.translation_.x += + moveApproach.x;
+		worldTransform_.translation_.y += + moveApproach.y;
+		worldTransform_.translation_.z += + moveApproach.z;
+
+		if (worldTransform_.translation_.z < 0.0f) {
+			phase_ = Phase::Leave;
+		}
+		break;
+	case Phase::Leave:
+
+	
+		worldTransform_.translation_.x -= + moveApproach.x;
+		worldTransform_.translation_.y -= + moveApproach.y;
+		worldTransform_.translation_.z -= + moveApproach.z;
+
+
+		break;
+	}
+
+	// 行列計算
+	worldTransform_.UpdateMatrix();
+}
+
+void Enemy::Draw() {
+
+	// 3D作成
+	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
+}
+
 
 void Enemy::Fire() {
 
-	const float kBulletSpeed = 0.4f;
+	const float kBulletSpeed = 0.8f;
 
 	Vector3 playerVec = player_->GetWorldPos();
 	Vector3 enemyVec = GetWorldPos();
@@ -28,7 +94,6 @@ void Enemy::Fire() {
 	newBullet->Initialize(model_, worldTransform_.translation_, diff);
 
 	gameScene_->AddEnemyBullet(newBullet);
-
 }
 
 void Enemy::ApproachPhaseInstance() {
@@ -46,83 +111,15 @@ void Enemy::ApproachPhaseUpdate() {
 	}
 }
 
+void Enemy::OnCollision() {}
+
 Vector3 Enemy::GetWorldPos() {
 
 	Vector3 worldPos = {};
 
-	worldPos.x = worldTransform_.matWorld_.m[3][0];
-	worldPos.y = worldTransform_.matWorld_.m[3][1];
-	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
 
 	return worldPos;
-}
-
-void Enemy::OnCollision() {}
-
-Enemy::~Enemy() {
-
-	model_ = nullptr;
-	viewProjection_ = nullptr;
-	
-}
-
-void Enemy::Initialize(Model* model, ViewProjection* viewProjection) {
-	assert(model);
-
-	// 3Dモデルの作成
-	model_ = model;
-
-	// ワールドトランスフォームの初期化
-	worldTransform_.Initialize();
-	worldTransform_.translation_.x = 5.0f;
-	worldTransform_.translation_.y = 0.0f;
-	worldTransform_.translation_.z = 100.0f;
-	textureHandle_ = TextureManager::Load("slime.jpg");
-
-	viewProjection_ = viewProjection;
-
-	ApproachPhaseInstance();
-}
-
-void Enemy::Update() {
-
-	
-
-	// Enemyの移動ベクトル
-	Vector3 moveApproach = {0.0f, 0.0f, 0.0f};
-	Vector3 moveLeave = {0.0f, 0.0f, 0.0f};
-
-	// キャラクターの移動速さ
-	const float kCharaSpeed = 0.2f;
-
-	ApproachPhaseUpdate();
-	
-
-	switch (phase_) {
-	case Phase::Approach:
-		moveApproach.z -= kCharaSpeed;
-		worldTransform_.translation_ += moveApproach;
-
-		if (worldTransform_.translation_.z < 0.0f) {
-			phase_ = Phase::Leave;
-		}
-		break;
-	case Phase::Leave:
-
-		moveLeave.z += kCharaSpeed;
-		worldTransform_.translation_ += moveLeave;
-
-		break;
-	}
-
-	// 行列計算
-	worldTransform_.UpdateMatrix();
-}
-
-void Enemy::Draw() {
-
-	// 3D作成
-	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
-
-	
 }
