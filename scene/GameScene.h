@@ -53,6 +53,8 @@ public: // メンバ関数
 
 	void CheckAllCollisions();
 
+	void AddEnemyBullet(EnemyBullet* enemyBullet) { enemyBullets_.push_back(enemyBullet); }
+
 private: // メンバ変数
 
 	DirectXCommon* dxCommon_ = nullptr;
