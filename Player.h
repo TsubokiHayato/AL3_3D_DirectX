@@ -6,7 +6,7 @@
 
 #include <numbers>
 
-
+#include "Sprite.h"
 #include"PlayerBullet.h"
 #include<list>
 
@@ -21,12 +21,13 @@ enum class LRDirection {
 class Player {
 public:
 	// 初期化
-	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, Vector3 Position);
+	void Initialize(Model* model,Model* targetModel, uint32_t textureHandle, ViewProjection* viewProjection, Vector3 Position);
 	// 更新
-	void Update();
+	void Update(const Matrix4x4 viewMatrix,const Matrix4x4 viewProjectionMatrix);
 	// 描画
 	void Draw();
 
+	void DrawUI();
 	
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
@@ -57,8 +58,7 @@ private:
 
 	// 3Dモデル
 	Model* model_ = nullptr;
-
-	Model* modelTarget = nullptr;
+	Model* modelTarget_ = nullptr;
 
 	// テクスチャーハンドル
 	uint32_t textureHandle_ = 0u;
@@ -69,6 +69,6 @@ private:
 	WorldTransform worldTransform3DReticle_;
 
 	
-
+	Sprite* sprite2DReticle_ = nullptr;
 
 };

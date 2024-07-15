@@ -30,7 +30,7 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vecto
 
 void Enemy::Update() {
 	// キャラクターの移動速さ
-	const float kCharaSpeed = -0.01f;
+	const float kCharaSpeed = -0.05f;
 	// Enemyの移動ベクトル
 	Vector3 moveApproach = {0.0f, 0.0f, kCharaSpeed};
 	Vector3 moveLeave = {0.0f, 0.0f, 0.0f};

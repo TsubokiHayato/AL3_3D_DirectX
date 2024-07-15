@@ -36,17 +36,18 @@ void GameScene::CheckAllCollisions() {
 	for (Enemy* enemy_ : enemies_) {
 
 		enemyPos = enemy_->GetWorldPos();
-	}
-	for (PlayerBullet* playerBullet : playerBullets) {
 
-		playerBulletPos = playerBullet->GetWorldPos();
+		for (PlayerBullet* playerBullet : playerBullets) {
 
-		float distance = powf((playerBulletPos.x - enemyPos.x), 2.0f) + powf((playerBulletPos.y - enemyPos.y), 2.0f) + powf((playerBulletPos.z - enemyPos.z), 2.0f);
-		float length = 1.0f;
-		if (distance <= length) {
+			playerBulletPos = playerBullet->GetWorldPos();
 
-			enemy->OnCollision();
-			playerBullet->OnCollision();
+			float distance = powf((playerBulletPos.x - enemyPos.x), 2.0f) + powf((playerBulletPos.y - enemyPos.y), 2.0f) + powf((playerBulletPos.z - enemyPos.z), 2.0f);
+			float length = 1.0f;
+			if (distance <= length) {
+
+				enemy->OnCollision();
+				playerBullet->OnCollision();
+			}
 		}
 	}
 
@@ -77,19 +78,24 @@ void GameScene::CheckAllCollisions() {
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
-	for (EnemyBullet* bullet : enemyBullets_) {
-		delete bullet;
-	}
 	delete debugCamera_;
 	delete railCamera;
 	delete player;
-	delete enemy;
+	
 	delete skydome;
 	// 3Dモデル削除
 
 	delete modelPlayer;
 	delete modelEnemy;
 	delete modelSkydome;
+	delete modelTarget;
+	for (EnemyBullet* bullet : enemyBullets_) {
+		delete bullet;
+	}
+	for (Enemy* enemy_ : enemies_) {
+		delete enemy_;
+	}
+	
 }
 
 void GameScene::Initialize() {
@@ -130,19 +136,20 @@ void GameScene::Initialize() {
 	/*---------
 	* Chara
 	--------*/
-	
+	TextureManager::Load("2D_Reticle.png");
 	// 自キャラの生成
 	player = new Player;
 	// ポーションの画像
 	textureHandle = TextureManager::Load("Recovery_agents.png");
 
 	modelPlayer = Model::Create();
+	modelTarget=Model::Create();
 
 	player->SetParent(&railCamera->GetWorldTransform());
 	Vector3 playerPos(0, 0, 10);
 	
 	// 自キャラの初期化
-	player->Initialize(modelPlayer, textureHandle, &viewProjection_,playerPos);
+	player->Initialize(modelPlayer,modelTarget, textureHandle, &viewProjection_,playerPos);
 
 	modelEnemy = Model::Create();
 	LoadEnemyPopData();
@@ -209,7 +216,7 @@ void GameScene::Update() {
 	skydome->Update();
 
 	// 自キャラの更新
-	player->Update();
+	player->Update(viewProjection_.matView,viewProjection_.matProjection);
 
 	UpdateEnemyPopCommands();
 
@@ -241,6 +248,7 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 	///
+	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -281,6 +289,7 @@ void GameScene::Draw() {
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
+	player->DrawUI();
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
@@ -377,3 +386,4 @@ void GameScene::enemyPop(Vector3 translation) {
 
 	enemies_.push_back(enemy);
 }
+

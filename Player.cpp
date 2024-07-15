@@ -6,11 +6,17 @@
 
 #include <ImGuiManager.h>
 #include <MT.h>
+#include <TextureManager.h>
+#include"WinApp.h"
+#include"WorldTransform_MT.h"
+#include"ViewProjection.h"
 
 Player::~Player() {
 	model_ = nullptr;
 	modelTarget_ = nullptr;
 	viewProjection_ = nullptr;
+
+	delete sprite2DReticle_;
 
 	input_ = nullptr;
 	for (PlayerBullet* bullet : bullets_) {
@@ -24,7 +30,7 @@ void Player::Attack() {
 		const float kBulletSpeed = 1.0f;
 		Vector3 velocity(0, 0, kBulletSpeed);
 
-		velocity = worldTransform3DReticle_.translation_ - worldTransform_.translation_;
+		velocity = worldTransform3DReticle_.translation_ - GetWorldPos();
 		velocity = Normalize(velocity) * kBulletSpeed;
 
 		PlayerBullet* newBullet = new PlayerBullet();
@@ -66,13 +72,17 @@ void Player::Initialize(Model* model, Model* targetModel, uint32_t textureHandle
 	// worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 
 	viewProjection_ = viewProjection;
-
+	
 	worldTransform3DReticle_.Initialize();
+
+	Vector2 anchorPoint = {0.5f, 0.5f};
+	uint32_t textureReticle = TextureManager::Load("2D_Reticle.png");
+	sprite2DReticle_ = Sprite::Create(textureReticle, {}, {1.0f,1.0f,1.0f,1.0f});
 
 	input_ = Input::GetInstance();
 }
 // 更新
-void Player::Update() {
+void Player::Update(const Matrix4x4 viewMatrix, const Matrix4x4 viewProjectionMatrix) {
 
 	bullets_.remove_if([](PlayerBullet* bullet) {
 		if (bullet->IsDead()) {
@@ -122,7 +132,22 @@ void Player::Update() {
 	offset = Normalize(offset) * kDistancePlayerTo3DReticle;
 	worldTransform3DReticle_.translation_ = offset;
 
+    worldTransform3DReticle_.UpdateMatrix();
+
+
+	Vector3 positionReticle = worldTransform3DReticle_.translation_;
+
+	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
+	Matrix4x4 matViewProjectionViewport = viewMatrix*viewProjectionMatrix * matViewport;
+
+	positionReticle = Transform(positionReticle, matViewProjectionViewport);
+
+	sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
+		
+	
 	ImGui::Begin("Memo");
+	ImGui::SliderFloat2("Position", &positionReticle.x, -600.0f, 600.0f);
+	
 	ImGui::SliderFloat3("Player Position", &worldTransform_.translation_.x, -600.0f, 600.0f);
 	ImGui::Text("playerMove : LEFT RIGHT UP DOWN");
 	ImGui::Text("playerRotate : A D");
@@ -142,18 +167,20 @@ void Player::Update() {
 
 	// 行列計算
 	worldTransform_.UpdateMatrix();
-	worldTransform3DReticle_.UpdateMatrix();
+	
 }
 
 // 描画
 void Player::Draw() {
 	// 3D作成
 	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
-	modelTarget_->Draw(worldTransform3DReticle_, *viewProjection_);
+	//modelTarget_->Draw(worldTransform3DReticle_, *viewProjection_);
 	for (PlayerBullet* bullet : bullets_) {
 
 		bullet->Draw(*viewProjection_);
 	}
 }
+
+void Player::DrawUI() { sprite2DReticle_->Draw(); }
 
 void Player::OnCollision() {}

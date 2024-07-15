@@ -69,6 +69,8 @@ public: // メンバ関数
 
 	void enemyPop(Vector3 translation);
 
+	
+
 
 private: // メンバ変数
 
@@ -112,6 +114,7 @@ private: // メンバ変数
 	
 	Model* modelPlayer = nullptr;
 	Model* modelEnemy = nullptr;
+	Model* modelTarget = nullptr;
 
 	Model* modelSkydome = nullptr;
 	
