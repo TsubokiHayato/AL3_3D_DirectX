@@ -5,12 +5,14 @@
 #include <cassert>
 
 #include <ImGuiManager.h>
-#include<MT.h>
-
+#include <MT.h>
 
 Player::~Player() {
 	model_ = nullptr;
+	modelTarget_ = nullptr;
 	viewProjection_ = nullptr;
+
+	input_ = nullptr;
 	for (PlayerBullet* bullet : bullets_) {
 		delete bullet;
 	}
@@ -22,36 +24,36 @@ void Player::Attack() {
 		const float kBulletSpeed = 1.0f;
 		Vector3 velocity(0, 0, kBulletSpeed);
 
-		velocity = TransformNormal(velocity,worldTransform_.matWorld_ );
+		velocity = worldTransform3DReticle_.translation_ - worldTransform_.translation_;
+		velocity = Normalize(velocity) * kBulletSpeed;
 
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_,velocity);
+		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 		newBullet->SetParent(worldTransform_.parent_);
 		bullets_.push_back(newBullet);
 	}
 }
 
-Vector3 Player::GetWorldPos() { 
-	
+Vector3 Player::GetWorldPos() {
+
 	Vector3 worldPos = {};
 
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
-	
-	
-	
+
 	return worldPos;
 }
 
 void Player::SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
 
 // 初期化
-void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection,Vector3 Position) {
+void Player::Initialize(Model* model, Model* targetModel, uint32_t textureHandle, ViewProjection* viewProjection, Vector3 Position) {
 	assert(model);
 
 	// 3Dモデルの作成
 	model_ = model;
+	modelTarget_ = targetModel;
 
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -61,22 +63,23 @@ void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 	textureHandle_ = textureHandle;
 
 	//// プレイヤーの初期角度
-	//worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
+	// worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 
 	viewProjection_ = viewProjection;
+
+	worldTransform3DReticle_.Initialize();
 
 	input_ = Input::GetInstance();
 }
 // 更新
 void Player::Update() {
 
-
 	bullets_.remove_if([](PlayerBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
 			return true;
 		}
- 		return false;
+		return false;
 	});
 
 	// 回転速さ
@@ -107,12 +110,17 @@ void Player::Update() {
 		move.y += kCharaSpeed;
 	}
 
-
-
 	Attack();
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Update();
 	}
+
+	const float kDistancePlayerTo3DReticle = 50.0f;
+	//
+	Vector3 offset = {0, 0, 1.0f};
+	offset = TransformNormal(offset, worldTransform_.matWorld_);
+	offset = Normalize(offset) * kDistancePlayerTo3DReticle;
+	worldTransform3DReticle_.translation_ = offset;
 
 	ImGui::Begin("Memo");
 	ImGui::SliderFloat3("Player Position", &worldTransform_.translation_.x, -600.0f, 600.0f);
@@ -134,19 +142,18 @@ void Player::Update() {
 
 	// 行列計算
 	worldTransform_.UpdateMatrix();
+	worldTransform3DReticle_.UpdateMatrix();
 }
+
 // 描画
 void Player::Draw() {
 	// 3D作成
 	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
-
+	modelTarget_->Draw(worldTransform3DReticle_, *viewProjection_);
 	for (PlayerBullet* bullet : bullets_) {
 
 		bullet->Draw(*viewProjection_);
 	}
 }
 
-void Player::OnCollision() {
-
-
-}
+void Player::OnCollision() {}

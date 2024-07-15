@@ -58,11 +58,15 @@ private:
 	// 3Dモデル
 	Model* model_ = nullptr;
 
+	Model* modelTarget = nullptr;
+
 	// テクスチャーハンドル
 	uint32_t textureHandle_ = 0u;
 
 	// ビューポート
 	ViewProjection* viewProjection_ = nullptr;
+
+	WorldTransform worldTransform3DReticle_;
 
 	
 
