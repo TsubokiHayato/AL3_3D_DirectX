@@ -8,6 +8,7 @@
 Enemy::~Enemy() {
 
 	model_ = nullptr;
+	
 	viewProjection_ = nullptr;
 }
 
@@ -28,22 +29,19 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vecto
 }
 
 void Enemy::Update() {
-// キャラクターの移動速さ
+	// キャラクターの移動速さ
 	const float kCharaSpeed = -0.01f;
 	// Enemyの移動ベクトル
 	Vector3 moveApproach = {0.0f, 0.0f, kCharaSpeed};
 	Vector3 moveLeave = {0.0f, 0.0f, 0.0f};
 
-	
-
-	ApproachPhaseUpdate();
-
 	switch (phase_) {
 	case Phase::Approach:
-		
-		worldTransform_.translation_.x += + moveApproach.x;
-		worldTransform_.translation_.y += + moveApproach.y;
-		worldTransform_.translation_.z += + moveApproach.z;
+		ApproachPhaseUpdate();
+
+		worldTransform_.translation_.x += +moveApproach.x;
+		worldTransform_.translation_.y += +moveApproach.y;
+		worldTransform_.translation_.z += +moveApproach.z;
 
 		if (worldTransform_.translation_.z < 0.0f) {
 			phase_ = Phase::Leave;
@@ -51,11 +49,9 @@ void Enemy::Update() {
 		break;
 	case Phase::Leave:
 
-	
-		worldTransform_.translation_.x -= + moveApproach.x;
-		worldTransform_.translation_.y -= + moveApproach.y;
-		worldTransform_.translation_.z -= + moveApproach.z;
-
+		worldTransform_.translation_.x -= +moveApproach.x;
+		worldTransform_.translation_.y -= +moveApproach.y;
+		worldTransform_.translation_.z -= +moveApproach.z;
 
 		break;
 	}
@@ -69,7 +65,6 @@ void Enemy::Draw() {
 	// 3D作成
 	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
 }
-
 
 void Enemy::Fire() {
 

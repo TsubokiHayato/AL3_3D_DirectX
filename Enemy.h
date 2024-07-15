@@ -44,8 +44,10 @@ public:
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
 
+	bool IsDead() const { return isDead_; }
 	
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+
 
 private:
 	Player* player_ = nullptr;
@@ -71,4 +73,6 @@ private:
 	int32_t ShotTimer = 0;
 
 	GameScene* gameScene_ = nullptr;
+
+	bool isDead_ = false;
 };

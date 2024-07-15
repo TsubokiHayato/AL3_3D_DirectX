@@ -42,7 +42,17 @@ struct Vector3 final {
 		return *this;
 	}
 
-	
+	Vector3& operator*(float scalar) {
+		x *= scalar;
+		y *= scalar;
+		z *= scalar;
+		return *this;
+	}
 
-	
+	Vector3& operator-(const Vector3& other) {
+		x -= other.x;
+		y -= other.y;
+		z -= other.z;
+		return *this;
+	}
 };
