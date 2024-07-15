@@ -10,6 +10,7 @@ Enemy::~Enemy() {
 	model_ = nullptr;
 	
 	viewProjection_ = nullptr;
+	gameScene_ = nullptr;
 }
 
 void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) {

@@ -77,19 +77,28 @@ void GameScene::CheckAllCollisions() {
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
-	for (EnemyBullet* bullet : enemyBullets_) {
-		delete bullet;
-	}
-	delete debugCamera_;
-	delete railCamera;
-	delete player;
-	delete enemy;
-	delete skydome;
 	// 3Dモデル削除
-
+delete player;
+	
+	delete skydome;
 	delete modelPlayer;
 	delete modelEnemy;
 	delete modelSkydome;
+	for (Enemy* enemy_ : enemies_) {
+		delete enemy_;
+		
+	}
+	enemies_.clear();
+
+	for (EnemyBullet* bullet : enemyBullets_) {
+		delete bullet;
+	}
+	enemyBullets_.clear();
+
+	delete debugCamera_;
+	delete railCamera;
+	
+	
 }
 
 void GameScene::Initialize() {
