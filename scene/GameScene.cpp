@@ -32,6 +32,18 @@ void GameScene::Initialize() {
 	* Chara
 	--------*/
 
+
+
+	/*---------
+	  SkyDome
+	---------*/
+
+	
+
+	modelSkyDome.reset(Model::CreateFromOBJ("SkyDome", true));
+
+	skyDome->Initialize(modelSkyDome.get(), &viewProjection);
+
 	// 自キャラの生成
 	player = std::make_unique<Player>();
 	// 自キャラの初期化

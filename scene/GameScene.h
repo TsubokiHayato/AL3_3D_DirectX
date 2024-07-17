@@ -12,6 +12,7 @@
 #include "Player.h"
 #include<memory>
 
+#include"SkyDome.h"
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -58,12 +59,13 @@ private: // メンバ変数
 
 	std::unique_ptr<Player> player = nullptr;
 
+	std::unique_ptr<SkyDome> skyDome = nullptr;
 	/*------------
 	   テクスチャ
 	------------*/
 	uint32_t textureHandle = 0;
 	std::unique_ptr<Model> model = nullptr;
-
+	std::unique_ptr<Model> modelSkyDome = nullptr;
 	
 	/*--------------
 	* ワールド・ビュー
