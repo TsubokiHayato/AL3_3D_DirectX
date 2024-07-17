@@ -71,4 +71,7 @@ private:
 	
 	Sprite* sprite2DReticle_ = nullptr;
 
+
+	XINPUT_STATE joyState;
+
 };
