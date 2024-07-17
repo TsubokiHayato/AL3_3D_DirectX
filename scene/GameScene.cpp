@@ -39,7 +39,7 @@ void GameScene::Initialize() {
 	---------*/
 
 	
-
+	modelSkyDome.reset(Model::Create());
 	modelSkyDome.reset(Model::CreateFromOBJ("SkyDome", true));
 
 	skyDome->Initialize(modelSkyDome.get(), &viewProjection);
@@ -57,7 +57,7 @@ void GameScene::Update() {
 	----------*/
 	// 自キャラの更新
 	player->Update();
-
+	skyDome->Update();
 }
 
 void GameScene::Draw() {
@@ -95,6 +95,8 @@ void GameScene::Draw() {
 	-----------*/
 	//自キャラ
 	player->Draw();
+
+	skyDome->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
