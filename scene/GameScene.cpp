@@ -170,14 +170,14 @@ void GameScene::Update() {
 		return false;
 	});
 
-	//// デスフラグの立った敵を削除
-	//enemies_.remove_if([](Enemy* enemy_) {
-	//	if (enemy_->IsDead) {
-	//		delete enemy_;
-	//		return true;
-	//	}
-	//	return false;
-	//});
+	// デスフラグの立った敵を削除
+	enemies_.remove_if([](Enemy* enemy_) {
+		if (enemy_->IsDead()) {
+			delete enemy_;
+			return true;
+		}
+		return false;
+	});
 
 	/*-----------
 	DebugCamera

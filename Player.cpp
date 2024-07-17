@@ -100,7 +100,11 @@ void Player::Update(const Matrix4x4 viewMatrix, const Matrix4x4 viewProjectionMa
 	} else if (input_->PushKey(DIK_D)) {
 		worldTransform_.rotation_.y += kRotSpeed;
 	}
-
+	if (input_->PushKey(DIK_W)) {
+		worldTransform_.rotation_.x -= kRotSpeed;
+	} else if (input_->PushKey(DIK_S)) {
+		worldTransform_.rotation_.x += kRotSpeed;
+	}
 	// playerの移動ベクトル
 	Vector3 move = {0.0f, 0.0f, 0.0f};
 
