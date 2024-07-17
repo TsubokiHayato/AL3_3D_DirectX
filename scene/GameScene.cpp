@@ -22,7 +22,7 @@ void GameScene::Initialize() {
 	//ポーションの画像
 	textureHandle = TextureManager::Load("Recovery_agents.png");
 
-	model.reset(Model::Create());
+	modelPlayer.reset(Model::Create());
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
@@ -43,11 +43,22 @@ void GameScene::Initialize() {
 
 	skyDome->Initialize(modelSkyDome.get(), &viewProjection);
 
+	/*---------
+	  SkyDome
+	---------*/
+	modelPlane.reset(Model::CreateFromOBJ("plane", true));
+
+	plane = std::make_unique<Plane>();
+
+	plane->Initialize(modelPlane.get(), &viewProjection);
+
+
+
 
 	// 自キャラの生成
 	player = std::make_unique<Player>();
 	// 自キャラの初期化
-	player->Initialize(model.get(), textureHandle, &viewProjection);
+	player->Initialize(modelPlayer.get(), textureHandle, &viewProjection);
 }
 
 void GameScene::Update() {
@@ -58,6 +69,7 @@ void GameScene::Update() {
 	// 自キャラの更新
 	player->Update();
 	skyDome->Update();
+	plane->Update();
 }
 
 void GameScene::Draw() {
@@ -97,6 +109,8 @@ void GameScene::Draw() {
 	player->Draw();
 
 	skyDome->Draw();
+
+	plane->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
