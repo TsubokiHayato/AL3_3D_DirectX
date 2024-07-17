@@ -15,4 +15,4 @@ void SkyDome::Initialize(Model* model, ViewProjection* viewProjection) {
 }
 
 void SkyDome::Update() { Sky_worldTransform_.TransferMatrix(); }
-void SkyDome::Draw() { Sky_Model_->Draw(Sky_worldT
+void SkyDome::Draw() { Sky_Model_->Draw(Sky_worldTransform_, *Sky_viewProjection_); }
