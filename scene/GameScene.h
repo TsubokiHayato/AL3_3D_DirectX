@@ -68,13 +68,20 @@ private: // メンバ変数
 	
 	std::unique_ptr<Plane> plane = nullptr;
 
-		std::unique_ptr < DebugCamera> debugCamera_ = nullptr;
+	std::unique_ptr < DebugCamera> debugCamera_ = nullptr;
+
+
 
 	/*------------
 	   テクスチャ
 	------------*/
 	uint32_t textureHandle = 0;
-	std::unique_ptr<Model> modelPlayer = nullptr;
+	std::unique_ptr<Model> modelPlayer_Head = nullptr;
+	std::unique_ptr<Model> modelPlayer_Body = nullptr;
+	std::unique_ptr<Model> modelPlayer_LeftArm = nullptr;
+	std::unique_ptr<Model> modelPlayer_RightArm = nullptr;
+
+
 	std::unique_ptr<Model> modelSkyDome = nullptr;
 	std::unique_ptr<Model> modelPlane = nullptr;
 	
@@ -85,5 +92,7 @@ private: // メンバ変数
 	ViewProjection viewProjection;
 
 	bool isDebugCameraActive_ = false;
+
+
 
 };

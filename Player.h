@@ -3,6 +3,7 @@
 #include "WorldTransform.h"
 #include "Model.h"
 
+
 //#include "TextureManager.h"
 
 
@@ -11,7 +12,7 @@ class Player {
 public:
 
 	// 初期化
-	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
+	void Initialize(Model* modelHead,Model* modelBody, Model* modelLeftArm,Model* modelRightArm, ViewProjection* viewProjection);
 	//更新
 	void Update();
 	//描画
@@ -22,8 +23,19 @@ private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_;
 
+	WorldTransform worldHeadTransform_;
+	WorldTransform worldBodyTransform_;
+	WorldTransform worldLArmTransform_;
+	WorldTransform worldRArmTransform_;
+
+	
+
+
 	//3Dモデル
-	Model* model_ = nullptr;
+	Model* modelHead_ = nullptr;
+	Model* modelBody_ = nullptr;
+	Model* modelLeftArm_ = nullptr;
+	Model* modelRightArm_ = nullptr;
 
 	//テクスチャーハンドル
 	uint32_t textureHandle_ = 0u;

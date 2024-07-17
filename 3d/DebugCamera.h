@@ -17,6 +17,11 @@ public:
 	/// <param name="window_height">画面高さ</param>
 	DebugCamera(int window_width, int window_height);
 
+
+		Matrix4x4 GetView() { return viewProjection_.matView; }
+	Matrix4x4 GetProjection() { return viewProjection_.matProjection; }
+
+
 	// 更新
 	void Update();
 
