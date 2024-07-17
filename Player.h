@@ -43,6 +43,11 @@ private:
 	//ビューポート
 	ViewProjection* viewProjection_=nullptr;
 
+	ViewProjection* HeadViewProjection_;
+	ViewProjection* BodyViewProjection_;
+	ViewProjection* LArmViewProjection_;
+	ViewProjection* RArmViewProjection_;
+
 };
 
 
