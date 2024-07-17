@@ -10,6 +10,7 @@
 
 //#include <DebugCamera.h>
 #include "Player.h"
+#include<memory>
 
 /// <summary>
 /// ゲームシーン
@@ -54,14 +55,14 @@ private: // メンバ変数
 	/*-----------
 	　 キャラクタ
 	-----------*/
-	Player* player = nullptr;
 
+	std::unique_ptr<Player> player = nullptr;
 
 	/*------------
 	   テクスチャ
 	------------*/
 	uint32_t textureHandle = 0;
-	Model* model = nullptr;
+	std::unique_ptr<Model> model = nullptr;
 
 	
 	/*--------------

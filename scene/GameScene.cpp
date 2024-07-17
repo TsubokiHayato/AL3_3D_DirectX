@@ -6,10 +6,7 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 
-	// 3Dモデル削除
-	delete model;
-
-	delete player;
+	
 
 }
 
@@ -25,7 +22,7 @@ void GameScene::Initialize() {
 	//ポーションの画像
 	textureHandle = TextureManager::Load("Recovery_agents.png");
 
-	model = Model::Create();
+	model.reset(Model::Create());
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
@@ -36,9 +33,9 @@ void GameScene::Initialize() {
 	--------*/
 
 	// 自キャラの生成
-	player = new Player;
+	player = std::make_unique<Player>();
 	// 自キャラの初期化
-	player->Initialize(model, textureHandle, &viewProjection);
+	player->Initialize(model.get(), textureHandle, &viewProjection);
 }
 
 void GameScene::Update() {
