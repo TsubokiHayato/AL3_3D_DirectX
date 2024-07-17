@@ -5,6 +5,8 @@
 #include <Vector3.h>
 #include <cassert>
 
+#include"ImGuiManager.h"
+
 Enemy::~Enemy() {
 
 	model_ = nullptr;
@@ -106,7 +108,9 @@ void Enemy::ApproachPhaseUpdate() {
 	}
 }
 
-void Enemy::OnCollision() { isDead_ = true; }
+void Enemy::OnCollision() { isDead_ = true; 
+ImGui::Text("isEnemyDead");
+}
 
 Vector3 Enemy::GetWorldPos() {
 

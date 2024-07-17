@@ -21,7 +21,7 @@ void GameScene::CheckAllCollisions() {
 		enemyBulletPos = enemyBullet->GetWorldPos();
 
 		float distance = powf((enemyBulletPos.x - playerPos.x), 2.0f) + powf((enemyBulletPos.y - playerPos.y), 2.0f) + powf((enemyBulletPos.z - playerPos.z), 2.0f);
-		float length = 1.0f;
+		float length = 3.0f;
 		if (distance <= length) {
 
 			player->OnCollision();
@@ -42,10 +42,10 @@ void GameScene::CheckAllCollisions() {
 			playerBulletPos = playerBullet->GetWorldPos();
 
 			float distance = powf((playerBulletPos.x - enemyPos.x), 2.0f) + powf((playerBulletPos.y - enemyPos.y), 2.0f) + powf((playerBulletPos.z - enemyPos.z), 2.0f);
-			float length = 1.0f;
+			float length = 3.0f;
 			if (distance <= length) {
 
-				enemy->OnCollision();
+				enemy_->OnCollision();
 				playerBullet->OnCollision();
 			}
 		}
@@ -63,7 +63,7 @@ void GameScene::CheckAllCollisions() {
 			enemyBulletPos = enemyBullet->GetWorldPos();
 
 			float distance = powf((playerBulletPos.x - enemyBulletPos.x), 2.0f) + powf((playerBulletPos.y - enemyBulletPos.y), 2.0f) + powf((playerBulletPos.z - enemyBulletPos.z), 2.0f);
-			float length = 1.0f;
+			float length = 3.0f;
 			if (distance <= length) {
 
 				playerBullet->OnCollision();
