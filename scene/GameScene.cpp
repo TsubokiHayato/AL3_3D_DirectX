@@ -44,7 +44,7 @@ void GameScene::Initialize() {
 	skyDome->Initialize(modelSkyDome.get(), &viewProjection);
 
 	/*---------
-	  SkyDome
+	  plane
 	---------*/
 	modelPlane.reset(Model::CreateFromOBJ("plane", true));
 

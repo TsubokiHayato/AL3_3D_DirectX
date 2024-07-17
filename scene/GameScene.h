@@ -14,6 +14,9 @@
 
 #include"SkyDome.h"
 #include"Plane.h"
+
+#include<DebugCamera.h>
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -64,6 +67,8 @@ private: // メンバ変数
 
 	
 	std::unique_ptr<Plane> plane = nullptr;
+
+	DebugCamera* debugCamera_ = nullptr;
 
 	/*------------
 	   テクスチャ

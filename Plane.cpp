@@ -14,6 +14,8 @@ void Plane::Initialize(Model* model, ViewProjection* viewProjection) {
 	viewProjection_ = viewProjection;
 }
 
-void Plane::Update() { worldTransform_.TransferMatrix(); }
+void Plane::Update() {
+	worldTransform_.translation_ = {};
+	worldTransform_.TransferMatrix(); }
 
 void Plane::Draw() { model_->Draw(worldTransform_, *viewProjection_); }
