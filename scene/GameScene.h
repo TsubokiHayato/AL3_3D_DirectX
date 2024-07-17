@@ -84,4 +84,6 @@ private: // メンバ変数
 	
 	ViewProjection viewProjection;
 
+	bool isDebugCameraActive_ = false;
+
 };
