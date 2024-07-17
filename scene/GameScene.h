@@ -68,7 +68,7 @@ private: // メンバ変数
 	
 	std::unique_ptr<Plane> plane = nullptr;
 
-	DebugCamera* debugCamera_ = nullptr;
+		std::unique_ptr < DebugCamera> debugCamera_ = nullptr;
 
 	/*------------
 	   テクスチャ

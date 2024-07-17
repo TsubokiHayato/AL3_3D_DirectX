@@ -59,6 +59,12 @@ void GameScene::Initialize() {
 	player = std::make_unique<Player>();
 	// 自キャラの初期化
 	player->Initialize(modelPlayer.get(), textureHandle, &viewProjection);
+
+
+	/*-----------
+	 DEBUG_CAMERA
+	-----------*/
+	debugCamera_ = std::make_unique < DebugCamera>(1280, 720);
 }
 
 void GameScene::Update() {
