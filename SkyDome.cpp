@@ -3,11 +3,12 @@
 #include <cassert>
 
 void SkyDome::Initialize(Model* model, ViewProjection* viewProjection) {
-	assert(model);
+	//assert(model);
 
 	// 3Dモデルの作成
 	Sky_Model_ = model;
 
+	
 	// ワールドトランスフォームの初期化
 	Sky_worldTransform_.Initialize();
 
