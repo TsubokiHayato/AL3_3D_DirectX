@@ -4,8 +4,9 @@
 
 #include "MT_Matrix.h"
 
+#include "ImGuiManager.h"
+#include "Input.h"
 #include "ViewProjection.h"
-#include"ImGuiManager.h"
 
 // 初期化
 void Player::Initialize(Model* modelHead, Model* modelBody, Model* modelLeftArm, Model* modelRightArm, ViewProjection* viewProjection) {
@@ -43,15 +44,27 @@ void Player::Initialize(Model* modelHead, Model* modelBody, Model* modelLeftArm,
 	RArmViewProjection_ = viewProjection;
 
 	viewProjection_ = viewProjection;
+
+
+	
 }
 // 更新
 void Player::Update() {
 
-	
+	XINPUT_STATE joyState;
+
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		const float speed = 0.3f;
+		
+		move.x += (float)joyState.Gamepad.sThumbLX / SHRT_MAX * speed;
+		move.z += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * speed;
+
+	}
+	worldBodyTransform_.translation_ = move;
+
 	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
 	ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
 	ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
-	
 
 	worldHeadTransform_.UpdateMatrix();
 	worldLArmTransform_.UpdateMatrix();
@@ -59,7 +72,6 @@ void Player::Update() {
 	worldBodyTransform_.UpdateMatrix();
 
 	worldTransform_.UpdateMatrix();
-
 }
 // 描画
 void Player::Draw() {

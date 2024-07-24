@@ -37,6 +37,12 @@ void GameScene::Initialize() {
 	--------*/
 
 
+	// 自キャラの生成
+	player = std::make_unique<Player>();
+	// 自キャラの初期化
+	player->Initialize(modelPlayer_Head.get(), modelPlayer_Body.get(), modelPlayer_LeftArm.get(), modelPlayer_RightArm.get(),&viewProjection);
+
+
 
 	/*---------
 	  SkyDome
@@ -59,16 +65,15 @@ void GameScene::Initialize() {
 
 
 
-	// 自キャラの生成
-	player = std::make_unique<Player>();
-	// 自キャラの初期化
-	player->Initialize(modelPlayer_Head.get(), modelPlayer_Body.get(), modelPlayer_LeftArm.get(), modelPlayer_RightArm.get(),&viewProjection);
-
-
 	/*-----------
 	 DEBUG_CAMERA
 	-----------*/
 	debugCamera_ = std::make_unique < DebugCamera>(1280, 720);
+
+	followCamera = std::make_unique<FollowCamera>();
+	followCamera->Initialize();
+	followCamera->SetTarget(&player->)
+
 }
 
 void GameScene::Update() {
@@ -96,6 +101,8 @@ void GameScene::Update() {
 		//
 		viewProjection.UpdateMatrix();
 	}
+
+	followCamera->Update();
 
 	/*----------
 	     3D

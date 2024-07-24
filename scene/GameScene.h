@@ -17,6 +17,8 @@
 
 #include<DebugCamera.h>
 
+#include"FollowCamera.h"
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -92,6 +94,13 @@ private: // メンバ変数
 	ViewProjection viewProjection;
 
 	bool isDebugCameraActive_ = false;
+
+
+	/*--------------
+	* camera
+	--------------*/
+
+	std::unique_ptr<FollowCamera> followCamera;
 
 
 

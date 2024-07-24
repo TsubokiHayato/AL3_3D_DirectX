@@ -48,6 +48,10 @@ private:
 	ViewProjection* LArmViewProjection_;
 	ViewProjection* RArmViewProjection_;
 
+
+	Vector3 move;
+	
+
 };
 
 
