@@ -267,3 +267,14 @@ inline Matrix4x4 Inverse(const Matrix4x4& m) {
 
 	return m2;
 }
+
+Matrix4x4 CalculateRotationMatrix(const Vector3& rotationAngles) {
+	float pitch = DegreesToRadians(rotationAngles.x);
+	float yaw = DegreesToRadians(rotationAngles.y);
+	float roll = DegreesToRadians(rotationAngles.z);
+
+	Matrix4x4 rotationMatrix;
+	rotationMatrix.SetRotation(pitch, yaw, roll);
+
+	return rotationMatrix;
+}
