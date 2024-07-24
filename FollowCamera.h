@@ -12,8 +12,8 @@ class FollowCamera {
 	void SetTarget(const WorldTransform* target) { target_ = target; }
 
 
-	Matrix4x4 GetProjection() { return viewProjection_.matProjection; }
-	const ViewProjection& GetViewProjection() { return viewProjection_; }
+	Matrix4x4 GetProjection() { return viewProjection_->matProjection; }
+	ViewProjection* GetViewProjection() { return viewProjection_; }
 
 	
 	private:

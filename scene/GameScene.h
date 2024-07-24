@@ -91,7 +91,7 @@ private: // メンバ変数
 	* ワールド・ビュー
 	--------------*/
 	
-	ViewProjection viewProjection;
+	ViewProjection *viewProjection;
 
 	bool isDebugCameraActive_ = false;
 
