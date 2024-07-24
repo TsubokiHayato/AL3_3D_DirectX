@@ -30,7 +30,8 @@ void GameScene::Initialize() {
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
-	viewProjection->Initialize();
+
+	viewProjection_.Initialize();
 
 	/*---------
 	* Chara
@@ -40,7 +41,7 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player = std::make_unique<Player>();
 	// 自キャラの初期化
-	player->Initialize(modelPlayer_Head.get(), modelPlayer_Body.get(), modelPlayer_LeftArm.get(), modelPlayer_RightArm.get(),viewProjection);
+	player->Initialize(modelPlayer_Head.get(), modelPlayer_Body.get(), modelPlayer_LeftArm.get(), modelPlayer_RightArm.get(),&viewProjection_);
 
 
 
@@ -51,7 +52,7 @@ void GameScene::Initialize() {
 
 	skyDome = std::make_unique<SkyDome>();
 
-	skyDome->Initialize(modelSkyDome.get(), viewProjection);
+	skyDome->Initialize(modelSkyDome.get(), &viewProjection_);
 
 	/*---------
 	  plane
@@ -60,7 +61,7 @@ void GameScene::Initialize() {
 
 	plane = std::make_unique<Plane>();
 
-	plane->Initialize(modelPlane.get(), viewProjection);
+	plane->Initialize(modelPlane.get(), &viewProjection_);
 
 
 
@@ -92,20 +93,23 @@ void GameScene::Update() {
 	if (isDebugCameraActive_) {
 
 		debugCamera_->Update();
-		viewProjection->matView = debugCamera_->GetView();
-		viewProjection->matProjection = debugCamera_->GetProjection();
+		viewProjection_.matView = debugCamera_->GetView();
+		viewProjection_.matProjection = debugCamera_->GetProjection();
 
 		//
-		viewProjection->TransferMatrix();
+		viewProjection_.TransferMatrix();
 	} else {
 		//
-		viewProjection->UpdateMatrix();
+		viewProjection_.UpdateMatrix();
 	}
 
 	followCamera->Update();
 
-	viewProjection = followCamera->GetViewProjection();
-	viewProjection->matProjection = followCamera->GetProjection();
+	viewProjection_.matView = followCamera->GetView();
+	viewProjection_.matProjection = followCamera->GetProjection();
+
+	viewProjection_.UpdateMatrix();
+	viewProjection_.TransferMatrix();
 
 	/*----------
 	     3D
