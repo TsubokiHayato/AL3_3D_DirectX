@@ -17,7 +17,7 @@ public:
 
 	Matrix4x4 GetView() { return viewProjection_.matView; }
 	Matrix4x4 GetProjection() { return viewProjection_.matProjection; }
-
+	
 
 private:
 
