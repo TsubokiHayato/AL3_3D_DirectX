@@ -11,10 +11,12 @@ class FollowCamera {
 
 	void SetTarget(const WorldTransform* target) { target_ = target; }
 
+
+	//ViewProjection GetViewProjection()  { return viewProjection_; };
 	
 	private:
 
-	ViewProjection* viewProjection;
+	ViewProjection* viewProjection_;
 	   
 	const WorldTransform* target_ = nullptr;
 };
