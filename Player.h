@@ -18,6 +18,8 @@ public:
 	//描画
 	void Draw();
 
+	WorldTransform& GetWorldTransform() { return worldTransform_; };
+	
 
 private:
 
