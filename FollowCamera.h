@@ -4,9 +4,8 @@
 
 
 class FollowCamera {
-	
-	public:
 
+public:
 	void Initialize();
 	void Update();
 
@@ -15,7 +14,7 @@ class FollowCamera {
 	Matrix4x4 GetView() { return viewProjection_.matView; }
 	Matrix4x4 GetProjection() { return viewProjection_.matProjection; }
 
-	
+	  const ViewProjection& GetViewProjection() const { return viewProjection_; }
 	
 	private:
 

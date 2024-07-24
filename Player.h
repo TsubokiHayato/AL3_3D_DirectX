@@ -24,7 +24,7 @@ public:
 	WorldTransform& GetWorldBodyTransform() { return worldBodyTransform_; };
 
 
-	
+	void SetViewProjection(const ViewProjection* viewProjection) { viewProjection = viewProjection_; }
 
 private:
 
@@ -49,7 +49,7 @@ private:
 	uint32_t textureHandle_ = 0u;
 
 	//ビューポート
-	ViewProjection* viewProjection_=nullptr;
+	const ViewProjection* viewProjection_=nullptr;
 
 	ViewProjection* HeadViewProjection_;
 	ViewProjection* BodyViewProjection_;

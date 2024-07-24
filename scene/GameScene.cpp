@@ -43,7 +43,7 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player->Initialize(modelPlayer_Head.get(), modelPlayer_Body.get(), modelPlayer_LeftArm.get(), modelPlayer_RightArm.get(),&viewProjection_);
 
-
+	
 
 	/*---------
 	  SkyDome
@@ -76,6 +76,8 @@ void GameScene::Initialize() {
 
 	followCamera->SetTarget(&player->GetWorldBodyTransform()); 
 
+
+	//player->SetViewProjection(&followCamera->GetViewProjection());
 }
 
 void GameScene::Update() {
