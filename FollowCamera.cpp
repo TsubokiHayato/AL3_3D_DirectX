@@ -1,13 +1,45 @@
 #include "FollowCamera.h"
+#include"Input.h"
 
-void FollowCamera::Initialize() { viewProjection_.Initialize(); }
+#include "MT_Matrix.h"
+// ベクトルに行列を適用する
+Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
+	return {
+	    vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0], vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1],
+	    vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2]};
+}
+void FollowCamera::Initialize() {
+	
+	viewProjection_.Initialize(); }
 
 void FollowCamera::Update() {
 	if (target_) {
 		Vector3 offset{0.0f, 2.0f, -10.0f};
 
+		Vector3 cameraRotationAngles = target_->rotation_;
+		Matrix4x4 rotateXMatrix = MakeRotateXMatrix(cameraRotationAngles.x);
+		Matrix4x4 rotateYMatrix = MakeRotateYMatrix(cameraRotationAngles.y);
+		Matrix4x4 rotateZMatrix = MakeRotateZMatrix(cameraRotationAngles.z);
+		Matrix4x4 rotateXYZMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
+
+		offset = TransformNormal(offset,rotateXYZMatrix );
+
+
 		viewProjection_.translation_ = target_->translation_ + offset;
 	}
 
+	
+	XINPUT_STATE joyState;
+
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+
+		const float speed = 0.3f;
+
+		viewProjection_.rotation_.y += (float)joyState.Gamepad.sThumbRX/ SHRT_MAX * speed;
+
+	}
+
 	viewProjection_.UpdateMatrix();
+	viewProjection_.TransferMatrix();
+	
 }

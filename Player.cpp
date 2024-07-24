@@ -33,6 +33,8 @@ void Player::Initialize(Model* modelHead, Model* modelBody, Model* modelLeftArm,
 	worldLArmTransform_.parent_ = &worldBodyTransform_;
 	worldRArmTransform_.parent_ = &worldBodyTransform_;
 
+
+
 	worldHeadTransform_.translation_ = {0.0f, 1.5f, 0.0f};
 	worldBodyTransform_.translation_ = {0.0f, 0.0f, 0.0f};
 	worldLArmTransform_.translation_ = {-0.4f, 1.3f, 0.0f};
@@ -61,15 +63,17 @@ void Player::Update() {
 
 	}
 	worldBodyTransform_.translation_ = move;
+	
 
 	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
 	ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
 	ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
 
+worldBodyTransform_.UpdateMatrix();
 	worldHeadTransform_.UpdateMatrix();
 	worldLArmTransform_.UpdateMatrix();
 	worldRArmTransform_.UpdateMatrix();
-	worldBodyTransform_.UpdateMatrix();
+	
 
 	worldTransform_.UpdateMatrix();
 }

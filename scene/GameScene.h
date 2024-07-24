@@ -100,7 +100,7 @@ private: // メンバ変数
 	* camera
 	--------------*/
 
-	std::unique_ptr<FollowCamera> followCamera;
+	std::unique_ptr<FollowCamera> followCamera=nullptr;
 
 
 

@@ -21,6 +21,9 @@ public:
 	void Draw();
 
 	WorldTransform& GetWorldTransform() { return worldTransform_; };
+	WorldTransform& GetWorldBodyTransform() { return worldBodyTransform_; };
+
+
 	
 
 private:

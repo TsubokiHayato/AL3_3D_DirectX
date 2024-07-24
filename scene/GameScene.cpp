@@ -73,7 +73,8 @@ void GameScene::Initialize() {
 
 	followCamera = std::make_unique<FollowCamera>();
 	followCamera->Initialize();
-	followCamera->SetTarget(&player->GetWorldTransform()); 
+
+	followCamera->SetTarget(&player->GetWorldBodyTransform()); 
 
 }
 
@@ -103,12 +104,13 @@ void GameScene::Update() {
 		viewProjection_.UpdateMatrix();
 	}
 
+	
 	followCamera->Update();
 
 	viewProjection_.matView = followCamera->GetView();
 	viewProjection_.matProjection = followCamera->GetProjection();
 
-	viewProjection_.UpdateMatrix();
+	
 	viewProjection_.TransferMatrix();
 
 	/*----------
