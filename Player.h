@@ -57,7 +57,7 @@ private:
 	ViewProjection* RArmViewProjection_;
 
 
-	Vector3 move;
+	
 	
 
 };

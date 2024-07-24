@@ -49,6 +49,8 @@ void Player::Initialize(Model* modelHead, Model* modelBody, Model* modelLeftArm,
 	RArmViewProjection_ = viewProjection;
 
 	viewProjection_ = viewProjection;
+
+	
 }
 // 更新
 void Player::Update() {
@@ -58,24 +60,19 @@ void Player::Update() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		const float speed = 0.3f;
 
-		move.x += (float)joyState.Gamepad.sThumbLX / SHRT_MAX * speed;
-		move.z += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * speed;
+		Vector3 move = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX , 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
 
-		//move = Normalize(move);
+		move = Normalize(move) * speed;
 
-		ViewProjection cameraViewPro;
+		Matrix4x4 viewport = BodyViewProjection_->matView;
+		Vector3 rotate = TransformNormal(move, Inverse(viewport));
 
-		Vector3 cameraRotationAngles = cameraViewPro.rotation_;
-		Matrix4x4 rotateXMatrix = MakeRotateXMatrix(cameraRotationAngles.x);
-		Matrix4x4 rotateYMatrix = MakeRotateYMatrix(cameraRotationAngles.y);
-		Matrix4x4 rotateZMatrix = MakeRotateZMatrix(cameraRotationAngles.z);
-		Matrix4x4 rotateXYZMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
+		move.sanitize();
+		rotate.sanitize();
 
-		worldBodyTransform_.translation_ = TransformNormal(cameraViewPro.rotation_, rotateXYZMatrix);
-
+		worldBodyTransform_.rotation_.y = atan2(rotate.x, rotate.z);
+		worldBodyTransform_.translation_ += move;
 	}
-
-	worldBodyTransform_.translation_ = move;
 
 	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
 	ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
@@ -96,4 +93,3 @@ void Player::Draw() {
 	modelLeftArm_->Draw(worldLArmTransform_, *LArmViewProjection_);
 	modelRightArm_->Draw(worldRArmTransform_, *RArmViewProjection_);
 }
-

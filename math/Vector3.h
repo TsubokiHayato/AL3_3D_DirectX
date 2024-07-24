@@ -1,6 +1,7 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <cmath>
 
 /// <summary>
 /// 3次元ベクトル
@@ -32,6 +33,15 @@ struct Vector3 final {
 		this->y += other.y;
 		this->z += other.z;
 		return *this;
+	}
+
+	void sanitize() {
+		if (std::isnan(x))
+			x = 0.0f;
+		if (std::isnan(y))
+			y = 0.0f;
+		if (std::isnan(z))
+			z = 0.0f;
 	}
 };
 

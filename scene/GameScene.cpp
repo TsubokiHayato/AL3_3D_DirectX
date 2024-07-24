@@ -77,7 +77,7 @@ void GameScene::Initialize() {
 	followCamera->SetTarget(&player->GetWorldBodyTransform()); 
 
 
-	//player->SetViewProjection(&followCamera->GetViewProjection());
+	player->SetViewProjection(&followCamera->GetViewProjection());
 }
 
 void GameScene::Update() {
