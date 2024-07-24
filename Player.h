@@ -13,8 +13,10 @@ public:
 
 	// 初期化
 	void Initialize(Model* modelHead,Model* modelBody, Model* modelLeftArm,Model* modelRightArm, ViewProjection* viewProjection);
+	
 	//更新
 	void Update();
+	
 	//描画
 	void Draw();
 
