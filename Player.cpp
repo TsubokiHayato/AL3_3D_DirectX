@@ -8,6 +8,8 @@
 #include "Input.h"
 #include "ViewProjection.h"
 
+#define PI 3.14159265359f
+
 inline Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
 	return Vector3(
 	    vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0], vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1],
@@ -39,9 +41,13 @@ void Player::Initialize(Model* modelHead, Model* modelBody, Model* modelLeftArm,
 	worldRArmTransform_.parent_ = &worldBodyTransform_;
 
 	worldHeadTransform_.translation_ = {0.0f, 1.5f, 0.0f};
-	worldBodyTransform_.translation_ = {0.0f, 0.0f, 0.0f};
-	worldLArmTransform_.translation_ = {-0.4f, 1.3f, 0.0f};
-	worldRArmTransform_.translation_ = {0.4f, 1.3f, 0.0f};
+	worldBodyTransform_.translation_ = {0.0f, 2.0f, 0.0f};
+	worldLArmTransform_.translation_ = {-0.5f, 1.2f, 0.0f};
+	worldRArmTransform_.translation_ = {0.5f, 1.2f, 0.0f};
+
+	
+
+	InitializeFloatingGimmick();
 
 	HeadViewProjection_ = viewProjection;
 	BodyViewProjection_ = viewProjection;
@@ -49,8 +55,6 @@ void Player::Initialize(Model* modelHead, Model* modelBody, Model* modelLeftArm,
 	RArmViewProjection_ = viewProjection;
 
 	viewProjection_ = viewProjection;
-
-	
 }
 // 更新
 void Player::Update() {
@@ -60,7 +64,7 @@ void Player::Update() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		const float speed = 0.3f;
 
-		Vector3 move = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX , 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
+		Vector3 move = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX, 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
 
 		move = Normalize(move) * speed;
 
@@ -73,6 +77,8 @@ void Player::Update() {
 		worldBodyTransform_.rotation_.y = atan2(rotate.x, rotate.z);
 		worldBodyTransform_.translation_ += move;
 	}
+
+	UpdateFloatingGimmick();
 
 	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
 	ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
@@ -92,4 +98,32 @@ void Player::Draw() {
 	modelBody_->Draw(worldBodyTransform_, *BodyViewProjection_);
 	modelLeftArm_->Draw(worldLArmTransform_, *LArmViewProjection_);
 	modelRightArm_->Draw(worldRArmTransform_, *RArmViewProjection_);
+}
+
+void Player::InitializeFloatingGimmick() {
+
+	floatingParameter_ = 0.0f;
+	period = 120;
+
+	floatingSwing = 0.1f;
+}
+
+void Player::UpdateFloatingGimmick() {
+	step = 2.0f * PI / period;
+	floatingParameter_ += step;
+
+	floatingParameter_ = std::fmod(floatingParameter_, 2.0f * PI);
+
+	worldBodyTransform_.translation_.y += std::sin(floatingParameter_) * floatingSwing;
+
+	/*worldLArmTransform_.rotation_.x += std::sin(floatingParameter_) * floatingSwing;
+	worldRArmTransform_.rotation_.x += std::sin(floatingParameter_) * floatingSwing;*/
+
+	ImGui::Begin("player");
+	ImGui::DragFloat3("Head_Transform", &worldHeadTransform_.translation_.x, 0.1f);
+	ImGui::DragFloat3("LArm_Transform", &worldLArmTransform_.rotation_.x, 0.1f);
+	ImGui::DragFloat3("RArm_Transform", &worldRArmTransform_.rotation_.x, 0.1f);
+	ImGui::DragInt("period", &period, 1,1,300);
+	ImGui::DragFloat("floatingSwing", &floatingSwing, 0.1f,0.1f,30.0f);
+	ImGui::End();
 }

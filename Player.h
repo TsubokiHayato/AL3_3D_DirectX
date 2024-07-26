@@ -20,11 +20,16 @@ public:
 	//描画
 	void Draw();
 
+	void InitializeFloatingGimmick();
+
+	void UpdateFloatingGimmick();
+
 	WorldTransform& GetWorldTransform() { return worldTransform_; };
 	WorldTransform& GetWorldBodyTransform() { return worldBodyTransform_; };
 
 
 	void SetViewProjection(const ViewProjection* viewProjection) { viewProjection = viewProjection_; }
+
 
 private:
 
@@ -57,7 +62,10 @@ private:
 	ViewProjection* RArmViewProjection_;
 
 
-	
+	float floatingParameter_ = 0.0f;
+	int period = 120;
+	float step;
+	float floatingSwing = 2.0f;
 	
 
 };

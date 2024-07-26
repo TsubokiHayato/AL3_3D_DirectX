@@ -65,7 +65,6 @@ void GameScene::Initialize() {
 
 
 
-
 	/*-----------
 	 DEBUG_CAMERA
 	-----------*/
