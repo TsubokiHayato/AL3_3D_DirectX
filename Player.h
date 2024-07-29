@@ -37,6 +37,10 @@ public:
 		return result;
 	};
 
+	void InitializeFloatingGimmick();
+
+	void UpdateFloatingGimmick();
+
 
 private:
 
