@@ -42,9 +42,9 @@ void Player::Initialize(Model* modelHead, Model* modelBody, Model* modelLeftArm,
 	worldLArmTransform_.parent_ = &worldBodyTransform_;
 	worldRArmTransform_.parent_ = &worldBodyTransform_;
 
-	worldTransform_.translation_ = {};
-	worldHeadTransform_.translation_ = {0.0f, 1.5f, 0.0f};
-	worldBodyTransform_.translation_ = {0.0f, 2.0f, 0.0f};
+	worldTransform_.translation_ = {0.0f,0.0f, 0.0f};
+	worldHeadTransform_.translation_ = {0.0f, 1.4f, 0.0f};
+	worldBodyTransform_.translation_ = {0.0f, 0.3f, 0.0f};
 	worldLArmTransform_.translation_ = {-0.5f, 1.2f, 0.0f};
 	worldRArmTransform_.translation_ = {0.5f, 1.2f, 0.0f};
 
@@ -92,7 +92,7 @@ void Player::Update() {
 
 		worldTransform_.rotation_.y = std::atan2(sub.x, sub.y);
 
-		worldTransform_.rotation_= viewProjection_->rotation_;
+		worldTransform_.rotation_.y= viewProjection_->rotation_.y;
 		// Add the movement to the translation
 		worldTransform_.translation_ = targetPos;
 	} 
@@ -100,9 +100,9 @@ void Player::Update() {
 
 	
 
-	ImGui::DragFloat3("Body_Scale", &worldTransform_.scale_.x, 0.1f);
-	ImGui::DragFloat3("Body_Rotation", &worldTransform_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("Body_Transform", &worldTransform_.translation_.x, 0.1f);
+	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
+	ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
+	ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
 
 	UpdateFloatingGimmick();
 
@@ -127,7 +127,7 @@ void Player::InitializeFloatingGimmick() {
 	floatingParameter_ = 0.0f;
 	period = 120;
 
-	floatingSwing = 0.1f;
+	floatingSwing = 0.01f;
 }
 
 void Player::UpdateFloatingGimmick() {
@@ -137,9 +137,6 @@ void Player::UpdateFloatingGimmick() {
 	floatingParameter_ = std::fmod(floatingParameter_, 2.0f * PI);
 
 	worldBodyTransform_.translation_.y += std::sin(floatingParameter_) * floatingSwing;
-
-	/*worldLArmTransform_.rotation_.x += std::sin(floatingParameter_) * floatingSwing;
-	worldRArmTransform_.rotation_.x += std::sin(floatingParameter_) * floatingSwing;*/
 
 	ImGui::Begin("player");
 	ImGui::DragFloat3("Head_Transform", &worldHeadTransform_.translation_.x, 0.1f);
