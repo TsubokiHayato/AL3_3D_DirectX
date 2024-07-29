@@ -71,7 +71,11 @@ private:
 
 	Vector3 move = {};
 	
-
+	
+	float floatingParameter_ = 0.0f;
+	int period = 120;
+	float step;
+	float floatingSwing = 2.0f;
 };
 
 
