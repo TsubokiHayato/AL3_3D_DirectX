@@ -44,9 +44,9 @@ void Player::Initialize(Model* modelHead, Model* modelBody, Model* modelLeftArm,
 
 	worldTransform_.translation_ = {};
 	worldHeadTransform_.translation_ = {0.0f, 1.5f, 0.0f};
-	worldBodyTransform_.translation_ = {0.0f, 0.0f, 0.0f};
-	worldLArmTransform_.translation_ = {-0.4f, 1.3f, 0.0f};
-	worldRArmTransform_.translation_ = {0.4f, 1.3f, 0.0f};
+	worldBodyTransform_.translation_ = {0.0f, 2.0f, 0.0f};
+	worldLArmTransform_.translation_ = {-0.5f, 1.2f, 0.0f};
+	worldRArmTransform_.translation_ = {0.5f, 1.2f, 0.0f};
 
 	HeadViewProjection_ = viewProjection;
 	BodyViewProjection_ = viewProjection;
