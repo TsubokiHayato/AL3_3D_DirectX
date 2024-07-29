@@ -115,3 +115,32 @@ void Player::Draw() {
 	modelLeftArm_->Draw(worldLArmTransform_, *LArmViewProjection_);
 	modelRightArm_->Draw(worldRArmTransform_, *RArmViewProjection_);
 }
+
+
+void Player::InitializeFloatingGimmick() {
+
+	floatingParameter_ = 0.0f;
+	period = 120;
+
+	floatingSwing = 0.1f;
+}
+
+void Player::UpdateFloatingGimmick() {
+	step = 2.0f * PI / period;
+	floatingParameter_ += step;
+
+	floatingParameter_ = std::fmod(floatingParameter_, 2.0f * PI);
+
+	worldBodyTransform_.translation_.y += std::sin(floatingParameter_) * floatingSwing;
+
+	/*worldLArmTransform_.rotation_.x += std::sin(floatingParameter_) * floatingSwing;
+	worldRArmTransform_.rotation_.x += std::sin(floatingParameter_) * floatingSwing;*/
+
+	ImGui::Begin("player");
+	ImGui::DragFloat3("Head_Transform", &worldHeadTransform_.translation_.x, 0.1f);
+	ImGui::DragFloat3("LArm_Transform", &worldLArmTransform_.rotation_.x, 0.1f);
+	ImGui::DragFloat3("RArm_Transform", &worldRArmTransform_.rotation_.x, 0.1f);
+	ImGui::DragInt("period", &period, 1, 1, 300);
+	ImGui::DragFloat("floatingSwing", &floatingSwing, 0.1f, 0.1f, 30.0f);
+	ImGui::End();
+}
