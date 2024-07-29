@@ -80,6 +80,11 @@ void Player::Update() {
 		// Normalize the movement vector
 		move = Normalize(move) * speed;
 
+		Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+
+		move = TransformNormal(move, rotateMatrix);
+
+
 		// Add the movement to the translation
 		worldTransform_.translation_ += move;
 	} 

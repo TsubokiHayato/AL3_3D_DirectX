@@ -1,5 +1,5 @@
 #include "FollowCamera.h"
-#include"Input.h"
+#include "Input.h"
 
 #include "MT_Matrix.h"
 
@@ -8,15 +8,10 @@ inline Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
 	    vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0], vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1],
 	    vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2]);
 }
-void FollowCamera::Initialize() {
-	
-	viewProjection_.Initialize(); 
-
-}
+void FollowCamera::Initialize() { viewProjection_.Initialize(); }
 
 void FollowCamera::Update() {
 
-	
 	XINPUT_STATE joyState;
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
@@ -39,5 +34,5 @@ void FollowCamera::Update() {
 	}
 
 	viewProjection_.UpdateMatrix();
-	
+	viewProjection_.TransferMatrix();
 }
