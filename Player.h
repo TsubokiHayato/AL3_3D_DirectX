@@ -2,17 +2,17 @@
 
 #include "WorldTransform.h"
 #include "Model.h"
-
+#include"BaseCharacter.h"
 
 //#include "TextureManager.h"
 
 
 //自キャラ
-class Player {
+class Player : public BaseCharacter {
 public:
 
 	// 初期化
-	void Initialize(Model* modelHead,Model* modelBody, Model* modelLeftArm,Model* modelRightArm, ViewProjection* viewProjection);
+	void Initialize(const std::vector<Model*>&models, ViewProjection* viewProjection);
 	
 	//更新
 	void Update();
@@ -67,12 +67,6 @@ private:
 	//ビューポート
 	const ViewProjection* viewProjection_=nullptr;
 
-	ViewProjection* HeadViewProjection_;
-	ViewProjection* BodyViewProjection_;
-	ViewProjection* LArmViewProjection_;
-	ViewProjection* RArmViewProjection_;
-
-
 	Vector3 move = {};
 	
 	
@@ -80,6 +74,11 @@ private:
 	int period = 120;
 	float step;
 	float floatingSwing = 2.0f;
+
+	static const int kModelIndexHead = 0;
+	static const int kModelIndexBody = 1;
+	static const int kModelIndexL_arm = 2;
+	static const int kModelIndexR_arm = 3;
 };
 
 

@@ -22,11 +22,25 @@ void GameScene::Initialize() {
 	//ポーションの画像
 	textureHandle = TextureManager::Load("Recovery_agents.png");
 
+
+	/*-----
+	 model
+	-----*/
 	modelPlayer_Head.reset(Model::CreateFromOBJ("float_Head", true));
 	modelPlayer_Body.reset(Model::CreateFromOBJ("float_Body", true));
 	modelPlayer_LeftArm.reset(Model::CreateFromOBJ("float_L_arm", true));
 	modelPlayer_RightArm.reset(Model::CreateFromOBJ("float_R_arm", true));
 
+	
+
+	std::vector<Model*> playerModels = {
+	    modelPlayer_Head.get(),
+	    modelPlayer_Body.get(),
+
+	    modelPlayer_LeftArm.get(),
+
+	    modelPlayer_RightArm.get(),
+	}; 
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
@@ -41,7 +55,7 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player = std::make_unique<Player>();
 	// 自キャラの初期化
-	player->Initialize(modelPlayer_Head.get(), modelPlayer_Body.get(), modelPlayer_LeftArm.get(), modelPlayer_RightArm.get(),&viewProjection_);
+	player->Initialize( playerModels,&viewProjection_);
 
 	
 
