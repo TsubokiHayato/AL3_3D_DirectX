@@ -8,8 +8,10 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
-//#include <DebugCamera.h>
+
 #include "Player.h"
+
+#include"Enemy.h"
 #include<memory>
 
 #include"SkyDome.h"
@@ -65,6 +67,8 @@ private: // メンバ変数
 
 	std::unique_ptr<Player> player = nullptr;
 
+	std::unique_ptr<Enemy> enemy = nullptr;
+
 	std::unique_ptr<SkyDome> skyDome = nullptr;
 
 	
@@ -78,13 +82,22 @@ private: // メンバ変数
 	   テクスチャ
 	------------*/
 	uint32_t textureHandle = 0;
+
+	/*------------
+	   model
+	------------*/
 	std::unique_ptr<Model> modelPlayer_Head = nullptr;
 	std::unique_ptr<Model> modelPlayer_Body = nullptr;
 	std::unique_ptr<Model> modelPlayer_LeftArm = nullptr;
 	std::unique_ptr<Model> modelPlayer_RightArm = nullptr;
 
+	std::unique_ptr<Model> modelEnemy_Head = nullptr;
+	std::unique_ptr<Model> modelEnemy_LeftArm = nullptr;
+	std::unique_ptr<Model> modelEnemy_RightArm = nullptr;
+
 
 	std::unique_ptr<Model> modelSkyDome = nullptr;
+
 	std::unique_ptr<Model> modelPlane = nullptr;
 	
 	/*--------------

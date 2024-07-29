@@ -17,17 +17,17 @@ inline Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
 	    vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2]);
 }
 // 初期化
-void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewProjection) {
+void Player::Initialize(const std::vector<Model*>&models, ViewProjection* viewProjection) {
 
 	assert(models[kModelIndexHead]);
 	assert(models[kModelIndexBody]);
 	assert(models[kModelIndexL_arm]);
 	assert(models[kModelIndexR_arm]);
 
-	models[kModelIndexHead]->Create();
-	models[kModelIndexBody];
-	models[kModelIndexL_arm];
-	models[kModelIndexR_arm];
+	modelHead_= models[kModelIndexHead];
+	modelBody_=models[kModelIndexBody];
+	modelLeftArm_= models[kModelIndexL_arm];
+	 modelRightArm_=models[kModelIndexR_arm];
 
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -110,15 +110,11 @@ void Player::Update() {
 // 描画
 void Player::Draw() {
 
-	/*modelHead_->Draw(worldHeadTransform_, *HeadViewProjection_);
-	modelBody_->Draw(worldBodyTransform_, *BodyViewProjection_);
-	modelLeftArm_->Draw(worldLArmTransform_, *LArmViewProjection_);
-	modelRightArm_->Draw(worldRArmTransform_, *RArmViewProjection_);*/
+	modelHead_->Draw(worldHeadTransform_, *viewProjection_);
+	modelBody_->Draw(worldBodyTransform_, *viewProjection_);
+	modelLeftArm_->Draw(worldLArmTransform_, *viewProjection_);
+	modelRightArm_->Draw(worldRArmTransform_, *viewProjection_);
 
-	models_[kModelIndexHead]->Draw(worldHeadTransform_, *viewProjection_);
-	models_[kModelIndexBody]->Draw(worldBodyTransform_, *viewProjection_);
-	models_[kModelIndexL_arm]->Draw(worldLArmTransform_, *viewProjection_);
-	models_[kModelIndexR_arm]->Draw(worldRArmTransform_, *viewProjection_);
 
 
 }

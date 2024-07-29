@@ -20,9 +20,6 @@ public:
 	//描画
 	void Draw();
 
-	WorldTransform& GetWorldTransform() { return worldTransform_; };
-	WorldTransform& GetWorldBodyTransform() { return worldBodyTransform_; };
-
 
 	void SetViewProjection(const ViewProjection* viewProjection) {  viewProjection_=viewProjection; }
 
@@ -40,6 +37,11 @@ public:
 	void InitializeFloatingGimmick();
 
 	void UpdateFloatingGimmick();
+
+
+	WorldTransform& GetWorldTransform() { return worldTransform_; };
+	
+
 
 
 private:
@@ -61,8 +63,6 @@ private:
 	Model* modelLeftArm_ = nullptr;
 	Model* modelRightArm_ = nullptr;
 
-	//テクスチャーハンドル
-	uint32_t textureHandle_ = 0u;
 
 	//ビューポート
 	const ViewProjection* viewProjection_=nullptr;

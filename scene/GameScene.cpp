@@ -36,11 +36,20 @@ void GameScene::Initialize() {
 	std::vector<Model*> playerModels = {
 	    modelPlayer_Head.get(),
 	    modelPlayer_Body.get(),
-
 	    modelPlayer_LeftArm.get(),
-
 	    modelPlayer_RightArm.get(),
 	}; 
+
+	modelEnemy_Head.reset(Model::Create());
+	modelEnemy_LeftArm.reset(Model::Create());
+	modelEnemy_RightArm.reset(Model::Create());
+
+	std::vector<Model*> enemyModels = {
+	    modelEnemy_Head.get(),
+	    modelEnemy_LeftArm.get(),
+	    modelEnemy_RightArm.get(),
+	}; 
+
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
@@ -55,9 +64,10 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player = std::make_unique<Player>();
 	// 自キャラの初期化
-	player->Initialize( playerModels,&viewProjection_);
+	player->Initialize(playerModels,&viewProjection_);
 
-	
+	enemy = std::make_unique<Enemy>();
+	enemy->Initialize(enemyModels, &viewProjection_);
 
 	/*---------
 	  SkyDome
@@ -81,7 +91,7 @@ void GameScene::Initialize() {
 
 
 	/*-----------
-	 DEBUG_CAMERA
+	 CAMERA
 	-----------*/
 	debugCamera_ = std::make_unique < DebugCamera>(1280, 720);
 
@@ -97,29 +107,29 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
-//
-//	/*-----------
-//	DebugCamera
-//	-----------*/
-//#ifdef _DEBUG
-//
-//	if (input_->TriggerKey(DIK_Q)) {
-//		isDebugCameraActive_ = true;
-//	}
-//#endif
-//
-//	if (isDebugCameraActive_) {
-//
-//		debugCamera_->Update();
-//		viewProjection_.matView = debugCamera_->GetView();
-//		viewProjection_.matProjection = debugCamera_->GetProjection();
-//
-//		//
-//		viewProjection_.TransferMatrix();
-//	} else {
-//		//
-//		viewProjection_.UpdateMatrix();
-//	}
+
+	/*-----------
+	DebugCamera
+	-----------*/
+#ifdef _DEBUG
+
+	if (input_->TriggerKey(DIK_Q)) {
+		isDebugCameraActive_ = true;
+	}
+#endif
+
+	if (isDebugCameraActive_) {
+
+		debugCamera_->Update();
+		viewProjection_.matView = debugCamera_->GetView();
+		viewProjection_.matProjection = debugCamera_->GetProjection();
+
+		//
+		viewProjection_.TransferMatrix();
+	} else {
+		//
+		viewProjection_.UpdateMatrix();
+	}
 
 	
 	followCamera->Update();
@@ -137,6 +147,7 @@ void GameScene::Update() {
 	player->Update();
 	skyDome->Update();
 	plane->Update();
+	enemy->Update();
 }
 
 void GameScene::Draw() {
@@ -174,6 +185,7 @@ void GameScene::Draw() {
 	-----------*/
 	//自キャラ
 	player->Draw();
+	enemy->Draw();
 
 	skyDome->Draw();
 
