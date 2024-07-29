@@ -24,7 +24,7 @@ public:
 	WorldTransform& GetWorldBodyTransform() { return worldBodyTransform_; };
 
 
-	void SetViewProjection(const ViewProjection* viewProjection) { viewProjection = viewProjection_; }
+	void SetViewProjection(const ViewProjection* viewProjection) {  viewProjection_=viewProjection; }
 
 	
 	Vector3 GetWorldTransformTranslate() {

@@ -83,10 +83,14 @@ void Player::Update() {
 		Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
 
 		move = TransformNormal(move, rotateMatrix);
+		Vector3 targetPos = worldTransform_.translation_ + move;
+		Vector3 sub = targetPos - GetWorldTransformTranslate();
 
+		worldTransform_.rotation_.y = std::atan2(sub.x, sub.y);
 
+		worldTransform_.rotation_= viewProjection_->rotation_;
 		// Add the movement to the translation
-		worldTransform_.translation_ += move;
+		worldTransform_.translation_ = targetPos;
 	} 
 
 
