@@ -58,32 +58,38 @@ void Player::Update() {
 	XINPUT_STATE joyState;
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+
 		const float speed = 0.3f;
 
-		Vector3 move = {(float)joyState.Gamepad.sThumbLX / SHRT_MAX , 0.0f, (float)joyState.Gamepad.sThumbLY / SHRT_MAX};
+		Vector3 Velocity_ = {};
+		Velocity_.x = (float)(joyState.Gamepad.sThumbLX / SHRT_MAX);
+		Velocity_.y = 0.0f;
+		Velocity_.z = (float)(joyState.Gamepad.sThumbLY / SHRT_MAX);
+		Velocity_ = Normalize(Velocity_) * speed;
 
-		move = Normalize(move) * speed;
+		Matrix4x4 rotateYMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
 
-		Matrix4x4 viewport = BodyViewProjection_->matView;
-		Vector3 rotate = TransformNormal(move, Inverse(viewport));
+		Velocity_ = TransformNormal(Velocity_, rotateYMatrix);
 
-		move.sanitize();
-		rotate.sanitize();
+		Vector3 targetPos = worldTransform_.translation_ + Velocity_;
+		Vector3 sub = targetPos - GetWorldTransformTranslate();
 
-		worldBodyTransform_.rotation_.y = atan2(rotate.x, rotate.z);
-		worldBodyTransform_.translation_ += move;
+		worldTransform_.rotation_.y = std::atan2(sub.x, sub.y);
+
+		worldTransform_.translation_ = targetPos;
 	}
+
+	
 
 	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
 	ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
 	ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
 
+	worldTransform_.UpdateMatrix();
 	worldBodyTransform_.UpdateMatrix();
 	worldHeadTransform_.UpdateMatrix();
 	worldLArmTransform_.UpdateMatrix();
 	worldRArmTransform_.UpdateMatrix();
-
-	worldTransform_.UpdateMatrix();
 }
 // 描画
 void Player::Draw() {
