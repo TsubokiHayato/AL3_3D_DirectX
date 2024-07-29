@@ -7,6 +7,7 @@
 #include "ImGuiManager.h"
 #include "Input.h"
 #include "ViewProjection.h"
+#include <algorithm>
 
 inline Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
 	return Vector3(
@@ -34,10 +35,12 @@ void Player::Initialize(Model* modelHead, Model* modelBody, Model* modelLeftArm,
 	worldRArmTransform_.Initialize();
 	worldBodyTransform_.Initialize();
 
+	worldBodyTransform_.parent_ = &worldTransform_;
 	worldHeadTransform_.parent_ = &worldBodyTransform_;
 	worldLArmTransform_.parent_ = &worldBodyTransform_;
 	worldRArmTransform_.parent_ = &worldBodyTransform_;
 
+	worldTransform_.translation_ = {};
 	worldHeadTransform_.translation_ = {0.0f, 1.5f, 0.0f};
 	worldBodyTransform_.translation_ = {0.0f, 0.0f, 0.0f};
 	worldLArmTransform_.translation_ = {-0.4f, 1.3f, 0.0f};
@@ -50,40 +53,44 @@ void Player::Initialize(Model* modelHead, Model* modelBody, Model* modelLeftArm,
 
 	viewProjection_ = viewProjection;
 
-	
+	move = {};
 }
 // 更新
 void Player::Update() {
 
 	XINPUT_STATE joyState;
 
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		const float speed = 0.3f;
 
-		Vector3 Velocity_ = {};
-		Velocity_.x = (float)(joyState.Gamepad.sThumbLX / SHRT_MAX);
-		Velocity_.y = 0.0f;
-		Velocity_.z = (float)(joyState.Gamepad.sThumbLY / SHRT_MAX);
-		Velocity_ = Normalize(Velocity_) * speed;
+		// Get joystick input values and clamp them to valid range
+		float thumbLX = static_cast<float>(joyState.Gamepad.sThumbLX);
+		float thumbLY = static_cast<float>(joyState.Gamepad.sThumbLY);
 
-		Matrix4x4 rotateYMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+		// Normalize the joystick values
+		float maxThumbValue = static_cast<float>(SHRT_MAX);
+		thumbLX = std::clamp(thumbLX / maxThumbValue, -1.0f, 1.0f);
+		thumbLY = std::clamp(thumbLY / maxThumbValue, -1.0f, 1.0f);
 
-		Velocity_ = TransformNormal(Velocity_, rotateYMatrix);
+		move.x = thumbLX;
+		move.y = 0.0f;
+		move.z = thumbLY;
 
-		Vector3 targetPos = worldTransform_.translation_ + Velocity_;
-		Vector3 sub = targetPos - GetWorldTransformTranslate();
+		// Normalize the movement vector
+		move = Normalize(move) * speed;
 
-		worldTransform_.rotation_.y = std::atan2(sub.x, sub.y);
+		// Add the movement to the translation
+		worldTransform_.translation_ += move;
+	} 
 
-		worldTransform_.translation_ = targetPos;
-	}
 
 	
 
-	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
-	ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
+	ImGui::DragFloat3("Body_Scale", &worldTransform_.scale_.x, 0.1f);
+	ImGui::DragFloat3("Body_Rotation", &worldTransform_.rotation_.x, 0.1f);
+	ImGui::DragFloat3("Body_Transform", &worldTransform_.translation_.x, 0.1f);
+
 
 	worldTransform_.UpdateMatrix();
 	worldBodyTransform_.UpdateMatrix();

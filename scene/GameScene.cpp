@@ -74,37 +74,38 @@ void GameScene::Initialize() {
 	followCamera = std::make_unique<FollowCamera>();
 	followCamera->Initialize();
 
-	followCamera->SetTarget(&player->GetWorldBodyTransform()); 
 
+    followCamera->SetTarget(&player->GetWorldTransform()); 
 
 	player->SetViewProjection(&followCamera->GetViewProjection());
+	
 }
 
 void GameScene::Update() {
 
-
-	/*-----------
-	DebugCamera
-	-----------*/
-#ifdef _DEBUG
-
-	if (input_->TriggerKey(DIK_Q)) {
-		isDebugCameraActive_ = true;
-	}
-#endif
-
-	if (isDebugCameraActive_) {
-
-		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetView();
-		viewProjection_.matProjection = debugCamera_->GetProjection();
-
-		//
-		viewProjection_.TransferMatrix();
-	} else {
-		//
-		viewProjection_.UpdateMatrix();
-	}
+//
+//	/*-----------
+//	DebugCamera
+//	-----------*/
+//#ifdef _DEBUG
+//
+//	if (input_->TriggerKey(DIK_Q)) {
+//		isDebugCameraActive_ = true;
+//	}
+//#endif
+//
+//	if (isDebugCameraActive_) {
+//
+//		debugCamera_->Update();
+//		viewProjection_.matView = debugCamera_->GetView();
+//		viewProjection_.matProjection = debugCamera_->GetProjection();
+//
+//		//
+//		viewProjection_.TransferMatrix();
+//	} else {
+//		//
+//		viewProjection_.UpdateMatrix();
+//	}
 
 	
 	followCamera->Update();

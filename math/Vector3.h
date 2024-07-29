@@ -93,13 +93,13 @@ inline float Length(const Vector3& v) {
 	len = sqrtf(Dot(v, v));
 	return len;
 }
+
 // 正規化
 inline Vector3 Normalize(const Vector3& v) {
-	float len = Length(v);
-	Vector3 v2 = {};
-	v2.x = v.x / len;
-	v2.y = v.y / len;
-	v2.z = v.z / len;
-
-	return v2;
+float length = std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+if (length > 0.0f) {
+	return Vector3(v.x / length, v.y / length, v.z / length);
+} else {
+	return Vector3(0.0f, 0.0f, 0.0f); // Return zero vector if length is zero
+}
 }
