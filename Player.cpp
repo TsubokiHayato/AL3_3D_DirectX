@@ -9,6 +9,8 @@
 #include "ViewProjection.h"
 #include <algorithm>
 
+#define PI 3.14159265359f
+
 inline Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
 	return Vector3(
 	    vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0], vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1],
@@ -54,6 +56,8 @@ void Player::Initialize(Model* modelHead, Model* modelBody, Model* modelLeftArm,
 	viewProjection_ = viewProjection;
 
 	move = {};
+
+	InitializeFloatingGimmick();
 }
 // 更新
 void Player::Update() {
@@ -100,6 +104,7 @@ void Player::Update() {
 	ImGui::DragFloat3("Body_Rotation", &worldTransform_.rotation_.x, 0.1f);
 	ImGui::DragFloat3("Body_Transform", &worldTransform_.translation_.x, 0.1f);
 
+	UpdateFloatingGimmick();
 
 	worldTransform_.UpdateMatrix();
 	worldBodyTransform_.UpdateMatrix();
