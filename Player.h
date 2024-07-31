@@ -90,6 +90,9 @@ private:
 	static const int kModelIndexR_arm = 3;
 	static const int kModelIndexHammer = 4;
 
+	Phase phase_ = Phase::Approach;
+
+
 };
 
 
