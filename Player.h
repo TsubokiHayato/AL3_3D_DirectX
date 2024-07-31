@@ -5,11 +5,13 @@
 #include"BaseCharacter.h"
 
 //#include "TextureManager.h"
-enum class Attack {
-	initializeAttack,
-	UpdateAttack,
-	returnAttack
+//  行動フェーズ
+enum class Phase {
+	Approach, // 接近
+	Leave     // 離脱
 };
+
+
 
 //自キャラ
 class Player : public BaseCharacter {

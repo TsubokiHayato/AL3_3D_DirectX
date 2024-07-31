@@ -57,10 +57,7 @@ void Player::Initialize(const std::vector<Model*>&models, ViewProjection* viewPr
 
 	move = {};
 
-	worldHammerTransform_.translation_ = {-0.5f, 0.6f, -2.3f};
 	worldHammerTransform_.rotation_.x = -3.5f;
-	worldLArmTransform_.rotation_.x = -3.0f;
-	worldRArmTransform_.rotation_.x = -3.0f;
 
 
 	InitializeFloatingGimmick();
@@ -70,7 +67,31 @@ void Player::Update() {
 
 
 	BehaviorRootUpdate();
-	BehaviorAttackUpdate();
+
+	switch (phase_) {
+	case Phase::Approach:
+		BehaviorAttackUpdate();
+
+		
+
+		if (worldRArmTransform_.rotation_.x > -1.5f) {
+			phase_ = Phase::Leave;
+		}
+		break;
+
+	case Phase::Leave:
+
+		worldHammerTransform_.translation_ = {-0.5f, 1.3f, -1.0f};
+		worldHammerTransform_.rotation_.x = -3.5f;
+		worldLArmTransform_.rotation_.x = -3.0f;
+		worldRArmTransform_.rotation_.x = -3.0f;
+
+		phase_ = Phase::Approach;
+
+		break;
+	}
+
+	
 
 	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
 	ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
@@ -159,26 +180,8 @@ void Player::BehaviorRootUpdate() {
 
 void Player::BehaviorAttackUpdate() { 
 
-	switch (Attack) {
-	case Phase::Approach:
-		ApproachPhaseUpdate();
-
-		worldTransform_.translation_.x += +moveApproach.x;
-		worldTransform_.translation_.y += +moveApproach.y;
-		worldTransform_.translation_.z += +moveApproach.z;
-
-		if (worldTransform_.translation_.z < 0.0f) {
-			phase_ = Phase::Leave;
-		}
-		break;
-	case Phase::Leave:
-
-		worldTransform_.translation_.x -= +moveApproach.x;
-		worldTransform_.translation_.y -= +moveApproach.y;
-		worldTransform_.translation_.z -= +moveApproach.z;
-
-		break;
-	}
+	worldRArmTransform_.rotation_.x += 0.04f;
+	worldLArmTransform_.rotation_.x += 0.04f;
 
 	ImGui::Begin("player");
 	ImGui::DragFloat3("hammer_tra", &worldHammerTransform_.translation_.x, 0.1f);
