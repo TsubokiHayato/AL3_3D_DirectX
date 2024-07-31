@@ -13,6 +13,7 @@
 
 class GameScene;
 class Player;
+
 // 行動フェーズ
 enum class Phase {
 	Approach, // 接近
