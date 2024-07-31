@@ -16,7 +16,8 @@ struct Vector3 final {
 	Vector3 scale(float scalar) const { return {x * scalar, y * scalar, z * scalar}; }
 
 	// 演算子オーバーロード
-	Vector3 operator+(const Vector3& other) const { return {x + other.x, y + other.y, z + other.z}; }
+	Vector3 operator+(const Vector3& other) const 
+	{ return {x + other.x, y + other.y, z + other.z}; }
 
 	Vector3 operator-(const Vector3& other) const { return {x - other.x, y - other.y, z - other.z}; }
 

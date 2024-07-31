@@ -23,11 +23,13 @@ void Player::Initialize(const std::vector<Model*>&models, ViewProjection* viewPr
 	assert(models[kModelIndexBody]);
 	assert(models[kModelIndexL_arm]);
 	assert(models[kModelIndexR_arm]);
+	assert(models[kModelIndexHammer]);
 
 	modelHead_= models[kModelIndexHead];
 	modelBody_=models[kModelIndexBody];
 	modelLeftArm_= models[kModelIndexL_arm];
 	 modelRightArm_=models[kModelIndexR_arm];
+	modelHammer_ = models[kModelIndexHammer];
 
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -36,11 +38,14 @@ void Player::Initialize(const std::vector<Model*>&models, ViewProjection* viewPr
 	worldLArmTransform_.Initialize();
 	worldRArmTransform_.Initialize();
 	worldBodyTransform_.Initialize();
+	worldHammerTransform_.Initialize();
 
 	worldBodyTransform_.parent_ = &worldTransform_;
 	worldHeadTransform_.parent_ = &worldBodyTransform_;
 	worldLArmTransform_.parent_ = &worldBodyTransform_;
 	worldRArmTransform_.parent_ = &worldBodyTransform_;
+
+	worldHammerTransform_.parent_ = &worldRArmTransform_;
 
 	worldTransform_.translation_ = {0.0f,0.0f, 0.0f};
 	worldHeadTransform_.translation_ = {0.0f, 1.4f, 0.0f};
@@ -52,13 +57,70 @@ void Player::Initialize(const std::vector<Model*>&models, ViewProjection* viewPr
 
 	move = {};
 
+	worldHammerTransform_.translation_ = {-0.5f, 0.6f, -2.3f};
+	worldHammerTransform_.rotation_.x = -3.5f;
+	worldLArmTransform_.rotation_.x = -3.0f;
+	worldRArmTransform_.rotation_.x = -3.0f;
+
+
 	InitializeFloatingGimmick();
 }
 // 更新
 void Player::Update() {
 
-	XINPUT_STATE joyState;
 
+	BehaviorRootUpdate();
+	BehaviorAttackUpdate();
+
+	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
+	ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
+	ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
+
+	UpdateFloatingGimmick();
+
+	worldTransform_.UpdateMatrix();
+	worldBodyTransform_.UpdateMatrix();
+	worldHeadTransform_.UpdateMatrix();
+	worldLArmTransform_.UpdateMatrix();
+	worldRArmTransform_.UpdateMatrix();
+	worldHammerTransform_.UpdateMatrix();
+}
+// 描画
+void Player::Draw() {
+
+	modelHead_->Draw(worldHeadTransform_, *viewProjection_);
+	modelBody_->Draw(worldBodyTransform_, *viewProjection_);
+	modelLeftArm_->Draw(worldLArmTransform_, *viewProjection_);
+	modelRightArm_->Draw(worldRArmTransform_, *viewProjection_);
+	modelHammer_->Draw(worldHammerTransform_, *viewProjection_);
+
+
+
+}
+
+
+void Player::InitializeFloatingGimmick() {
+
+	floatingParameter_ = 0.0f;
+	period = 120;
+
+	floatingSwing = 0.01f;
+}
+
+void Player::UpdateFloatingGimmick() {
+	step = 2.0f * PI / period;
+	floatingParameter_ += step;
+
+	floatingParameter_ = std::fmod(floatingParameter_, 2.0f * PI);
+
+	worldBodyTransform_.translation_.y += std::sin(floatingParameter_) * floatingSwing;
+
+}
+
+void Player::BehaviorRootUpdate() {
+
+	
+	XINPUT_STATE joyState;
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		const float speed = 0.3f;
@@ -87,59 +149,23 @@ void Player::Update() {
 
 		worldTransform_.rotation_.y = std::atan2(sub.x, sub.y);
 
-		worldTransform_.rotation_.y= viewProjection_->rotation_.y;
+		worldTransform_.rotation_.y = viewProjection_->rotation_.y;
 		// Add the movement to the translation
 		worldTransform_.translation_ = targetPos;
 	} 
 
 
+}
+
+void Player::BehaviorAttackUpdate() { 
+
 	
 
-	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
-	ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
-
-	UpdateFloatingGimmick();
-
-	worldTransform_.UpdateMatrix();
-	worldBodyTransform_.UpdateMatrix();
-	worldHeadTransform_.UpdateMatrix();
-	worldLArmTransform_.UpdateMatrix();
-	worldRArmTransform_.UpdateMatrix();
-}
-// 描画
-void Player::Draw() {
-
-	modelHead_->Draw(worldHeadTransform_, *viewProjection_);
-	modelBody_->Draw(worldBodyTransform_, *viewProjection_);
-	modelLeftArm_->Draw(worldLArmTransform_, *viewProjection_);
-	modelRightArm_->Draw(worldRArmTransform_, *viewProjection_);
-
-
-
-}
-
-
-void Player::InitializeFloatingGimmick() {
-
-	floatingParameter_ = 0.0f;
-	period = 120;
-
-	floatingSwing = 0.01f;
-}
-
-void Player::UpdateFloatingGimmick() {
-	step = 2.0f * PI / period;
-	floatingParameter_ += step;
-
-	floatingParameter_ = std::fmod(floatingParameter_, 2.0f * PI);
-
-	worldBodyTransform_.translation_.y += std::sin(floatingParameter_) * floatingSwing;
-
 	ImGui::Begin("player");
-	ImGui::DragFloat3("Head_Transform", &worldHeadTransform_.translation_.x, 0.1f);
-	ImGui::DragFloat3("LArm_Transform", &worldLArmTransform_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("RArm_Transform", &worldRArmTransform_.rotation_.x, 0.1f);
+	ImGui::DragFloat3("hammer_tra", &worldHammerTransform_.translation_.x, 0.1f);
+	ImGui::DragFloat3("hammer_rotate", &worldHammerTransform_.rotation_.x, 0.1f);
+	ImGui::DragFloat3("LArm_rotate", &worldLArmTransform_.rotation_.x, 0.1f);
+	ImGui::DragFloat3("RArm_rotate", &worldRArmTransform_.rotation_.x, 0.1f);
 	ImGui::DragInt("period", &period, 1, 1, 300);
 	ImGui::DragFloat("floatingSwing", &floatingSwing, 0.1f, 0.1f, 30.0f);
 	ImGui::End();

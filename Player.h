@@ -5,7 +5,11 @@
 #include"BaseCharacter.h"
 
 //#include "TextureManager.h"
-
+enum Attack {
+	initializeAttack,
+	UpdateAttack,
+	returnAttack
+};
 
 //自キャラ
 class Player : public BaseCharacter {
@@ -42,7 +46,9 @@ public:
 	WorldTransform& GetWorldTransform() { return worldTransform_; };
 	
 
+	void BehaviorRootUpdate();
 
+	void BehaviorAttackUpdate();
 
 private:
 
@@ -54,6 +60,8 @@ private:
 	WorldTransform worldLArmTransform_;
 	WorldTransform worldRArmTransform_;
 
+	WorldTransform worldHammerTransform_;
+
 	
 
 
@@ -62,6 +70,7 @@ private:
 	Model* modelBody_ = nullptr;
 	Model* modelLeftArm_ = nullptr;
 	Model* modelRightArm_ = nullptr;
+	Model* modelHammer_ = nullptr;
 
 
 	//ビューポート
@@ -79,6 +88,8 @@ private:
 	static const int kModelIndexBody = 1;
 	static const int kModelIndexL_arm = 2;
 	static const int kModelIndexR_arm = 3;
+	static const int kModelIndexHammer = 4;
+
 };
 
 
