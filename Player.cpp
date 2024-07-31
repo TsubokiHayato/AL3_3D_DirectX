@@ -12,8 +12,6 @@
 #include <XInput.h>
 #include <iostream>
 
-#include"GlobalVariables.h"
-
 #pragma comment(lib, "XInput.lib")
 
 #define PI 3.14159265359f
@@ -25,15 +23,6 @@ inline Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
 }
 // 初期化
 void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewProjection) {
-
-
-	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
-	const char* groupName = "Player";
-	//グループを追加
-	GlobalVariables::GetInstance()->CreateGroup(groupName);
-
-	globalVariables->SetValue(groupName, "Test", 90);
-
 
 	assert(models[kModelIndexHead]);
 	assert(models[kModelIndexBody]);
@@ -128,12 +117,11 @@ void Player::Update() {
 
 	UpdateFloatingGimmick();
 
-	
+	worldTransform_.UpdateMatrix();
 	worldBodyTransform_.UpdateMatrix();
 	worldHeadTransform_.UpdateMatrix();
 	worldLArmTransform_.UpdateMatrix();
 	worldRArmTransform_.UpdateMatrix();
-	worldTransform_.UpdateMatrix();
 	worldHammerTransform_.UpdateMatrix();
 }
 // 描画
@@ -216,13 +204,11 @@ void Player::BehaviorAttackUpdate() {
 	ImGui::Text("attackUpDate");
 	isAttack = true;
 
-	worldRArmTransform_.rotation_.x += 0.07f;
-	worldLArmTransform_.rotation_.x += 0.07f;
+	worldRArmTransform_.rotation_.x += 0.04f;
+	worldLArmTransform_.rotation_.x += 0.04f;
 
 	if (worldRArmTransform_.rotation_.x > -1.5f) {
-
 		behaviorRequest_ = Behavior::kRoot;
-
 	}
 
 	ImGui::Begin("player");
