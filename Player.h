@@ -107,6 +107,7 @@ private:
 
 	std::optional<Behavior> behaviorRequest_ = std::nullopt;
 
+	bool isAttack = false;
 	
 };
 

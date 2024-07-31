@@ -9,6 +9,11 @@
 #include "ViewProjection.h"
 #include <algorithm>
 
+#include <XInput.h>
+#include <iostream>
+
+#pragma comment(lib, "XInput.lib")
+
 #define PI 3.14159265359f
 
 inline Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
@@ -17,7 +22,7 @@ inline Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
 	    vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2]);
 }
 // 初期化
-void Player::Initialize(const std::vector<Model*>&models, ViewProjection* viewProjection) {
+void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewProjection) {
 
 	assert(models[kModelIndexHead]);
 	assert(models[kModelIndexBody]);
@@ -25,10 +30,10 @@ void Player::Initialize(const std::vector<Model*>&models, ViewProjection* viewPr
 	assert(models[kModelIndexR_arm]);
 	assert(models[kModelIndexHammer]);
 
-	modelHead_= models[kModelIndexHead];
-	modelBody_=models[kModelIndexBody];
-	modelLeftArm_= models[kModelIndexL_arm];
-	 modelRightArm_=models[kModelIndexR_arm];
+	modelHead_ = models[kModelIndexHead];
+	modelBody_ = models[kModelIndexBody];
+	modelLeftArm_ = models[kModelIndexL_arm];
+	modelRightArm_ = models[kModelIndexR_arm];
 	modelHammer_ = models[kModelIndexHammer];
 
 	// ワールドトランスフォームの初期化
@@ -47,7 +52,7 @@ void Player::Initialize(const std::vector<Model*>&models, ViewProjection* viewPr
 
 	worldHammerTransform_.parent_ = &worldRArmTransform_;
 
-	worldTransform_.translation_ = {0.0f,0.0f, 0.0f};
+	worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
 	worldHeadTransform_.translation_ = {0.0f, 1.4f, 0.0f};
 	worldBodyTransform_.translation_ = {0.0f, 0.3f, 0.0f};
 	worldLArmTransform_.translation_ = {-0.5f, 1.2f, 0.0f};
@@ -59,61 +64,51 @@ void Player::Initialize(const std::vector<Model*>&models, ViewProjection* viewPr
 
 	worldHammerTransform_.rotation_.x = -3.5f;
 
-
 	InitializeFloatingGimmick();
+
 }
 // 更新
 void Player::Update() {
 
 
 
-	//switch (phase_) {
-	//case Phase::Approach:
-	//	BehaviorAttackUpdate();
-
-	//	if (worldRArmTransform_.rotation_.x > -1.5f) {
-	//		phase_ = Phase::Leave;
-	//	}
-	//	break;
-
-	//case Phase::Leave:
-
-	//	worldHammerTransform_.translation_ = {-0.5f, 1.3f, -1.0f};
-	//	worldHammerTransform_.rotation_.x = -3.5f;
-	//	worldLArmTransform_.rotation_.x = -3.0f;
-	//	worldRArmTransform_.rotation_.x = -3.0f;
-
-	//	phase_ = Phase::Approach;
-
-	//	break;
-	//}
-
-
 	if (behaviorRequest_) {
 
 		behavior_ = behaviorRequest_.value();
+
 		switch (behavior_) {
+
 		case Behavior::kRoot:
+
 		default:
 			BehaviorRootInitialize();
+
 			break;
 		case Behavior::kAttack:
+
 			BehaviorAttackInitialize();
+
 			break;
 		}
+
 		behaviorRequest_ = std::nullopt;
 	}
-	
+
+
+
 	switch (behavior_) {
+
 	case Behavior::kRoot:
 	default:
 		BehaviorRootUpdate();
 		break;
+
 	case Behavior::kAttack:
 		BehaviorAttackUpdate();
 		break;
 	}
-	
+
+
 
 
 	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
@@ -136,12 +131,11 @@ void Player::Draw() {
 	modelBody_->Draw(worldBodyTransform_, *viewProjection_);
 	modelLeftArm_->Draw(worldLArmTransform_, *viewProjection_);
 	modelRightArm_->Draw(worldRArmTransform_, *viewProjection_);
-	modelHammer_->Draw(worldHammerTransform_, *viewProjection_);
 
-
-
+	if (isAttack) {
+		modelHammer_->Draw(worldHammerTransform_, *viewProjection_);
+	}
 }
-
 
 void Player::InitializeFloatingGimmick() {
 
@@ -158,14 +152,15 @@ void Player::UpdateFloatingGimmick() {
 	floatingParameter_ = std::fmod(floatingParameter_, 2.0f * PI);
 
 	worldBodyTransform_.translation_.y += std::sin(floatingParameter_) * floatingSwing;
-
 }
 
 void Player::BehaviorRootUpdate() {
+	ImGui::Text("attackUpdate");
 
-	
+	isAttack = false;
 	XINPUT_STATE joyState;
 
+	ZeroMemory(&joyState, sizeof(XINPUT_STATE));
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		const float speed = 0.3f;
@@ -197,21 +192,23 @@ void Player::BehaviorRootUpdate() {
 		worldTransform_.rotation_.y = viewProjection_->rotation_.y;
 		// Add the movement to the translation
 		worldTransform_.translation_ = targetPos;
-	} 
 
-
-	if ()
-
-
+		// Attack to B
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+			behaviorRequest_= Behavior::kAttack;
+		}
+	}
 }
 
-void Player::BehaviorAttackUpdate() { 
+void Player::BehaviorAttackUpdate() {
+	ImGui::Text("attackUpDate");
+	isAttack = true;
 
 	worldRArmTransform_.rotation_.x += 0.04f;
 	worldLArmTransform_.rotation_.x += 0.04f;
 
 	if (worldRArmTransform_.rotation_.x > -1.5f) {
-		behavior_ = Behavior::kRoot;
+		behaviorRequest_ = Behavior::kRoot;
 	}
 
 	ImGui::Begin("player");
@@ -222,22 +219,27 @@ void Player::BehaviorAttackUpdate() {
 	ImGui::DragInt("period", &period, 1, 1, 300);
 	ImGui::DragFloat("floatingSwing", &floatingSwing, 0.1f, 0.1f, 30.0f);
 	ImGui::End();
-
 }
 
 
+/*---------------
+
+	
+
+----------------*/
 void Player::BehaviorRootInitialize() {
-	worldHammerTransform_.translation_ = {0.0f, -100.0f, 0.0f};
+	ImGui::Text("RootInit");
+	
 	worldHammerTransform_.rotation_.x = 0.0f;
 	worldLArmTransform_.rotation_.x = 0.0f;
 	worldRArmTransform_.rotation_.x = 0.0f;
+
 }
 
 void Player::BehaviorAttackInitialize() {
-
+	ImGui::Text("attackInit");
 	worldHammerTransform_.translation_ = {-0.5f, 1.3f, -1.0f};
 	worldHammerTransform_.rotation_.x = -3.5f;
 	worldLArmTransform_.rotation_.x = -3.0f;
 	worldRArmTransform_.rotation_.x = -3.0f;
-
 }
