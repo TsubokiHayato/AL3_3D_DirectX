@@ -159,7 +159,26 @@ void Player::BehaviorRootUpdate() {
 
 void Player::BehaviorAttackUpdate() { 
 
-	
+	switch (Attack) {
+	case Phase::Approach:
+		ApproachPhaseUpdate();
+
+		worldTransform_.translation_.x += +moveApproach.x;
+		worldTransform_.translation_.y += +moveApproach.y;
+		worldTransform_.translation_.z += +moveApproach.z;
+
+		if (worldTransform_.translation_.z < 0.0f) {
+			phase_ = Phase::Leave;
+		}
+		break;
+	case Phase::Leave:
+
+		worldTransform_.translation_.x -= +moveApproach.x;
+		worldTransform_.translation_.y -= +moveApproach.y;
+		worldTransform_.translation_.z -= +moveApproach.z;
+
+		break;
+	}
 
 	ImGui::Begin("player");
 	ImGui::DragFloat3("hammer_tra", &worldHammerTransform_.translation_.x, 0.1f);

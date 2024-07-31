@@ -5,7 +5,7 @@
 #include"BaseCharacter.h"
 
 //#include "TextureManager.h"
-enum Attack {
+enum class Attack {
 	initializeAttack,
 	UpdateAttack,
 	returnAttack
