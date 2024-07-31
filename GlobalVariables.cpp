@@ -41,7 +41,6 @@ void GlobalVariables::SetValue(const std::string& groupName, const std::string& 
 	// 設定した項目をstd::mapに追加
 	group.item[key] = newItem;
 }
-
 void GlobalVariables::Update() {
 
 	if (!ImGui::Begin("Global Variables", nullptr, ImGuiWindowFlags_MenuBar)) {
@@ -49,29 +48,39 @@ void GlobalVariables::Update() {
 		return;
 	}
 
-	if (!ImGui::BeginMenuBar())
+	if (!ImGui::BeginMenuBar()) {
+		ImGui::End(); // 追加: MenuBarが始まらなかった場合、ウィンドウも終了
 		return;
+	}
 
-	for (std::map<std::string, Group>::iterator itGroup = datas_.begin();, itGroup != datas_.end(); ++itGroup) {
+	for (std::map<std::string, Group>::iterator itGroup = datas_.begin(); itGroup != datas_.end(); ++itGroup) {
 
 		// group名を取得
 		const std::string& groupName = itGroup->first;
 		// グループの参照を取得
 		Group& group = itGroup->second;
 
+		if (ImGui::BeginMenu(groupName.c_str())) { // 変更: if文の中身を反転
+			for (std::map<std::string, Item>::iterator itItem = group.item.begin(); itItem != group.item.end(); ++itItem) {
 
-		if (!ImGui::BeginMenu(groupName.c_str())) {
-			continue;
+				const std::string& itemName = itItem->first;
 
-			if (std::holds_alternative<int32_t>(item.value)) {
+				Item& item = itItem->second;
+				if (std::holds_alternative<int32_t>(item.Value)) {
 
-				int32_t* ptr = std::get_if<int32_t>(&item.value);
-				ImGui::SliderInt(itemname.c_str(), ptr, 0, 100);
+					int32_t* ptr = std::get_if<int32_t>(&item.Value);
+					ImGui::SliderInt(itemName.c_str(), ptr, 0, 100);
+				} else if (std::holds_alternative<float>(item.Value)) {
 
+					float* ptr = std::get_if<float>(&item.Value);
+					ImGui::SliderFloat(itemName.c_str(), ptr, 0.0f, 100.0f);
+
+				} else if (std::holds_alternative<Vector3>(item.Value)) {
+
+					Vector3* ptr = std::get_if<Vector3>(&item.Value);
+					ImGui::SliderFloat3(itemName.c_str(), reinterpret_cast<float*>(ptr), -10.0f, 10.0f);
+				}
 			}
-
-
-			//04_07 33slide kara
 
 			ImGui::EndMenu();
 		}
