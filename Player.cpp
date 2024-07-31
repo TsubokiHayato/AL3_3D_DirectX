@@ -66,32 +66,55 @@ void Player::Initialize(const std::vector<Model*>&models, ViewProjection* viewPr
 void Player::Update() {
 
 
-	BehaviorRootUpdate();
 
-	switch (phase_) {
-	case Phase::Approach:
-		BehaviorAttackUpdate();
+	//switch (phase_) {
+	//case Phase::Approach:
+	//	BehaviorAttackUpdate();
 
-		
+	//	if (worldRArmTransform_.rotation_.x > -1.5f) {
+	//		phase_ = Phase::Leave;
+	//	}
+	//	break;
 
-		if (worldRArmTransform_.rotation_.x > -1.5f) {
-			phase_ = Phase::Leave;
+	//case Phase::Leave:
+
+	//	worldHammerTransform_.translation_ = {-0.5f, 1.3f, -1.0f};
+	//	worldHammerTransform_.rotation_.x = -3.5f;
+	//	worldLArmTransform_.rotation_.x = -3.0f;
+	//	worldRArmTransform_.rotation_.x = -3.0f;
+
+	//	phase_ = Phase::Approach;
+
+	//	break;
+	//}
+
+
+	if (behaviorRequest_) {
+
+		behavior_ = behaviorRequest_.value();
+		switch (behavior_) {
+		case Behavior::kRoot:
+		default:
+			BehaviorRootInitialize();
+			break;
+		case Behavior::kAttack:
+			BehaviorAttackInitialize();
+			break;
 		}
+		behaviorRequest_ = std::nullopt;
+	}
+	
+	switch (behavior_) {
+	case Behavior::kRoot:
+	default:
+		BehaviorRootUpdate();
 		break;
-
-	case Phase::Leave:
-
-		worldHammerTransform_.translation_ = {-0.5f, 1.3f, -1.0f};
-		worldHammerTransform_.rotation_.x = -3.5f;
-		worldLArmTransform_.rotation_.x = -3.0f;
-		worldRArmTransform_.rotation_.x = -3.0f;
-
-		phase_ = Phase::Approach;
-
+	case Behavior::kAttack:
+		BehaviorAttackUpdate();
 		break;
 	}
-
 	
+
 
 	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
 	ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
@@ -143,6 +166,7 @@ void Player::BehaviorRootUpdate() {
 	
 	XINPUT_STATE joyState;
 
+
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		const float speed = 0.3f;
 
@@ -176,12 +200,19 @@ void Player::BehaviorRootUpdate() {
 	} 
 
 
+	if ()
+
+
 }
 
 void Player::BehaviorAttackUpdate() { 
 
 	worldRArmTransform_.rotation_.x += 0.04f;
 	worldLArmTransform_.rotation_.x += 0.04f;
+
+	if (worldRArmTransform_.rotation_.x > -1.5f) {
+		behavior_ = Behavior::kRoot;
+	}
 
 	ImGui::Begin("player");
 	ImGui::DragFloat3("hammer_tra", &worldHammerTransform_.translation_.x, 0.1f);
@@ -191,4 +222,22 @@ void Player::BehaviorAttackUpdate() {
 	ImGui::DragInt("period", &period, 1, 1, 300);
 	ImGui::DragFloat("floatingSwing", &floatingSwing, 0.1f, 0.1f, 30.0f);
 	ImGui::End();
+
+}
+
+
+void Player::BehaviorRootInitialize() {
+	worldHammerTransform_.translation_ = {0.0f, -100.0f, 0.0f};
+	worldHammerTransform_.rotation_.x = 0.0f;
+	worldLArmTransform_.rotation_.x = 0.0f;
+	worldRArmTransform_.rotation_.x = 0.0f;
+}
+
+void Player::BehaviorAttackInitialize() {
+
+	worldHammerTransform_.translation_ = {-0.5f, 1.3f, -1.0f};
+	worldHammerTransform_.rotation_.x = -3.5f;
+	worldLArmTransform_.rotation_.x = -3.0f;
+	worldRArmTransform_.rotation_.x = -3.0f;
+
 }

@@ -4,6 +4,8 @@
 #include "Model.h"
 #include"BaseCharacter.h"
 
+#include"optional"
+
 //#include "TextureManager.h"
 //  行動フェーズ
 enum class Phase {
@@ -11,6 +13,10 @@ enum class Phase {
 	Leave     // 離脱
 };
 
+enum class Behavior {
+	kRoot,
+	kAttack,
+};
 
 
 //自キャラ
@@ -47,6 +53,9 @@ public:
 
 	WorldTransform& GetWorldTransform() { return worldTransform_; };
 	
+	void BehaviorRootInitialize();
+
+	void BehaviorAttackInitialize();
 
 	void BehaviorRootUpdate();
 
@@ -94,7 +103,11 @@ private:
 
 	Phase phase_ = Phase::Approach;
 
+	Behavior behavior_ = Behavior::kRoot;
 
+	std::optional<Behavior> behaviorRequest_ = std::nullopt;
+
+	
 };
 
 
