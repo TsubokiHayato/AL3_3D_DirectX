@@ -16,6 +16,7 @@ enum class Phase {
 enum class Behavior {
 	kRoot,
 	kAttack,
+	kJump
 };
 
 class GlobalVariables;
@@ -58,9 +59,13 @@ public:
 
 	void BehaviorAttackInitialize();
 
+	void BehaviorJumpInitialize();
+
 	void BehaviorRootUpdate();
 
 	void BehaviorAttackUpdate();
+
+	void BehaviorJumpUpdate();
 
 	void ApplyGlobalVariables();
 
@@ -90,7 +95,7 @@ private:
 	//ビューポート
 	const ViewProjection* viewProjection_=nullptr;
 
-	Vector3 move = {};
+	
 	
 	
 	float floatingParameter_ = 0.0f;
@@ -115,6 +120,8 @@ private:
 
 
 	GlobalVariables* globalVariables;
+
+	Vector3 velocity_ = {};
 	
 };
 

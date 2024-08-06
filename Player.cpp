@@ -31,9 +31,6 @@ void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewP
 	// グループを追加
 	GlobalVariables::GetInstance()->CreateGroup(groupName);
 
-
-	
-
 	globalVariables->AddItem(groupName, "period", period);
 
 	ApplyGlobalVariables();
@@ -74,7 +71,7 @@ void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewP
 
 	viewProjection_ = viewProjection;
 
-	move = {};
+	velocity_ = {};
 
 	worldHammerTransform_.rotation_.x = -3.5f;
 
@@ -82,7 +79,6 @@ void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewP
 }
 // 更新
 void Player::Update() {
-
 
 	ApplyGlobalVariables();
 
@@ -107,6 +103,10 @@ void Player::Update() {
 			BehaviorAttackInitialize();
 
 			break;
+
+		case Behavior::kJump:
+
+			BehaviorJumpInitialize();
 		}
 
 		behaviorRequest_ = std::nullopt;
@@ -122,6 +122,8 @@ void Player::Update() {
 	case Behavior::kAttack:
 		BehaviorAttackUpdate();
 		break;
+	case Behavior::kJump:
+		BehaviorJumpUpdate();
 	}
 
 	// ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
@@ -129,7 +131,6 @@ void Player::Update() {
 	// ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
 
 	UpdateFloatingGimmick();
-	
 
 	worldBodyTransform_.UpdateMatrix();
 	worldHeadTransform_.UpdateMatrix();
@@ -169,7 +170,7 @@ void Player::UpdateFloatingGimmick() {
 }
 
 void Player::BehaviorRootUpdate() {
-	ImGui::Text("attackUpdate");
+	ImGui::Text("RootUpdate");
 
 	isAttack = false;
 	XINPUT_STATE joyState;
@@ -188,17 +189,17 @@ void Player::BehaviorRootUpdate() {
 		thumbLX = std::clamp(thumbLX / maxThumbValue, -1.0f, 1.0f);
 		thumbLY = std::clamp(thumbLY / maxThumbValue, -1.0f, 1.0f);
 
-		move.x = thumbLX;
-		move.y = 0.0f;
-		move.z = thumbLY;
+		velocity_.x = thumbLX;
+		velocity_.y = 0.0f;
+		velocity_.z = thumbLY;
 
 		// Normalize the movement vector
-		move = Normalize(move) * speed;
+		velocity_ = Normalize(velocity_) * speed;
 
 		Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
 
-		move = TransformNormal(move, rotateMatrix);
-		Vector3 targetPos = worldTransform_.translation_ + move;
+		velocity_ = TransformNormal(velocity_, rotateMatrix);
+		Vector3 targetPos = worldTransform_.translation_ + velocity_;
 		Vector3 sub = targetPos - GetWorldTransformTranslate();
 
 		worldTransform_.rotation_.y = std::atan2(sub.x, sub.y);
@@ -210,6 +211,11 @@ void Player::BehaviorRootUpdate() {
 		// Attack to B
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 			behaviorRequest_ = Behavior::kAttack;
+		}
+
+
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+			behaviorRequest_ = Behavior::kJump;
 		}
 	}
 }
@@ -226,28 +232,35 @@ void Player::BehaviorAttackUpdate() {
 		behaviorRequest_ = Behavior::kRoot;
 	}
 
-	ImGui::Begin("player");
-	ImGui::DragFloat3("hammer_tra", &worldHammerTransform_.translation_.x, 0.1f);
-	ImGui::DragFloat3("hammer_rotate", &worldHammerTransform_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("LArm_rotate", &worldLArmTransform_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("RArm_rotate", &worldRArmTransform_.rotation_.x, 0.1f);
-	ImGui::DragInt("period", &period, 1, 1, 300);
-	ImGui::DragFloat("floatingSwing", &floatingSwing, 0.1f, 0.1f, 30.0f);
-	ImGui::End();
+}
+
+void Player::BehaviorJumpUpdate() {
+	ImGui::Text("jumpUpdate");
+	
+
+	// 移動
+	worldTransform_.translation_ += velocity_;
+	// 重力加速度
+	const float kGravityAcceleration = 0.05f;
+	// 加速度ベクトル
+	Vector3 accelerationVector = {0, -kGravityAcceleration, 0};
+	// 加速する
+	velocity_ += accelerationVector;
+
+	// 着地
+	if (worldTransform_.translation_.y <= 0.0f) {
+		worldTransform_.translation_.y = 0;
+		// ジャンプ終わり
+		behaviorRequest_ = Behavior::kRoot;
+	}
 }
 
 void Player::ApplyGlobalVariables() {
 
 	globalVariables = GlobalVariables::GetInstance();
 	const char* groupName = "Player";
-	
-	
-	
+
 	period = globalVariables->GetIntValue(groupName, "period");
-
-
-
-
 }
 
 /*---------------
@@ -269,4 +282,17 @@ void Player::BehaviorAttackInitialize() {
 	worldHammerTransform_.rotation_.x = -3.5f;
 	worldLArmTransform_.rotation_.x = -3.0f;
 	worldRArmTransform_.rotation_.x = -3.0f;
+}
+
+void Player::BehaviorJumpInitialize() {
+
+	worldBodyTransform_.translation_.y = 0;
+	worldLArmTransform_.rotation_.x = 0;
+	worldRArmTransform_.rotation_.x = 0;
+
+	const float kJumpFirstSpeed = 1.0f;
+
+	velocity_.y = kJumpFirstSpeed;
+
+	
 }
