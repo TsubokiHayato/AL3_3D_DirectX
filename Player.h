@@ -62,6 +62,8 @@ public:
 
 	void BehaviorAttackUpdate();
 
+	void ApplyGlobalVariables();
+
 private:
 
 	//ワールドトランスフォーム

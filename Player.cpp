@@ -31,7 +31,12 @@ void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewP
 	// グループを追加
 	GlobalVariables::GetInstance()->CreateGroup(groupName);
 
-	globalVariables->SetValue(groupName, "Test", 90);
+
+	
+
+	globalVariables->AddItem(groupName, "period", period);
+
+	ApplyGlobalVariables();
 
 	assert(models[kModelIndexHead]);
 	assert(models[kModelIndexBody]);
@@ -78,6 +83,9 @@ void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewP
 // 更新
 void Player::Update() {
 
+
+	ApplyGlobalVariables();
+
 	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
 		globalVariables->SaveFile("Player");
 	}
@@ -121,6 +129,7 @@ void Player::Update() {
 	// ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
 
 	UpdateFloatingGimmick();
+	
 
 	worldBodyTransform_.UpdateMatrix();
 	worldHeadTransform_.UpdateMatrix();
@@ -225,6 +234,20 @@ void Player::BehaviorAttackUpdate() {
 	ImGui::DragInt("period", &period, 1, 1, 300);
 	ImGui::DragFloat("floatingSwing", &floatingSwing, 0.1f, 0.1f, 30.0f);
 	ImGui::End();
+}
+
+void Player::ApplyGlobalVariables() {
+
+	globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+	
+	
+	
+	period = globalVariables->GetIntValue(groupName, "period");
+
+
+
+
 }
 
 /*---------------

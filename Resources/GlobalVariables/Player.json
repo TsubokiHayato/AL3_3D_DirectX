@@ -1,5 +1,6 @@
 {
     "Player": {
-        "Test": 47
+        "Test": 45,
+        "period": 100
     }
 }
