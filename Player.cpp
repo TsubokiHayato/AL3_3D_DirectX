@@ -14,6 +14,9 @@
 
 #include"GlobalVariables.h"
 
+
+
+
 #pragma comment(lib, "XInput.lib")
 
 #define PI 3.14159265359f
@@ -81,7 +84,9 @@ void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewP
 // 更新
 void Player::Update() {
 
-
+	if (Input::PushKey(DIK_SPACE)) {
+	
+	}
 
 	if (behaviorRequest_) {
 
@@ -122,9 +127,9 @@ void Player::Update() {
 
 
 
-	ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
-	ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
-	ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
+	//ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
+	//ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
+	//ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
 
 	UpdateFloatingGimmick();
 
