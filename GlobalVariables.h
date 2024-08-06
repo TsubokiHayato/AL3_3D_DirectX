@@ -46,5 +46,5 @@ private:
 
 	using json=nlohmann::json;
 
-	const std::string kDirectionPath = "Resource/GlobalVariables/";
+	const std::string kDirectionPath = "Resources/GlobalVariables/";
 };

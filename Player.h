@@ -18,6 +18,7 @@ enum class Behavior {
 	kAttack,
 };
 
+class GlobalVariables;
 
 //自キャラ
 class Player : public BaseCharacter {
@@ -108,6 +109,10 @@ private:
 	std::optional<Behavior> behaviorRequest_ = std::nullopt;
 
 	bool isAttack = false;
+
+
+
+	GlobalVariables* globalVariables;
 	
 };
 

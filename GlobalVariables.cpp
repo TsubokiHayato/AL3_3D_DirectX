@@ -86,7 +86,13 @@ void GlobalVariables::Update() {
 					ImGui::SliderFloat3(itemName.c_str(), reinterpret_cast<float*>(ptr), -10.0f, 10.0f);
 				}
 			}
-
+			ImGui::Text("\n");
+			if (ImGui::Button("Save")) {
+				SaveFile(groupName);
+				std::string message = std::format("{}.json saved.", groupName);
+				MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+			}
+		
 			ImGui::EndMenu();
 		}
 	}
@@ -106,6 +112,7 @@ void GlobalVariables::SaveFile(const std::string& groupName) {
 	json root;
 
 	root = json::object();
+
 	root[groupName] = json::object();
 
 	for (std::map<std::string, Item>::iterator itItem = itGroup->second.items.begin(); itItem != itGroup->second.items.end(); ++itItem) {
@@ -134,12 +141,16 @@ void GlobalVariables::SaveFile(const std::string& groupName) {
 			Vector3 value = std::get<Vector3>(item.value);
 			root[groupName][itemName] = json::array({value.x, value.y, value.z});
 		}
+
+
+
+		
 	}
 
-	//ディレクトリがなければ作成する
+	 // ディレクトリがなければ作成する
 	std::filesystem::path dir(kDirectionPath);
-	if (!std::filesystem::exists(kDirectionPath)) {
-		std::filesystem::create_directory(kDirectionPath);
+	if (!std::filesystem::exists(dir)) {
+		std::filesystem::create_directory(dir);
 	}
 
 	//書き込むJSONファイルのフルパスを合成する

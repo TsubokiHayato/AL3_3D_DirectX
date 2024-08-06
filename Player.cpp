@@ -12,10 +12,7 @@
 #include <XInput.h>
 #include <iostream>
 
-#include"GlobalVariables.h"
-
-
-
+#include "GlobalVariables.h"
 
 #pragma comment(lib, "XInput.lib")
 
@@ -29,14 +26,12 @@ inline Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
 // 初期化
 void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewProjection) {
 
-
-	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	globalVariables = GlobalVariables::GetInstance();
 	const char* groupName = "Player";
-	//グループを追加
+	// グループを追加
 	GlobalVariables::GetInstance()->CreateGroup(groupName);
 
 	globalVariables->SetValue(groupName, "Test", 90);
-
 
 	assert(models[kModelIndexHead]);
 	assert(models[kModelIndexBody]);
@@ -79,13 +74,12 @@ void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewP
 	worldHammerTransform_.rotation_.x = -3.5f;
 
 	InitializeFloatingGimmick();
-
 }
 // 更新
 void Player::Update() {
 
-	if (Input::PushKey(DIK_SPACE)) {
-	
+	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+		globalVariables->SaveFile("Player");
 	}
 
 	if (behaviorRequest_) {
@@ -110,8 +104,6 @@ void Player::Update() {
 		behaviorRequest_ = std::nullopt;
 	}
 
-
-
 	switch (behavior_) {
 
 	case Behavior::kRoot:
@@ -124,16 +116,12 @@ void Player::Update() {
 		break;
 	}
 
-
-
-
-	//ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
-	//ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
-	//ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
+	// ImGui::DragFloat3("Body_Scale", &worldBodyTransform_.scale_.x, 0.1f);
+	// ImGui::DragFloat3("Body_Rotation", &worldBodyTransform_.rotation_.x, 0.1f);
+	// ImGui::DragFloat3("Body_Transform", &worldBodyTransform_.translation_.x, 0.1f);
 
 	UpdateFloatingGimmick();
 
-	
 	worldBodyTransform_.UpdateMatrix();
 	worldHeadTransform_.UpdateMatrix();
 	worldLArmTransform_.UpdateMatrix();
@@ -212,7 +200,7 @@ void Player::BehaviorRootUpdate() {
 
 		// Attack to B
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-			behaviorRequest_= Behavior::kAttack;
+			behaviorRequest_ = Behavior::kAttack;
 		}
 	}
 }
@@ -227,7 +215,6 @@ void Player::BehaviorAttackUpdate() {
 	if (worldRArmTransform_.rotation_.x > -1.5f) {
 
 		behaviorRequest_ = Behavior::kRoot;
-
 	}
 
 	ImGui::Begin("player");
@@ -240,19 +227,17 @@ void Player::BehaviorAttackUpdate() {
 	ImGui::End();
 }
 
-
 /*---------------
 
-	
+
 
 ----------------*/
 void Player::BehaviorRootInitialize() {
 	ImGui::Text("RootInit");
-	
+
 	worldHammerTransform_.rotation_.x = 0.0f;
 	worldLArmTransform_.rotation_.x = 0.0f;
 	worldRArmTransform_.rotation_.x = 0.0f;
-
 }
 
 void Player::BehaviorAttackInitialize() {
