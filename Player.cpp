@@ -26,12 +26,12 @@ Player::~Player() {
 
 void Player::Attack() {
 
-	if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
-		return;
-	}
+	//if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
+	//	return;
+	//}
 
-	if (joyState.Gamepad.wButtons&XINPUT_GAMEPAD_RIGHT_SHOULDER){
-	
+	//if (joyState.Gamepad.wButtons&XINPUT_GAMEPAD_RIGHT_SHOULDER){
+	if (input_->PushKey(DIK_SPACE)){
 		const float kBulletSpeed = 1.0f;
 		Vector3 velocity(0, 0, kBulletSpeed);
 
@@ -119,13 +119,13 @@ void Player::Update(const Matrix4x4 viewMatrix, const Matrix4x4 viewProjectionMa
 
 	
 
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		spritePos.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 5.0f;
-		spritePos.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 5.0f;
+	//if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+	//	spritePos.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 5.0f;
+	//	spritePos.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 5.0f;
 
-		sprite2DReticle_->SetPosition(spritePos);
+	//	sprite2DReticle_->SetPosition(spritePos);
 
-	}
+	//}
 	// playerの移動ベクトル
 	Vector3 move = {0.0f, 0.0f, 0.0f};
 
@@ -148,18 +148,18 @@ void Player::Update(const Matrix4x4 viewMatrix, const Matrix4x4 viewProjectionMa
 
 	
 
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+	/*if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 	
 		move.x += (float)joyState.Gamepad.sThumbLX/SHRT_MAX*kCharaSpeed;
 		move.y += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharaSpeed;
-	}
+	}*/
 
 	Attack();
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Update();
 	}
 
-	const float kDistancePlayerTo3DReticle = 215.0f;
+	const float kDistancePlayerTo3DReticle = 50.0f;
 	//
 	Vector3 offset = {0, 0, 1.0f};
 	offset = TransformNormal(offset, worldTransform_.matWorld_);
@@ -169,48 +169,42 @@ void Player::Update(const Matrix4x4 viewMatrix, const Matrix4x4 viewProjectionMa
     worldTransform3DReticle_.UpdateMatrix();
 
 
-	
-
 	Vector3 positionReticle = worldTransform3DReticle_.translation_;
+
+	
+		
+	
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+
+	HWND hwnd = WinApp::GetInstance()->GetHwnd();
+
+	ScreenToClient(hwnd, &mousePos);
+
+	
+	// 2Dレティクルのスプライトにマウス座標を設定
+	Vector2 reticlePosition(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+	sprite2DReticle_->SetPosition(reticlePosition);
+
 
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
 	Matrix4x4 matVPV = viewMatrix * viewProjectionMatrix * matViewport;
 
-
-
-
-
-
-	////POINT mousePos;
-	//GetCursorPos(&spritePos);
-
-	//HWND hwnd = WinApp::GetInstance()->GetHwnd();
-
-	//ScreenToClient(hwnd, &spritePos);
-
-	
-	positionReticle = Transform(positionReticle, matVPV);
-
-	sprite2DReticle_->SetPosition(Vector2((float)spritePos.x,(float)spritePos.y));
-
-
-	
-
 	Matrix4x4 matInverseVPV = Inverse(matVPV);
 
-	Vector3 posNear = Vector3(static_cast<float>(spritePos.x), static_cast<float>(spritePos.y), 0.0f);
-	Vector3 posFar = Vector3(static_cast<float>(spritePos.x), static_cast<float>(spritePos.y), 1.0f);
+	Vector3 posNear = Vector3(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y), 0.0f);
+	Vector3 posFar = Vector3(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y), 1.0f);
 
 	posNear = Transform(posNear, matInverseVPV);
 	posFar = Transform(posFar, matInverseVPV);
 
 	Vector3 mouseDirection = posFar - posNear; // posNearからposFarへのベクトルを計算する
 	mouseDirection = Normalize(mouseDirection);
+	const float kDistanceTestObject = 10.0f; // 設定距離（適切な距離を設定する）
 
-	const float kDistanceTestObject = 50.0f; // 設定距離（適切な距離を設定する）
-
-	worldTransform3DReticle_.translation_ = posNear + mouseDirection * kDistanceTestObject; // posNearからmouseDirectionの方向にkDistanceTestObject進んだ座標
-	
+	worldTransform3DReticle_.translation_.x = posNear.x + mouseDirection.x * kDistanceTestObject; // posNearからmouseDirectionの方向にkDistanceTestObject進んだ座標
+	worldTransform3DReticle_.translation_.y = posNear.y + mouseDirection.y * kDistanceTestObject; // posNearからmouseDirectionの方向にkDistanceTestObject進んだ座標
+	worldTransform3DReticle_.translation_.z = posNear.z + mouseDirection.z * kDistanceTestObject; // posNearからmouseDirectionの方向にkDistanceTestObject進んだ座標
 	worldTransform3DReticle_.UpdateMatrix();
 
 
