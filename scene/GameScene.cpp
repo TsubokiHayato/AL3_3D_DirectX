@@ -73,8 +73,8 @@ void GameScene::Initialize() {
 	enemies_.push_back(enemy);
 
 
-	lockOn_ = std::make_unique<LockOn>();
-	lockOn_->Initialize(&viewProjection_);
+	//lockOn_ = std::make_unique<LockOn>();
+	//lockOn_->Initialize(&viewProjection_);
 	/*---------
 	  SkyDome
 	---------*/
@@ -206,7 +206,7 @@ void GameScene::Draw() {
 	skyDome->Draw();
 
 	plane->Draw();
-	lockOn_->Draw();
+	//lockOn_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

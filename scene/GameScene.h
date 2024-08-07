@@ -122,7 +122,7 @@ private: // メンバ変数
 	std::unique_ptr<FollowCamera> followCamera=nullptr;
 
 
-	std::unique_ptr<LockOn> lockOn_;
+	//std::unique_ptr<LockOn> lockOn_;
 
 
 };
