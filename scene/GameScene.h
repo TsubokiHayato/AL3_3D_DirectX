@@ -69,7 +69,7 @@ private: // メンバ変数
 
 	std::unique_ptr<Player> player = nullptr;
 
-	std::unique_ptr<Enemy> enemy = nullptr;
+	//std::unique_ptr<Enemy> enemy = nullptr;
 
 	std::list<std::unique_ptr<Enemy>> enemies_;
 

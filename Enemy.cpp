@@ -39,9 +39,9 @@ void Enemy::Update() {
 	// 回転角度を更新
 	theta += 0.1f; // 回転速度を調整
 
-	worldTransform_.translation_.x = sin(theta)*3.0f;
+	/*worldTransform_.translation_.x = sin(theta)*3.0f;
 	worldTransform_.translation_.y = 1.0f;
-	worldTransform_.translation_.z = cos(theta)*3.0f;
+	worldTransform_.translation_.z = cos(theta)*3.0f;*/
 
 
 

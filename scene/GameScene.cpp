@@ -4,11 +4,7 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {
-
-	
-
-}
+GameScene::~GameScene() {}
 
 void GameScene::Initialize() {
 
@@ -19,9 +15,8 @@ void GameScene::Initialize() {
 	/*-------------------
 	       　テクスチャー
 	    -------------------*/
-	//ポーションの画像
+	// ポーションの画像
 	textureHandle = TextureManager::Load("Recovery_agents.png");
-
 
 	/*-----
 	 model
@@ -32,15 +27,7 @@ void GameScene::Initialize() {
 	modelPlayer_RightArm.reset(Model::CreateFromOBJ("float_R_arm", true));
 	modelHammer.reset(Model::CreateFromOBJ("hammer", true));
 
-	
-
-	std::vector<Model*> playerModels = {
-		modelPlayer_Head.get(),
-		modelPlayer_Body.get(),
-		modelPlayer_LeftArm.get(),
-		modelPlayer_RightArm.get(),
-		modelHammer.get()
-	}; 
+	std::vector<Model*> playerModels = {modelPlayer_Head.get(), modelPlayer_Body.get(), modelPlayer_LeftArm.get(), modelPlayer_RightArm.get(), modelHammer.get()};
 
 	modelEnemy_Head.reset(Model::Create());
 	modelEnemy_LeftArm.reset(Model::Create());
@@ -50,7 +37,7 @@ void GameScene::Initialize() {
 	    modelEnemy_Head.get(),
 	    modelEnemy_LeftArm.get(),
 	    modelEnemy_RightArm.get(),
-	}; 
+	};
 
 	/*--------------
 	* ワールド・ビュー
@@ -62,19 +49,30 @@ void GameScene::Initialize() {
 	* Chara
 	--------*/
 
-
 	// 自キャラの生成
 	player = std::make_unique<Player>();
 	// 自キャラの初期化
-	player->Initialize(playerModels,&viewProjection_);
+	player->Initialize(playerModels, &viewProjection_);
 
-	enemy = std::make_unique<Enemy>();
-	enemy->Initialize(enemyModels, &viewProjection_);
-	enemies_.push_back(enemy);
+	// std::unique_ptr<Enemy> enemy =
+	// enemy->Initialize(enemyModels, &viewProjection_, Vector3(1,1,1));
+	enemies_.push_back(std::make_unique<Enemy>());
+	enemies_.push_back(std::make_unique<Enemy>());
+	enemies_.push_back(std::make_unique<Enemy>());
 
+	Vector3 enemiesPos[3] = {
+	    {0, 0, 1 },
+        {0, 0, -2},
+        {0, 0, 2 }
+    };
 
-	//lockOn_ = std::make_unique<LockOn>();
-	//lockOn_->Initialize(&viewProjection_);
+	for (const auto& enemy_ : enemies_) {
+		for (int i = 0; i < 3; i++) {
+			enemy_->Initialize(enemyModels, &viewProjection_, enemiesPos[i]);
+		}
+	}
+	// lockOn_ = std::make_unique<LockOn>();
+	// lockOn_->Initialize(&viewProjection_);
 	/*---------
 	  SkyDome
 	---------*/
@@ -93,26 +91,20 @@ void GameScene::Initialize() {
 
 	plane->Initialize(modelPlane.get(), &viewProjection_);
 
-
-
-
 	/*-----------
 	 CAMERA
 	-----------*/
-	debugCamera_ = std::make_unique < DebugCamera>(1280, 720);
+	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 
 	followCamera = std::make_unique<FollowCamera>();
 	followCamera->Initialize();
 
-
-    followCamera->SetTarget(&player->GetWorldTransform()); 
+	followCamera->SetTarget(&player->GetWorldTransform());
 
 	player->SetViewProjection(&followCamera->GetViewProjection());
-	
 }
 
 void GameScene::Update() {
-
 
 	/*-----------
 	DebugCamera
@@ -137,13 +129,11 @@ void GameScene::Update() {
 		viewProjection_.UpdateMatrix();
 	}
 
-	
 	followCamera->Update();
 
 	viewProjection_.matView = followCamera->GetView();
 	viewProjection_.matProjection = followCamera->GetProjection();
 
-	
 	viewProjection_.TransferMatrix();
 
 	/*----------
@@ -153,9 +143,9 @@ void GameScene::Update() {
 	player->Update();
 	skyDome->Update();
 	plane->Update();
-	
-	for (const auto& enemyPtr : enemies_) {
-		enemyPtr->Update();
+
+	for (const auto& enemy_ : enemies_) {
+		enemy_->Update();
 	}
 }
 
@@ -172,7 +162,6 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 	///
-	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -192,19 +181,17 @@ void GameScene::Draw() {
 	/*-----------
 	     3D
 	-----------*/
-	//自キャラ
+	// 自キャラ
 	player->Draw();
-	
 
-	
-	for (const auto& enemyPtr : enemies_) {
-		enemyPtr->Draw();
+	for (const auto& enemy_ : enemies_) {
+		enemy_->Draw();
 	}
 
 	skyDome->Draw();
 
 	plane->Draw();
-	//lockOn_->Draw();
+	// lockOn_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -217,8 +204,6 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-
-	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
