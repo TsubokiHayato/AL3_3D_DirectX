@@ -21,6 +21,8 @@
 
 #include"FollowCamera.h"
 
+#include"LockOn.h"
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -117,6 +119,8 @@ private: // メンバ変数
 
 	std::unique_ptr<FollowCamera> followCamera=nullptr;
 
+
+	std::unique_ptr<LockOn> lockOn_;
 
 
 };

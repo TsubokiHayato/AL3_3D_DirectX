@@ -71,6 +71,9 @@ void GameScene::Initialize() {
 	enemy = std::make_unique<Enemy>();
 	enemy->Initialize(enemyModels, &viewProjection_);
 
+
+	lockOn_ = std::make_unique<LockOn>();
+	lockOn_->Initialize();
 	/*---------
 	  SkyDome
 	---------*/
