@@ -8,7 +8,7 @@ class Enemy {
 public:
 	
 	// 初期化
-	void Initialize(const std::vector<Model*>& models, ViewProjection* viewProjection);
+	void Initialize(const std::vector<Model*>& models, ViewProjection* viewProjection, const Vector3& position);
 
 	// 更新
 	void Update();
@@ -16,7 +16,8 @@ public:
 	// 描画
 	void Draw();
 
-
+	
+	// 更新worldTransform_.translation_ = position;
 private:
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;

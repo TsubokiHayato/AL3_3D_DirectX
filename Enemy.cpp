@@ -6,7 +6,7 @@
 
 #include "ImGuiManager.h"
 
-void Enemy::Initialize(const std::vector<Model*>& models, ViewProjection* viewProjection) {
+void Enemy::Initialize(const std::vector<Model*>& models, ViewProjection* viewProjection, const Vector3& position) {
 
 	assert(models[kModelIndexHead]);
 	assert(models[kModelIndexL_arm]);
@@ -27,7 +27,10 @@ void Enemy::Initialize(const std::vector<Model*>& models, ViewProjection* viewPr
 	worldLArmTransform_.parent_ = &worldHeadTransform_;
 	worldRArmTransform_.parent_ = &worldHeadTransform_;
 	
-//	worldTransform_.translation_ = {0.0f, 1.0f, 0.0f};
+
+	worldTransform_.translation_ = position;
+
+	//	worldTransform_.translation_ = {0.0f, 1.0f, 0.0f};
 
 	viewProjection_ = viewProjection;
 }
