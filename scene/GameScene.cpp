@@ -195,6 +195,7 @@ void GameScene::Draw() {
 	skyDome->Draw();
 
 	plane->Draw();
+	lockOn_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
