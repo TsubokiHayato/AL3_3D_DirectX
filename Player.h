@@ -53,8 +53,7 @@ private:
 	std::list<PlayerBullet*> bullets_;
 
 	Input* input_ = nullptr;
-	// ワールドトランスフォーム
-	WorldTransform worldTransform_;
+	
 
 	// 3Dモデル
 	Model* model_ = nullptr;
@@ -63,12 +62,13 @@ private:
 	// テクスチャーハンドル
 	uint32_t textureHandle_ = 0u;
 
-	// ビューポート
-	ViewProjection* viewProjection_ = nullptr;
 
 	WorldTransform worldTransform3DReticle_;
 
-	
+	// ワールドトランスフォーム
+	WorldTransform worldTransform_;
+	// ビューポート
+	ViewProjection* viewProjection_ = nullptr;
 	Sprite* sprite2DReticle_ = nullptr;
 
 
