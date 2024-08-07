@@ -1,26 +1,31 @@
 #pragma once
 
-#include"optional"
-#include"Sprite.h"
-#include"WorldTransform.h"
-#include"ViewProjection.h"
+#include "Sprite.h"
+#include "ViewProjection.h"
+#include "WorldTransform.h"
+#include "optional"
 
+#include <memory>
+#include"Enemy.h"
 
-#include<memory>
-class LockOn {
+ class LockOn {
 
-	public:
-
+public:
 	void Initialize();
 
 	void Update();
 
 	void Draw();
 
+private:
+	std::unique_ptr<Sprite> lockOnMark_;
 
-	private: 
+	// ワールドトランスフォーム
+	WorldTransform worldTransform_;
+	// ビューポート
+	ViewProjection* viewProjection_ = nullptr;
 
-		std::unique_ptr<Sprite> lockOnMark_;
+	const Enemy* target_ = nullptr;
 
-
-};
+	uint32_t textureHandle;
+ };

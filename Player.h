@@ -122,6 +122,8 @@ private:
 	GlobalVariables* globalVariables;
 
 	Vector3 velocity_ = {};
+
+	
 	
 };
 
