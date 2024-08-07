@@ -73,7 +73,7 @@ void GameScene::Initialize() {
 
 
 	lockOn_ = std::make_unique<LockOn>();
-	lockOn_->Initialize();
+	lockOn_->Initialize(&viewProjection_);
 	/*---------
 	  SkyDome
 	---------*/

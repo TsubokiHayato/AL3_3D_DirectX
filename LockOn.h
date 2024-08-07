@@ -11,9 +11,9 @@
  class LockOn {
 
 public:
-	void Initialize();
+	 void Initialize(ViewProjection* viewProjection);
 
-	void Update();
+	void Update(std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection);
 
 	void Draw();
 
@@ -28,4 +28,10 @@ private:
 	const Enemy* target_ = nullptr;
 
 	uint32_t textureHandle;
+
+	float kDegreeToRadian;
+	float minDistance_ = 10.0f;
+	float maxDistance_ = 30.0f;
+	float angleRange_ = 20.0f * kDegreeToRadian;
+
  };
