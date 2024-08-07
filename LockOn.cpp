@@ -8,7 +8,7 @@ void LockOn::Initialize() {
 
 	Vector2 anchorPoint = {0.5f, 0.5f};
 	uint32_t textureReticle = TextureManager::Load("2D_Reticle.png");
-	lockOnMark_ = Sprite::Create(textureReticle, {}, {1.0f, 1.0f, 1.0f, 1.0f}, anchorPoint);
+	lockOnMark_->Create(textureReticle, {}, {1.0f, 1.0f, 1.0f, 1.0f}, anchorPoint);
 
 
 }
@@ -20,5 +20,5 @@ void LockOn::Update() {
 
 void LockOn::Draw() {
 
-
+	lockOnMark_->Draw(&viewProjection_); 
 }
