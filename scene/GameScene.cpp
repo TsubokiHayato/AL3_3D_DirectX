@@ -153,10 +153,9 @@ void GameScene::Update() {
 	player->Update();
 	skyDome->Update();
 	plane->Update();
-	enemy->Update();
-	for (std::unique_ptr<Enemy> enemy_ : enemies_) {
-
-		enemy_->Draw();
+	
+	for (const auto& enemyPtr : enemies_) {
+		enemyPtr->Update();
 	}
 }
 
@@ -195,12 +194,11 @@ void GameScene::Draw() {
 	-----------*/
 	//自キャラ
 	player->Draw();
-	enemy->Draw();
+	
 
 	
-	for (std::unique_ptr<Enemy> enemy_ : enemies_) {
-
-		enemy_->Draw();
+	for (const auto& enemyPtr : enemies_) {
+		enemyPtr->Draw();
 	}
 
 	skyDome->Draw();

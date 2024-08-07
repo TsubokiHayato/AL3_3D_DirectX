@@ -14,8 +14,8 @@ void LockOn::Initialize(ViewProjection* viewProjection) {
 }
 
 void LockOn::Update(std::list<std::unique_ptr<Enemy>>& enemies,const ViewProjection& viewProjection ) {
-
-
+	enemies;
+	viewProjection;
 	worldTransform_.UpdateMatrix();
 	viewProjection_->UpdateMatrix();
 	viewProjection_->TransferMatrix();
