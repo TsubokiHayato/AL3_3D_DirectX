@@ -222,6 +222,8 @@ void GameScene::Update() {
 
 	UpdateEnemyPopCommands();
 
+
+	
 	for (Enemy* enemy_ : enemies_) {
 
 		enemy_->Update();
