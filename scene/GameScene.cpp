@@ -56,21 +56,21 @@ void GameScene::Initialize() {
 
 	// std::unique_ptr<Enemy> enemy =
 	// enemy->Initialize(enemyModels, &viewProjection_, Vector3(1,1,1));
-	enemies_.push_back(std::make_unique<Enemy>());
-	enemies_.push_back(std::make_unique<Enemy>());
-	enemies_.push_back(std::make_unique<Enemy>());
 
-	Vector3 enemiesPos[3] = {
-	    {0, 0, 1 },
-        {0, 0, -2},
-        {0, 0, 2 }
+	Vector3 enemiesPos = {
+	    0, 0, 1 
+        
     };
+	enemies_.push_back(std::make_unique<Enemy>());
+	enemies_.push_back(std::make_unique<Enemy>());
+	enemies_.push_back(std::make_unique<Enemy>());
 
 	for (const auto& enemy_ : enemies_) {
-		for (int i = 0; i < 3; i++) {
-			enemy_->Initialize(enemyModels, &viewProjection_, enemiesPos[i]);
-		}
+		
+			enemy_->Initialize(enemyModels, &viewProjection_, enemiesPos);
+		
 	}
+
 	// lockOn_ = std::make_unique<LockOn>();
 	// lockOn_->Initialize(&viewProjection_);
 	/*---------
