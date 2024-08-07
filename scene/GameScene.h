@@ -71,7 +71,7 @@ private: // メンバ変数
 
 	std::unique_ptr<Enemy> enemy = nullptr;
 
-	std::list<std::unique_ptr<Enemy>> enemies;
+	std::list<std::unique_ptr<Enemy>> enemies_;
 
 	std::unique_ptr<SkyDome> skyDome = nullptr;
 

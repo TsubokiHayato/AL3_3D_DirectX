@@ -70,6 +70,7 @@ void GameScene::Initialize() {
 
 	enemy = std::make_unique<Enemy>();
 	enemy->Initialize(enemyModels, &viewProjection_);
+	enemies_.push_back(enemy);
 
 
 	lockOn_ = std::make_unique<LockOn>();
@@ -153,6 +154,10 @@ void GameScene::Update() {
 	skyDome->Update();
 	plane->Update();
 	enemy->Update();
+	for (std::unique_ptr<Enemy> enemy_ : enemies_) {
+
+		enemy_->Draw();
+	}
 }
 
 void GameScene::Draw() {
@@ -191,6 +196,12 @@ void GameScene::Draw() {
 	//自キャラ
 	player->Draw();
 	enemy->Draw();
+
+	
+	for (std::unique_ptr<Enemy> enemy_ : enemies_) {
+
+		enemy_->Draw();
+	}
 
 	skyDome->Draw();
 
