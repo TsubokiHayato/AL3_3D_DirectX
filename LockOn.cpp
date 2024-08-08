@@ -18,7 +18,7 @@ void LockOn::Initialize(uint32_t textureReticle) {
 
 }
 
-void LockOn::Update(std::list<std::unique_ptr<Enemy>>& enemies,const ViewProjection& viewProjection ) {
+void LockOn::Update(std::list<std::unique_ptr<Enemy>>& enemies,const ViewProjection& viewProjection, ) {
 
 
 	//ボタンを押したらロックオン
@@ -38,6 +38,14 @@ void LockOn::Update(std::list<std::unique_ptr<Enemy>>& enemies,const ViewProject
 	if (target_) {
 	//
 		Vector3 posWorld = target_->;
+
+		Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
+		Matrix4x4 matViewProjectionViewport = viewMatrix * viewProjectionMatrix * matViewport;
+
+		posWorld= Transform(positionReticle, matViewProjectionViewport);
+
+		sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
+
 		//
 		Vector3 posScreen = ;
 
