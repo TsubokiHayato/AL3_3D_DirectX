@@ -16,8 +16,9 @@ public:
 	// 描画
 	void Draw();
 
+	Vector3 GetWorldTransform();
+
 	
-	// 更新worldTransform_.translation_ = position;
 private:
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;

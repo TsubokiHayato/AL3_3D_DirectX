@@ -39,9 +39,9 @@ void Enemy::Update() {
 	// 回転角度を更新
 	theta += 0.1f; // 回転速度を調整
 
-	/*worldTransform_.translation_.x = sin(theta)*3.0f;
-	worldTransform_.translation_.y = 1.0f;
-	worldTransform_.translation_.z = cos(theta)*3.0f;*/
+	//worldTransform_.translation_.x += sin(theta);
+	//worldTransform_.translation_.y = 1.0f;
+	//worldTransform_.translation_.z += cos(theta);
 
 
 
@@ -60,6 +60,15 @@ void Enemy::Update() {
 void Enemy::Draw() {
 
 	modelHead_->Draw(worldHeadTransform_, *viewProjection_);
-	modelLeftArm_->Draw(worldLArmTransform_, *viewProjection_);
-	modelRightArm_->Draw(worldRArmTransform_, *viewProjection_);
+	/*modelLeftArm_->Draw(worldLArmTransform_, *viewProjection_);
+	modelRightArm_->Draw(worldRArmTransform_, *viewProjection_);*/
+}
+
+Vector3 Enemy::GetWorldTransform() {
+
+	const Vector3 offset = {0.0f, 1.0f, 0.0f};
+
+	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
+
+	return worldPos;
 }

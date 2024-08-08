@@ -29,13 +29,13 @@ void GameScene::Initialize() {
 
 	std::vector<Model*> playerModels = {modelPlayer_Head.get(), modelPlayer_Body.get(), modelPlayer_LeftArm.get(), modelPlayer_RightArm.get(), modelHammer.get()};
 
-	modelEnemy_Head.reset(Model::Create());
+	modelEnemy_Head.reset(Model::CreateFromOBJ("needle_Body", true));
 	modelEnemy_LeftArm.reset(Model::Create());
 	modelEnemy_RightArm.reset(Model::Create());
 
 	std::vector<Model*> enemyModels = {
 	    modelEnemy_Head.get(),
-	    modelEnemy_LeftArm.get(),
+	    modelEnemy_LeftArm.get(),//腕は今使ってないから注意
 	    modelEnemy_RightArm.get(),
 	};
 
@@ -54,11 +54,9 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player->Initialize(playerModels, &viewProjection_);
 
-	// std::unique_ptr<Enemy> enemy =
-	// enemy->Initialize(enemyModels, &viewProjection_, Vector3(1,1,1));
-
+	
 	Vector3 enemiesPos = {
-	    0, 0, 1 
+	    0, 1, 1 
         
     };
 	enemies_.push_back(std::make_unique<Enemy>());
@@ -66,13 +64,20 @@ void GameScene::Initialize() {
 	enemies_.push_back(std::make_unique<Enemy>());
 
 	for (const auto& enemy_ : enemies_) {
+		enemiesPos.x+=3;
 		
+		enemiesPos.z+=3;
 			enemy_->Initialize(enemyModels, &viewProjection_, enemiesPos);
 		
 	}
 
-	// lockOn_ = std::make_unique<LockOn>();
-	// lockOn_->Initialize(&viewProjection_);
+
+	uint32_t textureReticle = TextureManager::Load("2D_Reticle.png");
+
+	 lockOn_ = std::make_unique<LockOn>();
+	 lockOn_->Initialize(textureReticle);
+
+
 	/*---------
 	  SkyDome
 	---------*/
@@ -147,6 +152,8 @@ void GameScene::Update() {
 	for (const auto& enemy_ : enemies_) {
 		enemy_->Update();
 	}
+
+	lockOn_->Update(enemies_, viewProjection_);
 }
 
 void GameScene::Draw() {
@@ -204,6 +211,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	lockOn_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
