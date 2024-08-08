@@ -12,11 +12,8 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	/*-------------------
-	       　テクスチャー
-	    -------------------*/
-	// ポーションの画像
-	textureHandle = TextureManager::Load("Recovery_agents.png");
+	
+	
 
 	/*-----
 	 model
@@ -72,7 +69,8 @@ void GameScene::Initialize() {
 	}
 
 
-	uint32_t textureReticle = TextureManager::Load("2D_Reticle.png");
+	
+	textureReticle= TextureManager::Load("2D_Reticle.png");
 
 	 lockOn_ = std::make_unique<LockOn>();
 	 lockOn_->Initialize(textureReticle);
@@ -114,6 +112,7 @@ void GameScene::Update() {
 	/*-----------
 	DebugCamera
 	-----------*/
+#pragma region camera
 #ifdef _DEBUG
 
 	if (input_->TriggerKey(DIK_Q)) {
@@ -140,7 +139,7 @@ void GameScene::Update() {
 	viewProjection_.matProjection = followCamera->GetProjection();
 
 	viewProjection_.TransferMatrix();
-
+#pragma endregion
 	/*----------
 	     3D
 	----------*/

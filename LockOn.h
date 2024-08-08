@@ -21,7 +21,7 @@ public:
 	void Search(std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection);
 
 private:
-	std::unique_ptr<Sprite> lockOnMark_;
+	std::unique_ptr<Sprite> lockOnMark_=nullptr;
 
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
@@ -38,4 +38,5 @@ private:
 	float maxDistance_ = 30.0f;
 	float angleRange_ = 20.0f * kDegreeToRadian;
 
+	bool isSearch = false;
  };

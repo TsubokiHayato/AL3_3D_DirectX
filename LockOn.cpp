@@ -4,6 +4,7 @@
 #include <Input.h>
 #include <iostream>
 #include"MT_Matrix.h"
+#include"ImGuiManager.h"
 
 void LockOn::Initialize(uint32_t textureReticle) { 
 	
@@ -12,7 +13,7 @@ void LockOn::Initialize(uint32_t textureReticle) {
 
 	Vector2 anchorPoint = {0.5f, 0.5f};
 	
-	lockOnMark_->Create(textureReticle, {}, {1.0f, 1.0f, 1.0f, 1.0f}, anchorPoint);
+	lockOnMark_.reset(Sprite::Create(textureReticle, {}));
 
 
 }
@@ -27,20 +28,30 @@ void LockOn::Update(std::list<std::unique_ptr<Enemy>>& enemies,const ViewProject
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
 			Search(enemies, viewProjection);
+			isSearch = true;
 		}
 
 	}
 
+	if (target_) {
+	//
+		Vector3 posWorld = target_->;
+		//
+		Vector3 posScreen = ;
+
+	}
 	worldTransform_.UpdateMatrix();
 	
 }
 
 void LockOn::Draw() {
+	if (isSearch) {
 
-	lockOnMark_->Draw(); 
-
+		//ImGui::Text("Search and Destroy");
+		lockOnMark_->Draw();
+	}
 }
 
 void LockOn::Search(std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {

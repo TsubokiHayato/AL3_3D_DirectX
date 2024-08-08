@@ -85,7 +85,7 @@ private: // メンバ変数
 	/*------------
 	   テクスチャ
 	------------*/
-	uint32_t textureHandle = 0;
+	uint32_t textureReticle = 0;
 
 	/*------------
 	   model
