@@ -57,8 +57,7 @@ void GameScene::Initialize() {
         
     };
 	enemies_.push_back(std::make_unique<Enemy>());
-	enemies_.push_back(std::make_unique<Enemy>());
-	enemies_.push_back(std::make_unique<Enemy>());
+	
 
 	for (const auto& enemy_ : enemies_) {
 		enemiesPos.x+=3;

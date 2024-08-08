@@ -8,6 +8,8 @@
 #include <memory>
 #include"Enemy.h"
 
+#include"GlobalVariables.h"
+
  class LockOn {
 
 public:
@@ -18,15 +20,19 @@ public:
 
 	void Draw();
 
+	//検索
 	void Search(std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection);
 
+	//範囲外判定
+	bool IsOutOfRangeJudgment(const ViewProjection& viewProjection);
+
+ void ApplyGlobalVariables();
 private:
 	std::unique_ptr<Sprite> lockOnMark_=nullptr;
 
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
-	// ビューポート
-	ViewProjection* viewProjection_ = nullptr;
+	
 
 	const Enemy* target_ = nullptr;
 
@@ -39,4 +45,7 @@ private:
 	float angleRange_ = 20.0f * kDegreeToRadian;
 
 	bool isSearch = false;
+
+	GlobalVariables* globalVariables;
+	
  };

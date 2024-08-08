@@ -76,11 +76,13 @@ void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewP
 	worldHammerTransform_.rotation_.x = -3.5f;
 
 	InitializeFloatingGimmick();
+
+	
 }
 // 更新
 void Player::Update() {
 
-	ApplyGlobalVariables();
+	
 
 	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
 		globalVariables->SaveFile("Player");
@@ -221,7 +223,7 @@ void Player::BehaviorRootUpdate() {
 }
 
 void Player::BehaviorAttackUpdate() {
-	ImGui::Text("attackUpDate");
+
 	isAttack = true;
 
 	worldRArmTransform_.rotation_.x += 0.07f;
@@ -235,7 +237,7 @@ void Player::BehaviorAttackUpdate() {
 }
 
 void Player::BehaviorJumpUpdate() {
-	ImGui::Text("jumpUpdate");
+
 	
 
 	// 移動
