@@ -40,21 +40,32 @@ void LockOn::Update(std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjec
 
 	ZeroMemory(&joyState, sizeof(XINPUT_STATE));
 
+
+
+
+
 	if (target_) {
 		//ロックオン解放戦線
-		if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-			target_ = nullptr;
-		} else if (IsOutOfRangeJudgment(viewProjection)) {
-			target_ = nullptr;
-		}
+	
+			if (Input::GetInstance()->GetJoystickState(0, joyState)&&joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+				target_ = nullptr;
+			} else if (IsOutOfRangeJudgment(viewProjection)) {
+				target_ = nullptr;
+			}
+		
 	} else {
-		Search(enemies, viewProjection);
+		if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+				Search(enemies, viewProjection);
+			}
+		}
 	}
 
 	if (target_) {
 	//
-		for (const std::unique_ptr<Enemy>& enemy : enemies) {
-			Vector3 posWorld = enemy->GetWorldTransform();
+		
+			Vector3 posWorld = target_->GetWorldTransform();
+	;
 
 			Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
 			Matrix4x4 matViewProjectionViewport = viewProjection.matView * viewProjection.matProjection * matViewport;
@@ -62,7 +73,7 @@ void LockOn::Update(std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjec
 			posWorld = Transform(posWorld, matViewProjectionViewport);
 
 			lockOnMark_->SetPosition(Vector2(posWorld.x, posWorld.y));
-		}
+		
 		
 
 	}
@@ -77,11 +88,11 @@ void LockOn::Update(std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjec
 }
 
 void LockOn::Draw() {
-	if (isSearch) {
+	//if (target_) {
 
-		//ImGui::Text("Search and Destroy");
+
 		lockOnMark_->Draw();
-	}
+	//}
 }
 
 void LockOn::Search(std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {

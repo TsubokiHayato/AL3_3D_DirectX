@@ -16,7 +16,7 @@ public:
 	// 描画
 	void Draw();
 
-	Vector3 GetWorldTransform();
+	Vector3 GetWorldTransform()const;
 
 	
 private:

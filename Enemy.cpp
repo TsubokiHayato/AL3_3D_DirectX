@@ -64,7 +64,7 @@ void Enemy::Draw() {
 	modelRightArm_->Draw(worldRArmTransform_, *viewProjection_);*/
 }
 
-Vector3 Enemy::GetWorldTransform() {
+Vector3 Enemy::GetWorldTransform()const {
 
 	const Vector3 offset = {0.0f, 1.0f, 0.0f};
 
