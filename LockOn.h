@@ -37,8 +37,8 @@ private:
 	const Enemy* target_ = nullptr;
 
 	uint32_t textureHandle;
+	float kDegreeToRadian = 3.14f / 180.0f;
 
-	float kDegreeToRadian=3.0f;
 
 	float minDistance_ = 10.0f;
 	float maxDistance_ = 30.0f;

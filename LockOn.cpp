@@ -40,32 +40,30 @@ void LockOn::Update(std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjec
 
 	ZeroMemory(&joyState, sizeof(XINPUT_STATE));
 
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		if (target_) {
+			// ロックオン解放戦線
 
-
-
-
-	if (target_) {
-		//ロックオン解放戦線
-	
-			if (Input::GetInstance()->GetJoystickState(0, joyState)&&joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
 				target_ = nullptr;
 			} else if (IsOutOfRangeJudgment(viewProjection)) {
 				target_ = nullptr;
 			}
-		
-	} else {
-		if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+
+		} else {
+
 			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
 				Search(enemies, viewProjection);
 			}
 		}
 	}
 
+
 	if (target_) {
 	//
 		
 			Vector3 posWorld = target_->GetWorldTransform();
-	;
+	
 
 			Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
 			Matrix4x4 matViewProjectionViewport = viewProjection.matView * viewProjection.matProjection * matViewport;
@@ -149,18 +147,20 @@ bool LockOn::IsOutOfRangeJudgment(const ViewProjection& viewProjection) {
 
 		// 角度条件チェック(コーンに収まっているか)
 		if (std::abs(arcTangent) <= angleRange_) {
-			return false;
+			return true;
 		}
 
 	}
-	return true;
+	return false;
 	
 }
 
 void LockOn::ApplyGlobalVariables() {
+
 	globalVariables = GlobalVariables::GetInstance();
 	const char* groupName = "LockOn";
 
 	kDegreeToRadian = globalVariables->GetFloatValue(groupName, "kDegreeToRadian");
+
 }
 
