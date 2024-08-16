@@ -48,6 +48,8 @@ public:
 		return result;
 	};
 
+	Vector3 GetCenterPos() const;
+
 	void InitializeFloatingGimmick();
 
 	void UpdateFloatingGimmick();
@@ -71,6 +73,7 @@ public:
 
 	void SetLockOn(const LockOn* lockOn) { lockOn_ = lockOn; };
 
+	void OnCollision() override;
 
 private:
 

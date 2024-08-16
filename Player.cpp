@@ -152,6 +152,14 @@ void Player::Draw() {
 	}
 }
 
+Vector3 Player::GetCenterPos() const { 
+
+	const Vector3 offset = {0.0f, 1.5f, 0.0f};
+	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
+	return worldPos;
+
+}
+
 void Player::InitializeFloatingGimmick() {
 
 	floatingParameter_ = 0.0f;
@@ -299,6 +307,11 @@ void Player::ApplyGlobalVariables() {
 	const char* groupName = "Player";
 
 	period = globalVariables->GetIntValue(groupName, "period");
+}
+
+void Player::OnCollision() { 
+	//behaviorRequest_ = Behavior::kJump;
+	ImGui::Text("HIT!!");
 }
 
 /*---------------

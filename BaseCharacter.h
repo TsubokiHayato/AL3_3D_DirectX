@@ -4,8 +4,8 @@
 #include"WorldTransform.h"
 #include"ViewProjection.h"
 
-
-class BaseCharacter {
+#include"Collider.h"
+class BaseCharacter : public Collider {
 
 	protected:
 	std::vector<Model*> models_;
@@ -20,5 +20,6 @@ class BaseCharacter {
 	    virtual void Update();
 	    virtual void Draw(const ViewProjection& viewProjection);
 
-
+		//中心座標を入れる変数
+	    virtual Vector3 GetCenterPos() const override;
 };

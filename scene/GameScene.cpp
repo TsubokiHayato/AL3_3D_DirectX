@@ -12,9 +12,6 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	
-	
-
 	/*-----
 	 model
 	-----*/
@@ -32,7 +29,7 @@ void GameScene::Initialize() {
 
 	std::vector<Model*> enemyModels = {
 	    modelEnemy_Head.get(),
-	    modelEnemy_LeftArm.get(),//腕は今使ってないから注意
+	    modelEnemy_LeftArm.get(), // 腕は今使ってないから注意
 	    modelEnemy_RightArm.get(),
 	};
 
@@ -42,8 +39,8 @@ void GameScene::Initialize() {
 
 	viewProjection_.Initialize();
 
- lockOn_ = std::make_unique<LockOn>();
-	 lockOn_->Initialize(textureReticle);
+	lockOn_ = std::make_unique<LockOn>();
+	lockOn_->Initialize(textureReticle);
 
 	/*---------
 	* Chara
@@ -56,28 +53,20 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player->Initialize(playerModels, &viewProjection_);
 
-	
 	Vector3 enemiesPos = {
-	    0, 1, 1 
-        
-    };
-	enemies_.push_back(std::make_unique<Enemy>());
-	
+	    0, 1, 1
 
-	for (const auto& enemy_ : enemies_) {
-		enemiesPos.x+=3;
-		
-		enemiesPos.z+=3;
-			enemy_->Initialize(enemyModels, &viewProjection_, enemiesPos);
-		
+	};
+	enemies_.push_back(std::make_unique<Enemy>());
+
+	for (const std::unique_ptr<Enemy>& enemy_ : enemies_) {
+		enemiesPos.x += 3;
+
+		enemiesPos.z += 3;
+		enemy_->Initialize(enemyModels, &viewProjection_, enemiesPos);
 	}
 
-
-	
-	textureReticle= TextureManager::Load("2D_Reticle.png");
-
-	
-
+	textureReticle = TextureManager::Load("2D_Reticle.png");
 
 	/*---------
 	  SkyDome
@@ -104,10 +93,13 @@ void GameScene::Initialize() {
 
 	followCamera = std::make_unique<FollowCamera>();
 	followCamera->Initialize();
-	
+
 	followCamera->SetTarget(&player->GetWorldTransform());
-followCamera->SetLockOn(lockOn_.get());
+	followCamera->SetLockOn(lockOn_.get());
 	player->SetViewProjection(&followCamera->GetViewProjection());
+
+
+	collisionManager_ = std::make_unique<CollisionManager>();
 }
 
 void GameScene::Update() {
@@ -136,8 +128,6 @@ void GameScene::Update() {
 		viewProjection_.UpdateMatrix();
 	}
 
-	
-	
 #pragma endregion
 	/*----------
 	     3D
@@ -147,21 +137,21 @@ void GameScene::Update() {
 	skyDome->Update();
 	plane->Update();
 
-	for (const auto& enemy_ : enemies_) {
+	for (const std::unique_ptr<Enemy>& enemy_ : enemies_) {
 		enemy_->Update();
 	}
 
-	
-	
-	
 	followCamera->Update();
 
 	viewProjection_.matView = followCamera->GetView();
 	viewProjection_.matProjection = followCamera->GetProjection();
 
 	viewProjection_.TransferMatrix();
-	
+
 	lockOn_->Update(enemies_, viewProjection_);
+
+	//衝突判定と応答
+	CheckAllCollisions();
 }
 
 void GameScene::Draw() {
@@ -199,7 +189,7 @@ void GameScene::Draw() {
 	// 自キャラ
 	player->Draw();
 
-	for (const auto& enemy_ : enemies_) {
+	for (const std::unique_ptr<Enemy>& enemy_ : enemies_) {
 		enemy_->Draw();
 	}
 
@@ -225,4 +215,20 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::CheckAllCollisions() {
+
+	//衝突マネージャーのリセット
+	collisionManager_->Reset();
+
+	//コライダーをリストに登録
+	collisionManager_->AddCollider(player.get());
+	//敵の全てについて
+	for (std::unique_ptr<Enemy>& enemy_ : enemies_) {
+		collisionManager_->AddCollider(enemy_.get());
+	}
+
+	//衝突判定と応答
+	collisionManager_->CheckAllCollisions();
 }
