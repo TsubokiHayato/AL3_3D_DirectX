@@ -42,12 +42,17 @@ void GameScene::Initialize() {
 
 	viewProjection_.Initialize();
 
+ lockOn_ = std::make_unique<LockOn>();
+	 lockOn_->Initialize(textureReticle);
+
 	/*---------
 	* Chara
 	--------*/
 
 	// 自キャラの生成
 	player = std::make_unique<Player>();
+
+	player->SetLockOn(lockOn_.get());
 	// 自キャラの初期化
 	player->Initialize(playerModels, &viewProjection_);
 
@@ -71,8 +76,7 @@ void GameScene::Initialize() {
 	
 	textureReticle= TextureManager::Load("2D_Reticle.png");
 
-	 lockOn_ = std::make_unique<LockOn>();
-	 lockOn_->Initialize(textureReticle);
+	
 
 
 	/*---------
@@ -100,9 +104,9 @@ void GameScene::Initialize() {
 
 	followCamera = std::make_unique<FollowCamera>();
 	followCamera->Initialize();
-	followCamera->SetLockOn(lockOn_.get());
+	
 	followCamera->SetTarget(&player->GetWorldTransform());
-
+followCamera->SetLockOn(lockOn_.get());
 	player->SetViewProjection(&followCamera->GetViewProjection());
 }
 
@@ -147,7 +151,7 @@ void GameScene::Update() {
 		enemy_->Update();
 	}
 
-	lockOn_->Update(enemies_, viewProjection_);
+	
 	
 	
 	followCamera->Update();
@@ -156,6 +160,8 @@ void GameScene::Update() {
 	viewProjection_.matProjection = followCamera->GetProjection();
 
 	viewProjection_.TransferMatrix();
+	
+	lockOn_->Update(enemies_, viewProjection_);
 }
 
 void GameScene::Draw() {

@@ -16,7 +16,7 @@
 
 #pragma comment(lib, "XInput.lib")
 
-#include"LockOn.h"
+#include "LockOn.h"
 
 #define PI 3.14159265359f
 
@@ -78,13 +78,9 @@ void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewP
 	worldHammerTransform_.rotation_.x = -3.5f;
 
 	InitializeFloatingGimmick();
-
-	
 }
 // 更新
 void Player::Update() {
-
-	
 
 	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
 		globalVariables->SaveFile("Player");
@@ -214,7 +210,7 @@ void Player::BehaviorRootUpdate() {
 			//
 			worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
 
-			//idou
+			// idou
 			worldTransform_.translation_ = targetPos;
 
 		} else if (lockOn_ && lockOn_->ExistTarget()) {
@@ -223,12 +219,10 @@ void Player::BehaviorRootUpdate() {
 			Vector3 lockOnPosition = lockOn_->GetTargetPos();
 
 			// プレイヤーからロックオン座標へのベクトル
-			Vector3 sub = lockOnPosition -GetWorldPos();
+			Vector3 sub = lockOnPosition - GetWorldPos();
 
 			// Y軸周りの角度を計算してプレイヤーの回転を更新
 			worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
-
-
 		}
 
 		// Attack to B
@@ -242,10 +236,34 @@ void Player::BehaviorRootUpdate() {
 	}
 }
 
-
 void Player::BehaviorAttackUpdate() {
-
+	float speed = 0.4f;
 	isAttack = true;
+	// ロックオン中
+	if (lockOn_ && lockOn_->ExistTarget()) {
+		//ロックオン座標
+		Vector3 lockOnPos = lockOn_->GetTargetPos();
+		//追従対象からロックオン対象へのベクトル
+		Vector3 sub = lockOnPos - GetWorldPos();
+
+		//距離
+		float distance = Length(sub);
+
+		//距離しきい値
+		const float threshold = 0.2f;
+
+		// しきい値より離れている時のみ
+		if (distance > threshold) {
+			// Y軸周り角度
+			worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
+
+			// しきい値を超える速さなら補正する
+			if (speed > distance - threshold) {
+				// ロックオン対象へのめり込み防止
+				speed = distance - threshold;
+			}
+		}
+	}
 
 	worldRArmTransform_.rotation_.x += 0.07f;
 	worldLArmTransform_.rotation_.x += 0.07f;
@@ -254,12 +272,9 @@ void Player::BehaviorAttackUpdate() {
 
 		behaviorRequest_ = Behavior::kRoot;
 	}
-
 }
 
 void Player::BehaviorJumpUpdate() {
-
-	
 
 	// 移動
 	worldTransform_.translation_ += velocity_;
@@ -316,6 +331,4 @@ void Player::BehaviorJumpInitialize() {
 	const float kJumpFirstSpeed = 1.0f;
 
 	velocity_.y = kJumpFirstSpeed;
-
-	
 }

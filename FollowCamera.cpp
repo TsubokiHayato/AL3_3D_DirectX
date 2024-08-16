@@ -15,7 +15,7 @@ void FollowCamera::Update() {
 
 	
 	
-	if (lockOn_) {
+	if (lockOn_&&lockOn_->ExistTarget()) {
 
 		Vector3 lockOnPos = lockOn_->GetTargetPos();
 		Vector3 playerPos = target_->translation_;
