@@ -8,20 +8,21 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
-
 #include "Player.h"
 
-#include"Enemy.h"
-#include<memory>
+#include "Enemy.h"
+#include <memory>
 
-#include"SkyDome.h"
-#include"Plane.h"
+#include "Plane.h"
+#include "SkyDome.h"
 
-#include<DebugCamera.h>
+#include <DebugCamera.h>
 
-#include"FollowCamera.h"
+#include "FollowCamera.h"
 
-#include"LockOn.h"
+#include "LockOn.h"
+
+#include "CollisionManager.h"
 
 /// <summary>
 /// ゲームシーン
@@ -54,6 +55,11 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// 衝突判定と応答
+	/// </summary>
+	void CheckAllCollisions();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -69,18 +75,15 @@ private: // メンバ変数
 
 	std::unique_ptr<Player> player = nullptr;
 
-	//std::unique_ptr<Enemy> enemy = nullptr;
+	// std::unique_ptr<Enemy> enemy = nullptr;
 
 	std::list<std::unique_ptr<Enemy>> enemies_;
 
 	std::unique_ptr<SkyDome> skyDome = nullptr;
 
-	
 	std::unique_ptr<Plane> plane = nullptr;
 
-	std::unique_ptr < DebugCamera> debugCamera_ = nullptr;
-
-
+	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
 
 	/*------------
 	   テクスチャ
@@ -101,28 +104,29 @@ private: // メンバ変数
 	std::unique_ptr<Model> modelEnemy_LeftArm = nullptr;
 	std::unique_ptr<Model> modelEnemy_RightArm = nullptr;
 
-
 	std::unique_ptr<Model> modelSkyDome = nullptr;
 
 	std::unique_ptr<Model> modelPlane = nullptr;
-	
+
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
-	
+
 	ViewProjection viewProjection_;
 
 	bool isDebugCameraActive_ = false;
-
 
 	/*--------------
 	* camera
 	--------------*/
 
-	std::unique_ptr<FollowCamera> followCamera=nullptr;
-
+	std::unique_ptr<FollowCamera> followCamera = nullptr;
 
 	std::unique_ptr<LockOn> lockOn_;
 
+	/*--------------
+	* 衝突マネージャー
+	--------------*/
 
+	std::unique_ptr<CollisionManager> collisionManager_;
 };

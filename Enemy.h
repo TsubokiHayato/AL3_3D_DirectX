@@ -3,8 +3,10 @@
 #include "BaseCharacter.h"
 #include "Model.h"
 #include "WorldTransform.h"
+#include"BaseCharacter.h"
 
-class Enemy {
+class Enemy: public BaseCharacter
+{
 public:
 	
 	// 初期化
@@ -18,7 +20,6 @@ public:
 
 	Vector3 GetWorldTransform()const;
 
-	
 private:
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
@@ -41,6 +42,5 @@ private:
 
 
 	float theta = 0.0f;
-
 
 };
