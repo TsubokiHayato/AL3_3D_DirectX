@@ -16,6 +16,8 @@
 
 #pragma comment(lib, "XInput.lib")
 
+#include"LockOn.h"
+
 #define PI 3.14159265359f
 
 inline Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
@@ -172,6 +174,7 @@ void Player::UpdateFloatingGimmick() {
 }
 
 void Player::BehaviorRootUpdate() {
+
 	ImGui::Text("RootUpdate");
 
 	isAttack = false;
@@ -180,8 +183,6 @@ void Player::BehaviorRootUpdate() {
 	ZeroMemory(&joyState, sizeof(XINPUT_STATE));
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		const float speed = 0.3f;
-
 		// Get joystick input values and clamp them to valid range
 		float thumbLX = static_cast<float>(joyState.Gamepad.sThumbLX);
 		float thumbLY = static_cast<float>(joyState.Gamepad.sThumbLY);
@@ -190,37 +191,57 @@ void Player::BehaviorRootUpdate() {
 		float maxThumbValue = static_cast<float>(SHRT_MAX);
 		thumbLX = std::clamp(thumbLX / maxThumbValue, -1.0f, 1.0f);
 		thumbLY = std::clamp(thumbLY / maxThumbValue, -1.0f, 1.0f);
+		if (thumbLX != 0.0f || thumbLY != 0.0f) {
 
-		velocity_.x = thumbLX;
-		velocity_.y = 0.0f;
-		velocity_.z = thumbLY;
+			/*-------
+			移動処理
+			-------*/
+			const float speed = 0.3f;
 
-		// Normalize the movement vector
-		velocity_ = Normalize(velocity_) * speed;
+			velocity_.x = thumbLX;
+			velocity_.y = 0.0f;
+			velocity_.z = thumbLY;
 
-		Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+			// Normalize the movement vector
+			velocity_ = Normalize(velocity_) * speed;
 
-		velocity_ = TransformNormal(velocity_, rotateMatrix);
-		Vector3 targetPos = worldTransform_.translation_ + velocity_;
-		Vector3 sub = targetPos - GetWorldTransformTranslate();
+			Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
 
-		worldTransform_.rotation_.y = std::atan2(sub.x, sub.y);
+			velocity_ = TransformNormal(velocity_, rotateMatrix);
+			Vector3 targetPos = worldTransform_.translation_ + velocity_;
+			Vector3 sub = targetPos - GetWorldPos();
 
-		worldTransform_.rotation_.y = viewProjection_->rotation_.y;
-		// Add the movement to the translation
-		worldTransform_.translation_ = targetPos;
+			//
+			worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
+
+			//idou
+			worldTransform_.translation_ = targetPos;
+
+		} else if (lockOn_ && lockOn_->ExistTarget()) {
+
+			// ロックオン座標
+			Vector3 lockOnPosition = lockOn_->GetTargetPos();
+
+			// プレイヤーからロックオン座標へのベクトル
+			Vector3 sub = lockOnPosition -GetWorldPos();
+
+			// Y軸周りの角度を計算してプレイヤーの回転を更新
+			worldTransform_.rotation_.y = std::atan2(sub.x, sub.z);
+
+
+		}
 
 		// Attack to B
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 			behaviorRequest_ = Behavior::kAttack;
 		}
 
-
 		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
 			behaviorRequest_ = Behavior::kJump;
 		}
 	}
 }
+
 
 void Player::BehaviorAttackUpdate() {
 

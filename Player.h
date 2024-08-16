@@ -6,7 +6,7 @@
 
 #include"optional"
 
-//#include "TextureManager.h"
+
 //  行動フェーズ
 enum class Phase {
 	Approach, // 接近
@@ -20,7 +20,7 @@ enum class Behavior {
 };
 
 class GlobalVariables;
-
+class LockOn;
 //自キャラ
 class Player : public BaseCharacter {
 public:
@@ -38,7 +38,7 @@ public:
 	void SetViewProjection(const ViewProjection* viewProjection) {  viewProjection_=viewProjection; }
 
 	
-	Vector3 GetWorldTransformTranslate() {
+	Vector3 GetWorldPos() {
 
 		Vector3 result = {};
 		result.x = worldTransform_.matWorld_.m[3][0];
@@ -68,6 +68,9 @@ public:
 	void BehaviorJumpUpdate();
 
 	void ApplyGlobalVariables();
+
+	void SetLockOn(const LockOn* lockOn) { lockOn_ = lockOn; };
+
 
 private:
 
@@ -123,7 +126,7 @@ private:
 
 	Vector3 velocity_ = {};
 
-	
+	const LockOn* lockOn_ = nullptr;
 	
 };
 

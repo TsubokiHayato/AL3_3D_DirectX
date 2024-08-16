@@ -2,6 +2,7 @@
 #include"ViewProjection.h"
 #include"WorldTransform.h"
 
+class LockOn;
 
 class FollowCamera {
 
@@ -15,10 +16,14 @@ public:
 	Matrix4x4 GetProjection() { return viewProjection_.matProjection; }
 
 	  const ViewProjection& GetViewProjection() const { return viewProjection_; }
+
+	  void SetLockOn(const LockOn* lockOn) { lockOn_ = lockOn; }
 	
 	private:
 
 	ViewProjection viewProjection_;
 	   
 	const WorldTransform* target_ = nullptr;
+	const LockOn* lockOn_ = nullptr;
+
 };

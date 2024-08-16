@@ -26,6 +26,12 @@ public:
 	//範囲外判定
 	bool IsOutOfRangeJudgment(const ViewProjection& viewProjection);
 
+	Vector3 GetTargetPos() const;
+
+	bool ExistTarget() const { return target_ ? true : false; }
+	
+
+
  void ApplyGlobalVariables();
 private:
 	std::unique_ptr<Sprite> lockOnMark_=nullptr;

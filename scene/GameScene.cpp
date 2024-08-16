@@ -100,7 +100,7 @@ void GameScene::Initialize() {
 
 	followCamera = std::make_unique<FollowCamera>();
 	followCamera->Initialize();
-
+	followCamera->SetLockOn(lockOn_.get());
 	followCamera->SetTarget(&player->GetWorldTransform());
 
 	player->SetViewProjection(&followCamera->GetViewProjection());
@@ -132,12 +132,8 @@ void GameScene::Update() {
 		viewProjection_.UpdateMatrix();
 	}
 
-	followCamera->Update();
-
-	viewProjection_.matView = followCamera->GetView();
-	viewProjection_.matProjection = followCamera->GetProjection();
-
-	viewProjection_.TransferMatrix();
+	
+	
 #pragma endregion
 	/*----------
 	     3D
@@ -152,6 +148,14 @@ void GameScene::Update() {
 	}
 
 	lockOn_->Update(enemies_, viewProjection_);
+	
+	
+	followCamera->Update();
+
+	viewProjection_.matView = followCamera->GetView();
+	viewProjection_.matProjection = followCamera->GetProjection();
+
+	viewProjection_.TransferMatrix();
 }
 
 void GameScene::Draw() {

@@ -1,6 +1,7 @@
 #include "FollowCamera.h"
 #include "Input.h"
 
+#include "LockOn.h"
 #include "MT_Matrix.h"
 
 inline Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
@@ -12,27 +13,59 @@ void FollowCamera::Initialize() { viewProjection_.Initialize(); }
 
 void FollowCamera::Update() {
 
-	XINPUT_STATE joyState;
+	
+	
+	if (lockOn_) {
 
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		Vector3 lockOnPos = lockOn_->GetTargetPos();
+		Vector3 playerPos = target_->translation_;
 
-		const float speed = 0.1f;
+		Vector3 sub = lockOnPos - playerPos;
+		viewProjection_.rotation_.y = std::atan2(sub.x, sub.z);
 
-		viewProjection_.rotation_.y += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * speed;
+	    Vector3 offset{0.0f, 2.0f, -10.0f};
+		Matrix4x4 rotateMatrix = MakeRotateXYZMatrix(viewProjection_.rotation_);
+
+		offset = TransformNormal(offset, rotateMatrix);
+		
+
+
+		viewProjection_.translation_ = playerPos + offset;
+
+	} else {
+		// 追従対象がいれば
+		if (target_) {
+			
+			Vector3 offset ={0.0f, 2.0f, -10.0f};
+			Vector3 targetPos = target_->translation_;
+
+			XINPUT_STATE joyState;
+			if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+				const float speed = 0.1f;
+
+				Vector3 move{};
+				move.x = 0;
+				move.y += (float)(joyState.Gamepad.sThumbRX);
+				move.z = 0;
+
+				
+					move = Normalize(move) * speed;
+			
+
+				viewProjection_.rotation_ += move;
+			}
+
+			Matrix4x4 rotateMatrix = MakeRotateXYZMatrix(viewProjection_.rotation_);
+
+			
+			offset = TransformNormal(offset, rotateMatrix);
+
+			
+			viewProjection_.translation_ = targetPos + offset;
+		}
 	}
 
-	if (target_) {
-		Vector3 offset{0.0f, 2.0f, -10.0f};
-
-		Vector3 cameraRotationAngles = viewProjection_.rotation_;
-
-		Matrix4x4 rotateYMatrix = MakeRotateYMatrix(cameraRotationAngles.y);
-
-		offset = TransformNormal(offset, rotateYMatrix);
-
-		viewProjection_.translation_ = target_->translation_ + offset;
-	}
-
+	// ビュー行列の更新
 	viewProjection_.UpdateMatrix();
 	viewProjection_.TransferMatrix();
 }

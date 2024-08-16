@@ -77,20 +77,14 @@ void LockOn::Update(std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjec
 	}
 	worldTransform_.UpdateMatrix();
 
-	ImGui::Begin("lockon");
-	ImGui::DragFloat("angle",&angleRange_);
-	ImGui::DragFloat("degreeToRad", &kDegreeToRadian);
-	
-	ImGui::End();
-	
 }
 
 void LockOn::Draw() {
-	//if (target_) {
+	if (target_) {
 
 
 		lockOnMark_->Draw();
-	//}
+	}
 }
 
 void LockOn::Search(std::list<std::unique_ptr<Enemy>>& enemies, const ViewProjection& viewProjection) {
@@ -154,6 +148,16 @@ bool LockOn::IsOutOfRangeJudgment(const ViewProjection& viewProjection) {
 	return false;
 	
 }
+
+Vector3 LockOn::GetTargetPos() const {
+	
+
+	if (target_) {
+		return target_->GetWorldTransform();
+	}
+	return Vector3();
+	}
+
 
 void LockOn::ApplyGlobalVariables() {
 

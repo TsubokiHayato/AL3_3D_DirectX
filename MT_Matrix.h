@@ -48,6 +48,7 @@ inline Matrix4x4 MakeRotateZMatrix(float radian) {
 	return result;
 }
 
+
 inline Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	Matrix4x4 m3;
 	for (int i = 0; i < 4; i++) {
@@ -57,6 +58,20 @@ inline Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	}
 	return m3;
 }
+inline Matrix4x4 MakeRotateXYZMatrix(Vector3 radian) {
+	Matrix4x4 result[4] = {};
+
+	result[0] = MakeRotateXMatrix(radian.x);
+	result[1] = MakeRotateYMatrix(radian.y);
+	result[2] = MakeRotateZMatrix(radian.z);
+	result[3] = Multiply(result[0], (Multiply(result[1], result[2])));
+
+	
+
+	return result[3];
+}
+
+
 
 inline Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 	Matrix4x4 m = {};
