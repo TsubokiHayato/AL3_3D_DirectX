@@ -1,4 +1,24 @@
 #include "CollisionManager.h"
+#include"cassert"
+void CollisionManager::Initialize() {
+	
+	model_ICO.reset(Model::CreateFromOBJ("ICO", true));
+	assert(model_ICO);
+}
+
+void CollisionManager::UpdateWorldTransform() {
+
+	for (Collider* collider : colliders_) {
+		collider->UpdateWorldTransform();
+	}
+}
+
+void CollisionManager::Draw(const ViewProjection& viewProjection) {
+	for (Collider* collider : colliders_) {
+
+		collider->Draw(model_ICO.get(), viewProjection);
+	}
+}
 
 void CollisionManager::Reset() { colliders_.clear(); }
 
@@ -7,27 +27,24 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 	Vector3 posA = colliderA->GetCenterPos();
 	Vector3 posB = colliderB->GetCenterPos();
 
-	//座標の差分ベクトル
+	// 座標の差分ベクトル
 	Vector3 subtract = posB - posA;
-	//座標AとBの距離を求める
+	// 座標AとBの距離を求める
 	float distance = Length(subtract);
 
 	if (distance <= colliderA->GetRadius() + colliderB->GetRadius()) {
-		
+
 		colliderA->OnCollision();
 		colliderB->OnCollision();
 	}
-
-
-
 }
-
 
 void CollisionManager::AddCollider(Collider* collider) {
 
-// コライダーをリストに追加する
+	// コライダーをリストに追加する
 	colliders_.push_back(collider);
 }
+
 
 void CollisionManager::CheckAllCollisions() {
 

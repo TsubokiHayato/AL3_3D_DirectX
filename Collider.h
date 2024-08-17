@@ -1,8 +1,15 @@
 #pragma once
 #include"Vector3.h"
+#include"WorldTransform.h"
+#include"ViewProjection.h"
+#include"Model.h"
 class Collider {
 
 public:
+	//初期化
+	void Initialize();
+
+
 	//セッター
 	float GetRadius() { return radius_; }
 	//ゲッター
@@ -16,11 +23,15 @@ public:
 
 	virtual ~Collider() = default;
 
+	//ワールドトランスフォームの初期化
+	void UpdateWorldTransform();
 
-
+		// 描画
+	void Draw(Model* model, const ViewProjection& viewProjection);
 
 private:
 	// 衝突半径
-	float radius_ = 1.5f;
+	float radius_ = 1.0f;
 
+	WorldTransform worldTransform;
 };

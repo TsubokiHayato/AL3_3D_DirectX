@@ -2,10 +2,18 @@
 #include "Collider.h"
 #include <vector>
 #include <list>
+#include"Model.h"
 
 class CollisionManager {
 
 public:
+
+	//初期化
+	void Initialize();
+
+	//ワールドトランスフォームの更新
+	void UpdateWorldTransform();
+
 	//リセット
 	void Reset();
 
@@ -17,8 +25,12 @@ public:
 	// コライダーの登録
 	void AddCollider(Collider* collider);
 
+	void Draw(const ViewProjection& viewProjection);
+
 private:
 	//コライダー
 	std::list<Collider*> colliders_;
+	//デバッグ表示用のモデル
+	std::unique_ptr<Model> model_ICO;
 
 };
