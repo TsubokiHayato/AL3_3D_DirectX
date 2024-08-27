@@ -38,7 +38,7 @@ void GameScene::Initialize() {
 	--------------*/
 
 	viewProjection_.Initialize();
-
+	textureReticle = TextureManager::Load("2D_Reticle.png");
 	lockOn_ = std::make_unique<LockOn>();
 	lockOn_->Initialize(textureReticle);
 
@@ -68,7 +68,7 @@ collisionManager_ = std::make_unique<CollisionManager>();
 		enemy_->Initialize(enemyModels, &viewProjection_, enemiesPos);
 	}
 
-	textureReticle = TextureManager::Load("2D_Reticle.png");
+	
 
 	/*---------
 	  SkyDome
