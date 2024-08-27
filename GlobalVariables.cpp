@@ -1,10 +1,10 @@
 #include "GlobalVariables.h"
 #include "ImGuiManager.h"
 
+#include "cassert"
 #include <filesystem>
 #include <fstream>
 #include <string>
-#include"cassert"
 
 std::map<std::string, Group> datas_;
 
@@ -38,7 +38,6 @@ void GlobalVariables::SetValue(const std::string& groupName, const std::string& 
 	group[key] = newItem;
 }
 
-
 void GlobalVariables::SetValue(const std::string& groupName, const std::string& key, Vector3 value) {
 	// グループの参照を取得
 	Group& group = datas_[groupName];
@@ -49,8 +48,18 @@ void GlobalVariables::SetValue(const std::string& groupName, const std::string& 
 	group[key] = newItem;
 }
 
+void GlobalVariables::SetValue(const std::string& groupName, const std::string& key, bool value) {
+	// グループの参照を取得
+	Group& group = datas_[groupName];
+	// 新しい項目のデータを設定
+	Item newItem{};
+	newItem = value;
+	// 設定した項目をstd::mapに追加
+	group[key] = newItem;
+}
+
 void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, int32_t value) {
-	
+
 	// グループの参照を取得
 	Group& group = datas_[groupName];
 
@@ -63,8 +72,6 @@ void GlobalVariables::AddItem(const std::string& groupName, const std::string& k
 		// 設定した項目をstd::mapに追加
 		group[key] = newItem;
 	}
-
-
 }
 void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, float value) {
 
@@ -80,14 +87,12 @@ void GlobalVariables::AddItem(const std::string& groupName, const std::string& k
 		// 設定した項目をstd::mapに追加
 		group[key] = newItem;
 	}
-
-
 }
 void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, Vector3 value) {
 
 	// グループの参照を取得
 	Group& group = datas_[groupName];
-	
+
 	// 項目が未登録かどうかを確認
 	if (group.find(key) == group.end()) {
 		// 新しい項目のデータを設定
@@ -97,8 +102,23 @@ void GlobalVariables::AddItem(const std::string& groupName, const std::string& k
 		// 設定した項目をstd::mapに追加
 		group[key] = newItem;
 	}
-
 }
+void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, bool value) {
+
+	// グループの参照を取得
+	Group& group = datas_[groupName];
+
+	// 項目が未登録かどうかを確認
+	if (group.find(key) == group.end()) {
+		// 新しい項目のデータを設定
+		Item newItem{};
+		newItem = value;
+
+		// 設定した項目をstd::mapに追加
+		group[key] = newItem;
+	}
+}
+
 void GlobalVariables::Update() {
 
 	if (!ImGui::Begin("Global Variables", nullptr, ImGuiWindowFlags_MenuBar)) {
@@ -137,6 +157,10 @@ void GlobalVariables::Update() {
 
 					Vector3* ptr = std::get_if<Vector3>(&item);
 					ImGui::SliderFloat3(itemName.c_str(), reinterpret_cast<float*>(ptr), -10.0f, 10.0f);
+				} else if (std::holds_alternative<bool>(item)) {
+
+					bool* ptr = std::get_if<bool>(&item);
+					ImGui::Checkbox(itemName.c_str(), ptr); // 修正: SliderFloat3からCheckboxへ
 				}
 			}
 			ImGui::Text("\n");
@@ -191,6 +215,10 @@ void GlobalVariables::SaveFile(const std::string& groupName) {
 			// Vector3型のjson配列登録
 			Vector3 value = std::get<Vector3>(item);
 			root[groupName][itemName] = json::array({value.x, value.y, value.z});
+		} else if (std::holds_alternative<bool>(item)) {
+
+			
+			root[groupName][itemName] = std::get<bool>(item);
 		}
 	}
 
@@ -247,7 +275,7 @@ void GlobalVariables::LoadFile(const std::string& groupName) {
 	std::ifstream ifs;
 	// ファイルを読み込み用に開く
 	ifs.open(filePath);
-	
+
 	// ファイルオープン失敗?
 	if (ifs.fail()) {
 		std::string message = "Failed open data file for write.";
@@ -273,26 +301,30 @@ void GlobalVariables::LoadFile(const std::string& groupName) {
 		// アイテム名を取得
 		const std::string& itemName = itItem.key();
 
-		//int32_t型の値を保持していれば
+		// int32_t型の値を保持していれば
 		if (itItem->is_number_integer()) {
-			//int型の値を登録
+			// int型の値を登録
 			int32_t value = itItem->get<int32_t>();
 			SetValue(groupName, itemName, value);
 
-			//float型の値を保持していれば
+			// float型の値を保持していれば
 		} else if (itItem->is_number_float()) {
 			// float型の値を登録
 			double value = itItem->get<double>();
-			SetValue(groupName, itemName,static_cast<float>(value));
+			SetValue(groupName, itemName, static_cast<float>(value));
 
-			//要素3の配列であれば
+			// 要素3の配列であれば
 		} else if (itItem->is_array() && itItem->size() == 3) {
 			// 要素3の配列型の値を保持していれば
 			Vector3 value = {itItem->at(0), itItem->at(1), itItem->at(2)};
 			SetValue(groupName, itemName, value);
+
+			// bool型の値を保持していれば
+		} else if (itItem->is_boolean()) {
+			// bool型の値を登録
+			bool value = itItem->get<bool>();
+			SetValue(groupName, itemName, value);
 		}
-
-
 	}
 }
 
@@ -345,4 +377,20 @@ Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std
 	}
 	// グループまたはアイテムが見つからない場合のデフォルト値
 	return Vector3(); // Assuming Vector3 has a default constructor that initializes to (0, 0, 0)
+}
+bool GlobalVariables::GetBoolValue(const std::string& groupName, const std::string& key) const {
+	// グループを検索
+	auto itGroup = datas_.find(groupName);
+	if (itGroup != datas_.end()) {
+		const Group& group = itGroup->second;
+		auto itItem = group.find(key);
+		if (itItem != group.end()) {
+			const Item& item = itItem->second;
+			if (std::holds_alternative<bool>(item)) { // 修正: floatからboolへ
+				return std::get<bool>(item);          // 修正: floatからboolへ
+			}
+		}
+	}
+	// グループまたはアイテムが見つからない場合のデフォルト値
+	return bool();
 }

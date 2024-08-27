@@ -20,6 +20,9 @@ public:
 
 	Vector3 GetWorldTransform()const;
 
+	Vector3 GetCenterPos() const;
+
+
 private:
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;

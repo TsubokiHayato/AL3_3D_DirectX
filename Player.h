@@ -20,6 +20,7 @@ enum class Behavior {
 };
 
 class GlobalVariables;
+
 class LockOn;
 //自キャラ
 class Player : public BaseCharacter {

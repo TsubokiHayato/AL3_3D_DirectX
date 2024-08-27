@@ -7,6 +7,8 @@
 #include "ImGuiManager.h"
 
 void Enemy::Initialize(const std::vector<Model*>& models, ViewProjection* viewProjection, const Vector3& position) {
+	// 基底クラスの初期化
+	BaseCharacter::Initialize(models, viewProjection);
 
 	assert(models[kModelIndexHead]);
 	assert(models[kModelIndexL_arm]);
@@ -71,5 +73,13 @@ Vector3 Enemy::GetWorldTransform()const {
 	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
 
 	return worldPos;
+}
+
+Vector3 Enemy::GetCenterPos() const {
+
+	const Vector3 offset = {0.0f, 1.0f, 0.0f};
+	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
+	return worldPos;
+
 }
 

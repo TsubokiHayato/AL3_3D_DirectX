@@ -135,6 +135,8 @@ void GameScene::Update() {
 	/*----------
 	     3D
 	----------*/
+	// 衝突判定と応答
+	CheckAllCollisions();
 	// 自キャラの更新
 	player->Update();
 	skyDome->Update();
@@ -143,6 +145,7 @@ void GameScene::Update() {
 	for (const std::unique_ptr<Enemy>& enemy_ : enemies_) {
 		enemy_->Update();
 	}
+
 
 	followCamera->Update();
 
@@ -154,8 +157,7 @@ void GameScene::Update() {
 	lockOn_->Update(enemies_, viewProjection_);
 
 	
-	//衝突判定と応答
-	CheckAllCollisions();
+	
 }
 
 void GameScene::Draw() {
