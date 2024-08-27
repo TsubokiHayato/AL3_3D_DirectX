@@ -2,25 +2,31 @@
 #include"cassert"
 
 #include "GlobalVariables.h"
+#include <iostream>
 void CollisionManager::Initialize() {
-	globalVariables = GlobalVariables::GetInstance();
-	const char* groupName = "CollisionManager";
-	// グループを追加
-	GlobalVariables::GetInstance()->CreateGroup(groupName);
-
-	globalVariables->AddItem(groupName, "isCheckCollision",isCheckCollision );
-
-	isCheckCollision = globalVariables->GetBoolValue(groupName, "isCheckCollision");
 
 
-	model_ICO.reset(Model::CreateFromOBJ("ICO", true));
+    globalVariables = GlobalVariables::GetInstance();
+    const char* groupName = "CollisionManager";
+    globalVariables->CreateGroup(groupName);
 
-	assert(model_ICO);
+    // グローバル変数を追加または取得
+    globalVariables->AddItem(groupName, "isCheckCollision", isCheckCollision);
+
+    // 最新の値を取得
+    isCheckCollision = globalVariables->GetBoolValue(groupName, "isCheckCollision");
+
+	
+	
+
+    model_ICO.reset(Model::CreateFromOBJ("ICO", true));
+
+    assert(model_ICO);
 }
 
 void CollisionManager::UpdateWorldTransform() {
 
-
+	   isCheckCollision = globalVariables->GetBoolValue("CollisionManager", "isCheckCollision");
 	if (!isCheckCollision) {
 		return;
 	}
@@ -31,6 +37,7 @@ void CollisionManager::UpdateWorldTransform() {
 }
 
 void CollisionManager::Draw(const ViewProjection& viewProjection) {
+	isCheckCollision = globalVariables->GetBoolValue("CollisionManager", "isCheckCollision");
 	if (!isCheckCollision) {
 		return;
 	}

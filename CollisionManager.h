@@ -27,7 +27,7 @@ public:
 
 	void Draw(const ViewProjection& viewProjection);
 
-	void ApplyGlobalVariables();
+	
 	private:
 	// コライダー
 	std::list<Collider*> colliders_;
