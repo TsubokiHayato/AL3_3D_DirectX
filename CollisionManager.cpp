@@ -1,8 +1,11 @@
 #include "CollisionManager.h"
 #include"cassert"
+
 void CollisionManager::Initialize() {
 	
+
 	model_ICO.reset(Model::CreateFromOBJ("ICO", true));
+
 	assert(model_ICO);
 }
 

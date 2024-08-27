@@ -30,6 +30,7 @@ public:
 private:
 	//コライダー
 	std::list<Collider*> colliders_;
+
 	//デバッグ表示用のモデル
 	std::unique_ptr<Model> model_ICO;
 

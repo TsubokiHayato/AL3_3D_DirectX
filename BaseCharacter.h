@@ -5,6 +5,7 @@
 #include"ViewProjection.h"
 
 #include"Collider.h"
+
 class BaseCharacter : public Collider {
 
 	protected:

@@ -2,12 +2,14 @@
 
 void BaseCharacter::Initialize(const std::vector<Model*>& models) {
 
-	Collider::Initialize();
+	
 
 	models_ = models;
 
 
 	worldTransform_.Initialize();
+	
+	Collider::Initialize();
 }
 
 void BaseCharacter::Update() { worldTransform_.UpdateMatrix(); }

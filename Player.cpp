@@ -28,6 +28,7 @@ inline Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
 // 初期化
 void Player::Initialize(const std::vector<Model*>& models, ViewProjection* viewProjection) {
 
+	
 	globalVariables = GlobalVariables::GetInstance();
 	const char* groupName = "Player";
 	// グループを追加

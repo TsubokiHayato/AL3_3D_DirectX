@@ -42,6 +42,8 @@ void GameScene::Initialize() {
 	lockOn_ = std::make_unique<LockOn>();
 	lockOn_->Initialize(textureReticle);
 
+collisionManager_ = std::make_unique<CollisionManager>();
+	collisionManager_->Initialize();
 	/*---------
 	* Chara
 	--------*/
@@ -99,8 +101,7 @@ void GameScene::Initialize() {
 	player->SetViewProjection(&followCamera->GetViewProjection());
 
 
-	collisionManager_ = std::make_unique<CollisionManager>();
-	collisionManager_->Initialize();
+	
 }
 
 void GameScene::Update() {
