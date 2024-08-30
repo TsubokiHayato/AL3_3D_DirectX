@@ -57,7 +57,7 @@ void Enemy::Update() {
 
 		break;
 	}
-	ImGui::DragFloat("", &worldTransform_.translation_.x);
+	
 
 	// 行列計算
 	worldTransform_.UpdateMatrix();
