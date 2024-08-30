@@ -82,25 +82,25 @@ inline Vector3 Multiply(float k, const Vector3& v) {
 	v2.z = v.z * k;
 	return v2;
 }
-// 内積
-inline float Dot(const Vector3& v1, const Vector3& v2) {
-	float dot = {};
-	dot = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-	return dot;
-}
-// 長さ
-inline float Length(const Vector3& v) {
-	float len = {};
-	len = sqrtf(Dot(v, v));
-	return len;
-}
-
-// 正規化
-inline Vector3 Normalize(const Vector3& v) {
-float length = std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
-if (length > 0.0f) {
-	return Vector3(v.x / length, v.y / length, v.z / length);
-} else {
-	return Vector3(0.0f, 0.0f, 0.0f); // Return zero vector if length is zero
-}
-}
+//// 内積
+//inline float Dot(const Vector3& v1, const Vector3& v2) {
+//	float dot = {};
+//	dot = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+//	return dot;
+//}
+//// 長さ
+//inline float Length(const Vector3& v) {
+//	float len = {};
+//	len = sqrtf(Dot(v, v));
+//	return len;
+//}
+//
+//// 正規化
+//inline Vector3 Normalize(const Vector3& v) {
+//float length = std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+//if (length > 0.0f) {
+//	return Vector3(v.x / length, v.y / length, v.z / length);
+//} else {
+//	return Vector3(0.0f, 0.0f, 0.0f); // Return zero vector if length is zero
+//}
+//}
