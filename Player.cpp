@@ -200,7 +200,7 @@ void Player::Update(const Matrix4x4 viewMatrix, const Matrix4x4 viewProjectionMa
 
 	Vector3 mouseDirection = posFar - posNear; // posNearからposFarへのベクトルを計算する
 	mouseDirection = Normalize(mouseDirection);
-	const float kDistanceTestObject = 10.0f; // 設定距離（適切な距離を設定する）
+	const float kDistanceTestObject = 100.0f; // 設定距離（適切な距離を設定する）
 
 	worldTransform3DReticle_.translation_.x = posNear.x + mouseDirection.x * kDistanceTestObject; // posNearからmouseDirectionの方向にkDistanceTestObject進んだ座標
 	worldTransform3DReticle_.translation_.y = posNear.y + mouseDirection.y * kDistanceTestObject; // posNearからmouseDirectionの方向にkDistanceTestObject進んだ座標
@@ -209,7 +209,7 @@ void Player::Update(const Matrix4x4 viewMatrix, const Matrix4x4 viewProjectionMa
 
 
 	ImGui::Begin("Memo");
-	//ImGui::SliderFloat2("Position", &positionReticle.x, -600.0f, 600.0f);
+	
 	
 	ImGui::SliderFloat3("Player Position", &worldTransform_.translation_.x, -600.0f, 600.0f);
 	ImGui::Text("playerMove : LEFT RIGHT UP DOWN");
