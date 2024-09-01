@@ -9,7 +9,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos,const Vector3& ve
 	// 3Dモデルの作成
 	model_ = model;
 
-	textureHandle_ = TextureManager::Load("uvChecker.png");
+	textureHandle_ = TextureManager::Load("white.png");
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 

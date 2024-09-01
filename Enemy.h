@@ -25,7 +25,7 @@ class Enemy {
 public:
 	~Enemy();
 	// 初期化
-	void Initialize(Model* model, ViewProjection* viewProjection,const Vector3& position);
+	void Initialize(Model* model, Model* bulletModel,ViewProjection* viewProjection, const Vector3& position);
 	// 更新
 	void Update();
 	// 描画
@@ -58,7 +58,7 @@ private:
 
 	// 3Dモデル
 	Model* model_ = nullptr;
-
+	Model* bulletModel_ = nullptr;
 	// テクスチャーハンドル
 	uint32_t textureHandle_ = 0u;
 

@@ -4,84 +4,13 @@
 #include <ImGuiManager.h>
 #include <cassert>
 
-void GameScene::CheckAllCollisions() {
-
-	Vector3 playerPos, playerBulletPos, enemyPos, enemyBulletPos;
-
-	const std::list<PlayerBullet*>& playerBullets = player->GetBullets();
-	const std::list<EnemyBullet*>& enemyBullets = enemyBullets_ = GetBullets();
-
-#pragma region Player & EnemyBullets Colision
-
-	// 自キャラの座標
-	playerPos = player->GetWorldPos();
-
-	for (EnemyBullet* enemyBullet : enemyBullets) {
-
-		enemyBulletPos = enemyBullet->GetWorldPos();
-
-		float distance = powf((enemyBulletPos.x - playerPos.x), 2.0f) + powf((enemyBulletPos.y - playerPos.y), 2.0f) + powf((enemyBulletPos.z - playerPos.z), 2.0f);
-		float length = 3.0f;
-		if (distance <= length) {
-
-			player->OnCollision();
-			enemyBullet->OnCollision();
-		}
-	}
-
-#pragma endregion
-#pragma region PlayerBullets & Enemy Colision
-
-	// enemyの座標
-	for (Enemy* enemy_ : enemies_) {
-
-		enemyPos = enemy_->GetWorldPos();
-
-		for (PlayerBullet* playerBullet : playerBullets) {
-
-			playerBulletPos = playerBullet->GetWorldPos();
-
-			float distance = powf((playerBulletPos.x - enemyPos.x), 2.0f) + powf((playerBulletPos.y - enemyPos.y), 2.0f) + powf((playerBulletPos.z - enemyPos.z), 2.0f);
-			float length = 3.0f;
-			if (distance <= length) {
-
-				enemy_->OnCollision();
-				playerBullet->OnCollision();
-			}
-		}
-	}
-
-#pragma endregion
-#pragma region PlayerBullets & EnemyBullet Colision
-
-	for (PlayerBullet* playerBullet : playerBullets) {
-
-		playerBulletPos = playerBullet->GetWorldPos();
-
-		for (EnemyBullet* enemyBullet : enemyBullets) {
-
-			enemyBulletPos = enemyBullet->GetWorldPos();
-
-			float distance = powf((playerBulletPos.x - enemyBulletPos.x), 2.0f) + powf((playerBulletPos.y - enemyBulletPos.y), 2.0f) + powf((playerBulletPos.z - enemyBulletPos.z), 2.0f);
-			float length = 3.0f;
-			if (distance <= length) {
-
-				playerBullet->OnCollision();
-				enemyBullet->OnCollision();
-			}
-		}
-	}
-
-#pragma endregion
-}
-
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	delete debugCamera_;
 	delete railCamera;
 	delete player;
-	
+
 	delete skydome;
 	// 3Dモデル削除
 
@@ -89,13 +18,16 @@ GameScene::~GameScene() {
 	delete modelEnemy;
 	delete modelSkydome;
 	delete modelTarget;
+	delete modelEnemyBullet;
+
+	delete modelTitle;
+
 	for (EnemyBullet* bullet : enemyBullets_) {
 		delete bullet;
 	}
 	for (Enemy* enemy_ : enemies_) {
 		delete enemy_;
 	}
-	
 }
 
 void GameScene::Initialize() {
@@ -122,6 +54,11 @@ void GameScene::Initialize() {
 	railCamera = new RailCamera;
 	railCamera->Initialize(cameraPos, cameraRotate);
 
+	modelTitle = Model::CreateFromOBJ("title", true);
+
+	shouldRestartCommands = true;
+	LoadEnemyPopData();
+
 	/*---------
 	  SkyDome
 	---------*/
@@ -140,19 +77,23 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player = new Player;
 	// ポーションの画像
-	textureHandle = TextureManager::Load("Recovery_agents.png");
+	// textureHandle = TextureManager::Load("Recovery_agents.png");
 
-	modelPlayer = Model::Create();
-	modelTarget=Model::Create();
+	modelPlayer = Model::CreateFromOBJ("float_Head", true);
+
+	modelTarget = Model::Create();
 
 	player->SetParent(&railCamera->GetWorldTransform());
-	Vector3 playerPos(0, 0, 10);
-	
-	// 自キャラの初期化
-	player->Initialize(modelPlayer,modelTarget, textureHandle, &viewProjection_,playerPos);
+	Vector3 playerPos(0, 0, 30);
 
-	modelEnemy = Model::Create();
-	LoadEnemyPopData();
+	// 自キャラの初期化
+	player->Initialize(modelPlayer, modelTarget, &viewProjection_, playerPos);
+
+	modelEnemy = Model::CreateFromOBJ("needle_Body", true);
+
+	modelEnemyBullet = Model::CreateFromOBJ("needle_Body", true);
+
+	killEnemyCount = 15;
 
 	/*-----------
 	 DEBUG_CAMERA
@@ -162,10 +103,10 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-
 	enemyBullets_.remove_if([](EnemyBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
+
 			return true;
 		}
 		return false;
@@ -180,60 +121,55 @@ void GameScene::Update() {
 		return false;
 	});
 
-	/*-----------
-	DebugCamera
-	-----------*/
-#ifdef _DEBUG
+	switch (scene) {
+	case Title:
+		enemies_.remove_if([](Enemy* enemy_) { return true; });
+		enemyBullets_.remove_if([](EnemyBullet* bullet) {
+			return true;
+		});
+		LoadEnemyPopData();
+		if (input_->PushKey(DIK_SPACE)) {
+			scene = Battle;
+		}
+		break;
+	case Battle:
 
-	if (input_->TriggerKey(DIK_Q)) {
-		isDebugCameraActive_ = true;
-	}
-#endif
+		railCamera->Update();
 
-	if (isDebugCameraActive_) {
+		viewProjection_.matView = railCamera->GetView();
+		viewProjection_.matProjection = railCamera->GetProjection();
 
-		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetView();
-		viewProjection_.matProjection = debugCamera_->GetProjection();
-
-		//
 		viewProjection_.TransferMatrix();
-	} else {
-		//
-		viewProjection_.UpdateMatrix();
+
+		/*----------
+		     3D
+		----------*/
+
+		skydome->Update();
+
+		// 自キャラの更新
+		player->Update(viewProjection_.matView, viewProjection_.matProjection);
+
+		UpdateEnemyPopCommands();
+
+		for (Enemy* enemy_ : enemies_) {
+
+			enemy_->Update();
+		}
+
+		for (EnemyBullet* bullet : enemyBullets_) {
+			bullet->Update();
+		}
+		CheckAllCollisions();
+		if (killEnemyCount <= 0) {
+
+			shouldRestartCommands = true;
+			Initialize();
+			scene = Title;
+		}
+
+		break;
 	}
-
-	railCamera->Update();
-
-	viewProjection_.matView = railCamera->GetView();
-	viewProjection_.matProjection = railCamera->GetProjection();
-
-	viewProjection_.TransferMatrix();
-
-	/*----------
-	     3D
-	----------*/
-
-	skydome->Update();
-
-	// 自キャラの更新
-	player->Update(viewProjection_.matView,viewProjection_.matProjection);
-
-	UpdateEnemyPopCommands();
-
-	for (Enemy* enemy_ : enemies_) {
-
-		enemy_->Update();
-	}
-	
-
-	for (EnemyBullet* bullet : enemyBullets_) {
-		bullet->Update();
-	}
-	CheckAllCollisions();
-
-
-	//ImGui::DragFloat3("enemy.pos",&)
 }
 
 void GameScene::Draw() {
@@ -249,7 +185,6 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 	///
-	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -266,18 +201,24 @@ void GameScene::Draw() {
 	/// </summary>
 	///
 
-	/*-----------
-	     3D
-	-----------*/
-	// 自キャラ
-	player->Draw();
-	// Enemy
-	for (Enemy* enemy_ : enemies_) {
-		enemy_->Draw();
-	}
+	switch (scene) {
+	case Title:
+		modelTitle->Draw(worldTransform, viewProjection_);
+		break;
+	case Battle:
+		// 自キャラ
+		player->Draw();
 
-	for (EnemyBullet* bullet : enemyBullets_) {
-		bullet->Draw(viewProjection_);
+		// Enemy
+		for (Enemy* enemy_ : enemies_) {
+			enemy_->Draw();
+		}
+
+		for (EnemyBullet* bullet : enemyBullets_) {
+			bullet->Draw(viewProjection_);
+		}
+
+		break;
 	}
 
 	skydome->Draw();
@@ -289,8 +230,11 @@ void GameScene::Draw() {
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
-
-	player->DrawUI();
+	switch (scene) {
+	case Battle:
+		player->DrawUI();
+		break;
+	}
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
@@ -300,7 +244,6 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
-
 
 void GameScene::LoadEnemyPopData() {
 
@@ -312,7 +255,15 @@ void GameScene::LoadEnemyPopData() {
 
 	file.close();
 }
+
 void GameScene::UpdateEnemyPopCommands() {
+
+	// コマンドの再実行が必要ならば、リセットを行う
+	if (shouldRestartCommands) {
+		RestartEnemyPopCommands();
+		shouldRestartCommands = false;
+	}
+
 	// 待機処理
 	if (isWait) {
 		kWaitTimer_--;
@@ -327,6 +278,7 @@ void GameScene::UpdateEnemyPopCommands() {
 
 	// コマンド実行ループ
 	while (getline(enemyPopCommands, line)) {
+
 		// 1行分の文字列をストリームに変換して解析しやすくなる
 		std::istringstream line_stream(line);
 
@@ -372,13 +324,20 @@ void GameScene::UpdateEnemyPopCommands() {
 	}
 }
 
+void GameScene::RestartEnemyPopCommands() {
+	// ストリームの位置をリセットして最初から再開
+	enemyPopCommands.clear();  // エラーフラグのクリア
+	enemyPopCommands.seekg(0); // ストリームの位置を先頭に移動
+	isWait = false;            // 待機状態を解除
+	kWaitTimer_ = 0;           // タイマーをリセット
+}
 
 void GameScene::enemyPop(Vector3 translation) {
-	ImGui::DragFloat3("translate", &translation.x, 0.01f);
+
 	// 敵キャラの生成
 	enemy = new Enemy();
 	// 敵キャラの初期化
-	enemy->Initialize(modelEnemy, &viewProjection_,translation);
+	enemy->Initialize(modelEnemy, modelEnemyBullet, &viewProjection_, translation);
 	// 敵キャラにゲームシーンを渡す
 	enemy->SetGameScene(this);
 
@@ -388,3 +347,78 @@ void GameScene::enemyPop(Vector3 translation) {
 	enemies_.push_back(enemy);
 }
 
+void GameScene::CheckAllCollisions() {
+
+	Vector3 playerPos, playerBulletPos, enemyPos, enemyBulletPos;
+
+	const std::list<PlayerBullet*>& playerBullets = player->GetBullets();
+	const std::list<EnemyBullet*>& enemyBullets = enemyBullets_ = GetBullets();
+
+#pragma region Player & EnemyBullets Colision
+
+	// 自キャラの座標
+	playerPos = player->GetWorldPos();
+
+	for (EnemyBullet* enemyBullet : enemyBullets) {
+
+		enemyBulletPos = enemyBullet->GetWorldPos();
+
+		float distance = powf((enemyBulletPos.x - playerPos.x), 2.0f) + powf((enemyBulletPos.y - playerPos.y), 2.0f) + powf((enemyBulletPos.z - playerPos.z), 2.0f);
+		float length = 3.0f;
+		if (distance <= length) {
+
+			player->OnCollision();
+
+			enemyBullet->OnCollision();
+			shouldRestartCommands = true; // コマンドを再実行するフラグを立てる
+			scene = Title;                // タイトルに戻る
+			return;                       // ここで戻ることでコマンドの読み込みを中断する
+		}
+	}
+
+#pragma endregion
+#pragma region PlayerBullets & Enemy Colision
+
+	// enemyの座標
+	for (Enemy* enemy_ : enemies_) {
+
+		enemyPos = enemy_->GetWorldPos();
+
+		for (PlayerBullet* playerBullet : playerBullets) {
+
+			playerBulletPos = playerBullet->GetWorldPos();
+
+			float distance = powf((playerBulletPos.x - enemyPos.x), 2.0f) + powf((playerBulletPos.y - enemyPos.y), 2.0f) + powf((playerBulletPos.z - enemyPos.z), 2.0f);
+			float length = 3.0f;
+			if (distance <= length) {
+
+				enemy_->OnCollision();
+				playerBullet->OnCollision();
+				killEnemyCount--;
+			}
+		}
+	}
+
+#pragma endregion
+#pragma region PlayerBullets & EnemyBullet Colision
+
+	for (PlayerBullet* playerBullet : playerBullets) {
+
+		playerBulletPos = playerBullet->GetWorldPos();
+
+		for (EnemyBullet* enemyBullet : enemyBullets) {
+
+			enemyBulletPos = enemyBullet->GetWorldPos();
+
+			float distance = powf((playerBulletPos.x - enemyBulletPos.x), 2.0f) + powf((playerBulletPos.y - enemyBulletPos.y), 2.0f) + powf((playerBulletPos.z - enemyBulletPos.z), 2.0f);
+			float length = 3.0f;
+			if (distance <= length) {
+
+				playerBullet->OnCollision();
+				enemyBullet->OnCollision();
+			}
+		}
+	}
+
+#pragma endregion
+}

@@ -21,7 +21,7 @@ enum class LRDirection {
 class Player {
 public:
 	// 初期化
-	void Initialize(Model* model,Model* targetModel, uint32_t textureHandle, ViewProjection* viewProjection, Vector3 Position);
+	void Initialize(Model* model,Model* targetModel,  ViewProjection* viewProjection, Vector3 Position);
 	// 更新
 	void Update(const Matrix4x4 viewMatrix,const Matrix4x4 viewProjectionMatrix);
 	// 描画
@@ -73,5 +73,9 @@ private:
 
 
 	XINPUT_STATE joyState;
+	
+	
+	const int kBulletCoolTime = 30;
+	float kDistanceTestObject = 72.0f; // 設定距離（適切な距離を設定する）
 
 };

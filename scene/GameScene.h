@@ -22,6 +22,11 @@
 /// <summary>
 /// ゲームシーン
 /// </summary>
+/// 
+enum Scene {
+	Title,
+	Battle
+};
 class GameScene {
 
 public: // メンバ関数
@@ -69,7 +74,7 @@ public: // メンバ関数
 
 	void enemyPop(Vector3 translation);
 
-	
+	void RestartEnemyPopCommands();
 
 
 private: // メンバ変数
@@ -111,13 +116,17 @@ private: // メンバ変数
 	/*------------
 	テクスチャ&モデル
 	------------*/
-	
+	Model* modelTitle = nullptr;
+
 	Model* modelPlayer = nullptr;
 	Model* modelEnemy = nullptr;
 	Model* modelTarget = nullptr;
 
 	Model* modelSkydome = nullptr;
 	
+	Model* modelEnemyBullet = nullptr;
+	Model* modelPlayerBullet = nullptr;
+
 	/*--------------
 	* ワールド・ビュー
 	--------------*/
@@ -126,8 +135,8 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	WorldTransform worldTransform;
 
-	uint32_t textureHandle = 0;
-
+	
+	uint32_t soundDataHandle_ = 0;
 
 
 	std::list<Enemy*> enemies_;
@@ -140,5 +149,8 @@ private: // メンバ変数
 	// 待機タイマー
 	int32_t kWaitTimer_ = 0;
 
+	Scene scene = Title;
 
+	bool shouldRestartCommands = false;
+	int killEnemyCount = 15;
 };

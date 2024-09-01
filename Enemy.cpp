@@ -14,16 +14,17 @@ Enemy::~Enemy() {
 	viewProjection_ = nullptr;
 }
 
-void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) {
+void Enemy::Initialize(Model* model, Model* bulletModel, ViewProjection* viewProjection, const Vector3& position) {
 	assert(model);
 
 	// 3Dモデルの作成
 	model_ = model;
-	textureHandle_ = TextureManager::Load("slime.jpg");
+	bulletModel_ = bulletModel;
 
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
+	worldTransform_.rotation_.y = 4.8f;
 
 	viewProjection_ = viewProjection;
 
@@ -32,7 +33,7 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vecto
 
 void Enemy::Update() {
 	// キャラクターの移動速さ
-	const float kCharaSpeed = -0.05f;
+	const float kCharaSpeed = -0.5f;
 	// Enemyの移動ベクトル
 	Vector3 moveApproach = {0.0f, 0.0f, kCharaSpeed};
 	Vector3 moveLeave = {0.0f, 0.0f, 0.0f};
@@ -45,20 +46,17 @@ void Enemy::Update() {
 		worldTransform_.translation_.y += +moveApproach.y;
 		worldTransform_.translation_.z += +moveApproach.z;
 
-		if (worldTransform_.translation_.z < 0.0f) {
+		if (worldTransform_.translation_.z < -30.0f) {
 			phase_ = Phase::Leave;
 		}
 		break;
 	case Phase::Leave:
-
-		worldTransform_.translation_.x -= +moveApproach.x;
-		worldTransform_.translation_.y -= +moveApproach.y;
-		worldTransform_.translation_.z -= +moveApproach.z;
-
+		ApproachPhaseUpdate();
+		
 		break;
 	}
 	
-
+	
 	// 行列計算
 	worldTransform_.UpdateMatrix();
 }
@@ -66,7 +64,7 @@ void Enemy::Update() {
 void Enemy::Draw() {
 
 	// 3D作成
-	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
+	model_->Draw(worldTransform_, *viewProjection_);
 }
 
 void Enemy::Fire() {
@@ -89,7 +87,7 @@ void Enemy::Fire() {
 	diff.z *= kBulletSpeed;
 
 	EnemyBullet* newBullet = new EnemyBullet();
-	newBullet->Initialize(model_, worldTransform_.translation_, diff);
+	newBullet->Initialize(bulletModel_, worldTransform_.translation_, diff);
 
 	gameScene_->AddEnemyBullet(newBullet);
 }
@@ -109,8 +107,9 @@ void Enemy::ApproachPhaseUpdate() {
 	}
 }
 
-void Enemy::OnCollision() { isDead_ = true; 
-ImGui::Text("isEnemyDead");
+void Enemy::OnCollision() { 
+	isDead_ = true; 
+
 }
 
 Vector3 Enemy::GetWorldPos() {
