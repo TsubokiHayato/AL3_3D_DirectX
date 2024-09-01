@@ -157,6 +157,7 @@ void GameScene::Initialize() {
 	/*-----------
 	 DEBUG_CAMERA
 	-----------*/
+
 	debugCamera_ = new DebugCamera(1280, 720);
 }
 
