@@ -110,7 +110,7 @@ void Enemy::ApproachPhaseUpdate() {
 }
 
 void Enemy::OnCollision() { isDead_ = true; 
-ImGui::Text("isEnemyDead");
+//ImGui::Text("isEnemyDead");
 }
 
 Vector3 Enemy::GetWorldPos() {

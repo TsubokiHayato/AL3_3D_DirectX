@@ -23,10 +23,10 @@ void RailCamera::Update() {
 	viewProjection_.matView = Inverse(worldTransform_.matWorld_);
 	
 
-	ImGui::Begin("Camera");
-	ImGui::SliderFloat3("translation", &worldTransform_.translation_.x, -600.0f, 600.0f);
-	ImGui::SliderFloat3("rotation", &worldTransform_.rotation_.x, -10.0f, 10.0f);
-	ImGui::End();
+	//ImGui::Begin("Camera");
+	//ImGui::SliderFloat3("translation", &worldTransform_.translation_.x, -600.0f, 600.0f);
+	//ImGui::SliderFloat3("rotation", &worldTransform_.rotation_.x, -10.0f, 10.0f);
+	//ImGui::End();
 
 
 	worldTransform_.UpdateMatrix();

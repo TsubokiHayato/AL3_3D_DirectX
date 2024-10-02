@@ -208,15 +208,15 @@ void Player::Update(const Matrix4x4 viewMatrix, const Matrix4x4 viewProjectionMa
 	worldTransform3DReticle_.UpdateMatrix();
 
 
-	ImGui::Begin("Memo");
-	
-	
-	ImGui::SliderFloat3("Player Position", &worldTransform_.translation_.x, -600.0f, 600.0f);
-	ImGui::Text("playerMove : LEFT RIGHT UP DOWN");
-	ImGui::Text("playerRotate : A D");
-	ImGui::Text("playerAttack :Space");
-	ImGui::Text("DebugCameraMode : Q");
-	ImGui::End();
+	//ImGui::Begin("Memo");
+	//
+	//
+	//ImGui::SliderFloat3("Player Position", &worldTransform_.translation_.x, -600.0f, 600.0f);
+	//ImGui::Text("playerMove : LEFT RIGHT UP DOWN");
+	//ImGui::Text("playerRotate : A D");
+	//ImGui::Text("playerAttack :Space");
+	//ImGui::Text("DebugCameraMode : Q");
+	//ImGui::End();
 	// 移動限界座標
 	const float kMoveLimitX = 35.0f;
 	const float kMoveLimitY = 19.0f;

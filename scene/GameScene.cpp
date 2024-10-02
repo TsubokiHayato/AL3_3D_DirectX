@@ -374,7 +374,7 @@ void GameScene::UpdateEnemyPopCommands() {
 
 
 void GameScene::enemyPop(Vector3 translation) {
-	ImGui::DragFloat3("translate", &translation.x, 0.01f);
+	//ImGui::DragFloat3("translate", &translation.x, 0.01f);
 	// 敵キャラの生成
 	enemy = new Enemy();
 	// 敵キャラの初期化
